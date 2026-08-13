@@ -1,0 +1,24 @@
+# Node
+node_modules/
+dist/
+.turbo/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Env
+.env
+.env.local
+
+# Expo
+.expo/
+
+# OS
+.DS_Store
+
+# Editores
+.vscode/
+.idea/

@@ -1,0 +1,16 @@
+{
+  "name": "estudilabai",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:web": "turbo run dev --filter=@estudilabai/web",
+    "dev:mobile": "turbo run start --filter=@estudilabai/mobile",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.2"
+  },
+  "packageManager": "npm@10.8.0"
+}

@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "EstudiLabAI",
+    "slug": "estudilabai",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    }
+  }
+}
