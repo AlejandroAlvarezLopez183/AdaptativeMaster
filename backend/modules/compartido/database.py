@@ -5,7 +5,7 @@ Cada módulo debe usar su propio schema de Postgres (usuarios, ia, progreso, ses
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base
 
-from backend.modules.compartido.config import settings
+from modules.compartido.config import settings
 
 engine = create_async_engine(settings.database_url, echo=False)
 async_session = async_sessionmaker(engine, expire_on_commit=False)

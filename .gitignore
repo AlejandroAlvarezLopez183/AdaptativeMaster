@@ -22,3 +22,9 @@ venv/
 # Editores
 .vscode/
 .idea/
+
+# Secretos y BD
+.env.*
+!.env.example
+*.sqlite3
+*.db

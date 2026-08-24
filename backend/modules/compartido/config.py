@@ -6,9 +6,9 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_url: str = "postgresql+asyncpg://user:password@localhost:5432/estudilabai"
-    redis_url: str = "redis://localhost:6379"
-    jwt_secret: str = "CAMBIAR_EN_PRODUCCION"
+    database_url: str
+    redis_url: str
+    jwt_secret: str
     jwt_algorithm: str = "HS256"
     jwt_access_token_expire_minutes: int = 30
     ai_api_key: str = ""

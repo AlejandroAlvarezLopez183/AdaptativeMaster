@@ -12,7 +12,7 @@
     "expo": "~51.0.0",
     "react": "18.2.0",
     "react-native": "0.74.5",
-    "@estudilabai/shared": "workspace:*"
+    "@estudilabai/shared": "*"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
