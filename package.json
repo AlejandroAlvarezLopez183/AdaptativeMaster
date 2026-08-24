@@ -1,10 +1,10 @@
 {
-  "name": "estudilabai",
+  "name": "adaptativemaster",
   "private": true,
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "dev:web": "turbo run dev --filter=@estudilabai/web",
-    "dev:mobile": "turbo run start --filter=@estudilabai/mobile",
+    "dev:web": "turbo run dev --filter=@adaptativemaster/web",
+    "dev:mobile": "turbo run start --filter=@adaptativemaster/mobile",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint"

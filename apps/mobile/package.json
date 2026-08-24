@@ -1,5 +1,5 @@
 {
-  "name": "@estudilabai/mobile",
+  "name": "@adaptativemaster/mobile",
   "private": true,
   "version": "0.1.0",
   "main": "node_modules/expo/AppEntry.js",
@@ -12,7 +12,7 @@
     "expo": "~51.0.0",
     "react": "18.2.0",
     "react-native": "0.74.5",
-    "@estudilabai/shared": "*"
+    "@adaptativemaster/shared": "*"
   },
   "devDependencies": {
     "typescript": "^5.5.4"

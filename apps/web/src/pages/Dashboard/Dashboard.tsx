@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, UserResponse } from '@estudilabai/shared';
+import { auth, UserResponse } from '@adaptativemaster/shared';
+
+// Componentes modulares
+import { Sidebar } from './components/Sidebar';
+import { AyudaView } from './views/AyudaView';
+import { InicioView } from './views/InicioView';
+import { ConfigView } from './views/ConfigView';
+import { PerfilView } from './views/PerfilView';
+import { ProgresoView } from './views/ProgresoView';
+import { AprendizajeView } from './views/AprendizajeView';
+import { RutaDetalleView } from './views/RutaDetalleView';
+import { SocialView } from './views/SocialView';
+import { TutorView } from './views/TutorView';
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [active, setActive] = useState("inicio");
   const [user, setUser] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -38,42 +51,52 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div style={{ background: '#0F2A2E', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E8B94A' }}>
-        <p>Cargando tu sesión...</p>
+        <p>Cargando tu entorno...</p>
       </div>
     );
   }
 
   return (
-    <div style={{ background: '#0F2A2E', minHeight: '100vh', color: '#F5F3EE', padding: '40px' }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto' }} className="glass-panel animate-fade-in">
-        <div style={{ padding: '40px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-            <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", margin: 0, fontSize: '32px', color: '#E8B94A' }}>
-              Mi Aprendizaje
-            </h1>
-            <button 
-              onClick={handleLogout} 
-              style={{ background: 'transparent', border: '1px solid rgba(245,243,238,0.2)', color: '#F5F3EE', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.2s' }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(245,243,238,0.1)'}
-              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-            >
-              Cerrar sesión
-            </button>
+    <div style={{
+      minHeight: "100vh",
+      background: "#0F2A2E",
+      display: "flex",
+      fontFamily: "Inter, sans-serif",
+    }}>
+      {/* Sidebar Modularizado */}
+      <Sidebar 
+        active={active} 
+        setActive={setActive} 
+        user={user} 
+        onLogout={handleLogout} 
+      />
+
+      {/* Main Content Area */}
+      <main style={{ flex: 1, padding: "40px", display: "flex", flexDirection: "column", overflowY: "auto" }}>
+        {active === "ayuda" ? (
+          <AyudaView />
+        ) : active === "config" ? (
+          <ConfigView onLogout={handleLogout} />
+        ) : active === "perfil" ? (
+          <PerfilView user={user} />
+        ) : active === "progreso" ? (
+          <ProgresoView />
+        ) : active === "social" ? (
+          <SocialView />
+        ) : active === "tutor" ? (
+          <TutorView />
+        ) : active === "ruta_detalle" ? (
+          <RutaDetalleView setActive={setActive} />
+        ) : active === "aprendizaje" ? (
+          <AprendizajeView setActive={setActive} />
+        ) : active === "inicio" ? (
+          <InicioView user={user} />
+        ) : (
+          <div className="animate-fade-in" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+             <p style={{ color: "rgba(245,243,238,0.3)", fontSize: '18px' }}>Contenido de <span style={{ color: '#E8B94A' }}>{active}</span> próximamente...</p>
           </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ background: 'rgba(0,0,0,0.2)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(245,243,238,0.1)' }}>
-              <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: 'rgba(245,243,238,0.6)', textTransform: 'uppercase', letterSpacing: '1px' }}>Nombre</p>
-              <p style={{ margin: 0, fontSize: '18px', fontWeight: 500, fontFamily: 'Inter, sans-serif' }}>{user?.nombre}</p>
-            </div>
-            
-            <div style={{ background: 'rgba(0,0,0,0.2)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(245,243,238,0.1)' }}>
-              <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: 'rgba(245,243,238,0.6)', textTransform: 'uppercase', letterSpacing: '1px' }}>Email</p>
-              <p style={{ margin: 0, fontSize: '18px', fontWeight: 500, fontFamily: 'Inter, sans-serif' }}>{user?.email}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+        )}
+      </main>
     </div>
   );
 }

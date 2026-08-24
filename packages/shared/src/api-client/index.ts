@@ -23,3 +23,6 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
 }
 
 export * from './auth';
+export * from './ia';
+export * from './progreso';
+export * from './sesiones';

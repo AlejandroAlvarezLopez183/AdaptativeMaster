@@ -1,4 +1,4 @@
-# Contexto del proyecto — EstudiLabAI
+# Contexto del proyecto — Adaptative Master
 
 Este archivo existe para que cualquier asistente de IA (Claude Code, Cursor, Copilot, etc.)
 entienda el proyecto antes de escribir o modificar código. Léelo completo antes de proponer
@@ -6,7 +6,7 @@ cambios de arquitectura, crear archivos nuevos, o sugerir dependencias.
 
 ---
 
-## Qué es EstudiLabAI
+## Qué es Adaptative Master
 
 Plataforma de aprendizaje impulsada por IA (tipo Duolingo, pero diferenciada). El valor
 central no es solo "generar rutas de estudio con IA" — eso ya lo hace la competencia.

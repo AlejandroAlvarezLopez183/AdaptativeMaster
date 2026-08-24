@@ -3,21 +3,19 @@ Lógica de negocio del módulo usuarios.
 Aquí van las reglas reales (cálculos, validaciones de negocio, orquestación).
 No debe conocer detalles de HTTP ni de SQL directamente.
 """
-from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from fastapi import HTTPException, status
+import bcrypt
 from modules.compartido.config import settings
 from . import repository, schemas, models
 from sqlalchemy.ext.asyncio import AsyncSession
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
+def get_password_hash(password: str) -> str:
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 def create_access_token(data: dict):
     to_encode = data.copy()

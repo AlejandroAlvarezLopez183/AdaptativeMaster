@@ -11,7 +11,7 @@ from modules.progreso.routes import router as progreso_router
 from modules.sesiones.routes import router as sesiones_router
 from modules.pagos.routes import router as pagos_router
 
-app = FastAPI(title="EstudiLabAI API")
+app = FastAPI(title="Adaptative Master API")
 
 # Configurar CORS para permitir que el frontend de React se comunique con la API
 app.add_middleware(

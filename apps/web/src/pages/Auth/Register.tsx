@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { auth } from '@estudilabai/shared';
+import { auth } from '@adaptativemaster/shared';
 
 export default function Register() {
   const navigate = useNavigate();

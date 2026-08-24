@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 export default function App() {
   return (
     <View>
-      <Text>EstudiLabAI — Mobile</Text>
+      <Text>Adaptative Master — Mobile</Text>
     </View>
   );
 }

@@ -1,4 +1,4 @@
-# EstudiLabAI
+# Adaptative Master
 
 Plataforma de aprendizaje impulsada 100% por IA: rutas personalizadas,
 minijuegos generados dinámicamente, tutor conversacional y sesiones de
@@ -26,25 +26,37 @@ docs/
 
 Cada módulo del backend sigue el patrón de capas: `routes.py` → `services.py` → `repository.py`.
 
-## Cómo levantar el proyecto localmente
+## 🚀 Requisitos previos
 
-1. Copiar `.env.example` a `.env` dentro de `backend/` y ajustar valores
-2. Levantar base de datos y backend:
+Para correr este proyecto en tu entorno local, solo necesitas tener instalado:
+- **[Docker](https://docs.docker.com/get-docker/)** y **Docker Compose**.
+- _Opcional_: Node.js v20+ (solo si deseas correr el frontend fuera de Docker para desarrollo avanzado en la app móvil).
+
+## 💻 Cómo levantar el proyecto localmente
+
+1. **Configurar variables de entorno**
+   Copia el archivo de ejemplo en el backend para crear tu `.env`:
+   ```bash
+   cp backend/.env.example backend/.env
+   ```
+   *(Ajusta las credenciales de la base de datos o JWT si es necesario)*
+
+2. **Levantar todos los servicios con Docker**
+   El proyecto está contenerizado. Un solo comando levantará la Base de Datos, Redis, el Backend (FastAPI) y el Frontend Web (Vite/React):
    ```bash
    docker compose up -d
    ```
-3. Instalar dependencias del monorepo (frontend):
+
+3. **Aplicar migraciones de la Base de Datos**
+   La primera vez que levantes el proyecto, necesitas crear las tablas ejecutando:
    ```bash
-   npm install
+   docker compose exec backend alembic upgrade head
    ```
-4. Levantar el frontend web:
-   ```bash
-   npm run dev:web
-   ```
-5. Levantar la app móvil:
-   ```bash
-   npm run dev:mobile
-   ```
+
+4. **¡Listo!**
+   - El **Frontend Web** estará disponible en: [http://localhost:5173](http://localhost:5173)
+   - El **Backend API** estará disponible en: [http://localhost:8000](http://localhost:8000)
+   - La **Documentación Swagger** en: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ## Migraciones de base de datos
 
