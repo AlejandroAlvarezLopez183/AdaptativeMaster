@@ -17,6 +17,7 @@ import { TutorView } from './views/TutorView';
 export default function Dashboard() {
   const navigate = useNavigate();
   const [active, setActive] = useState("inicio");
+  const [selectedRutaId, setSelectedRutaId] = useState<string | null>(null);
   const [user, setUser] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -86,11 +87,11 @@ export default function Dashboard() {
         ) : active === "tutor" ? (
           <TutorView />
         ) : active === "ruta_detalle" ? (
-          <RutaDetalleView setActive={setActive} />
+          <RutaDetalleView setActive={setActive} rutaId={selectedRutaId} />
         ) : active === "aprendizaje" ? (
-          <AprendizajeView setActive={setActive} />
+          <AprendizajeView setActive={setActive} onSelectRuta={setSelectedRutaId} />
         ) : active === "inicio" ? (
-          <InicioView user={user} />
+          <InicioView user={user} setActive={setActive} onSelectRuta={setSelectedRutaId} />
         ) : (
           <div className="animate-fade-in" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
              <p style={{ color: "rgba(245,243,238,0.3)", fontSize: '18px' }}>Contenido de <span style={{ color: '#E8B94A' }}>{active}</span> próximamente...</p>

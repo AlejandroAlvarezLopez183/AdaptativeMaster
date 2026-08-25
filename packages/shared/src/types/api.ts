@@ -2,13 +2,13 @@
 
 // Módulo IA
 export interface TemaRuta {
-  id: number;
+  id: string;
   nombre: string;
   estado: 'completado' | 'actual' | 'bloqueado';
 }
 
 export interface RutaAprendizaje {
-  id: number;
+  id: string;
   titulo: string;
   icono?: string;
   progreso_porcentaje: number;
@@ -31,8 +31,8 @@ export interface RutasResponse {
 export interface TutorChatRequest {
   mensaje: string;
   contexto: {
-    ruta_id: number;
-    leccion_id: number;
+    ruta_id: string;
+    leccion_id: string;
   };
 }
 
@@ -52,14 +52,32 @@ export interface DiaTracker {
   completado: boolean;
 }
 
-export interface ResumenProgresoResponse {
-  progreso_general: number;
-  racha_dias: number;
-  tiempo_estudio_minutos: number;
-  lecciones_totales_completadas: number;
-  habilidades: Habilidad[];
-  tracker_semanal: DiaTracker[];
-  conceptos_a_reforzar: string[];
+export interface RachasResponse {
+  dias_actuales: number;
+  mejor_racha: number;
+  ultima_actividad: string | null;
+}
+
+export interface XPHistorialResponse {
+  id: string;
+  cantidad: number;
+  motivo: string;
+  fecha: string;
+}
+
+export interface LogrosResponse {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  criterio: string;
+  obtenido_en: string;
+}
+
+export interface DashboardProgresoResponse {
+  xp_total: number;
+  racha: RachasResponse;
+  ultimos_xp: XPHistorialResponse[];
+  logros_obtenidos: LogrosResponse[];
 }
 
 // Módulo Sesiones

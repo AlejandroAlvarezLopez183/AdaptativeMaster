@@ -1,10 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { progresoClient, DashboardProgresoResponse } from "@adaptativemaster/shared";
 
 export function ProgresoView() {
+  const [data, setData] = useState<DashboardProgresoResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProgreso = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("No hay sesión activa");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await progresoClient.getResumen(token);
+        setData(res);
+      } catch (err: any) {
+        setError(err.message || "Error al cargar progreso");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProgreso();
+  }, []);
+
+  if (loading) {
+    return <div style={{ color: "#E8B94A", textAlign: "center", marginTop: "40px" }}>Cargando tu progreso...</div>;
+  }
+
+  if (error) {
+    return <div style={{ color: "#F2637B", textAlign: "center", marginTop: "40px" }}>{error}</div>;
+  }
+
+  const rachaActual = data?.racha?.dias_actuales || 0;
+  const xpTotal = data?.xp_total || 0;
+  const leccionesCompletadas = data?.ultimos_xp?.filter(x => x.motivo.includes("Lección")).length || 0;
+
   const stats = [
-    { label: "Racha actual", value: "5 días", icon: "🔥", color: "#F2637B" },
-    { label: "Tiempo de estudio", value: "8h 42m", icon: "⏱️", color: "#E8B94A" },
-    { label: "Lecciones", value: "12 / 17", icon: "📚", color: "#45C893" },
+    { label: "Racha actual", value: `${rachaActual} días`, icon: "🔥", color: "#F2637B" },
+    { label: "Total XP", value: `${xpTotal} XP`, icon: "✨", color: "#E8B94A" },
+    { label: "Lecciones", value: `${leccionesCompletadas}`, icon: "📚", color: "#45C893" },
   ];
 
   const habilidades = [

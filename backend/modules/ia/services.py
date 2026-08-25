@@ -4,15 +4,28 @@ from fastapi import HTTPException
 from uuid import UUID
 from typing import List
 
+from sqlalchemy.orm import selectinload
 from . import models, schemas
 
 async def listar_rutas(db: AsyncSession, usuario_id: UUID) -> List[models.RutaAprendizaje]:
     result = await db.execute(
         select(models.RutaAprendizaje)
+        .options(selectinload(models.RutaAprendizaje.lecciones))
         .where(models.RutaAprendizaje.usuario_id == usuario_id)
         .order_by(models.RutaAprendizaje.generada_en.desc())
     )
     return result.scalars().all()
+
+async def obtener_ruta_por_id(db: AsyncSession, ruta_id: UUID, usuario_id: UUID) -> models.RutaAprendizaje:
+    result = await db.execute(
+        select(models.RutaAprendizaje)
+        .options(selectinload(models.RutaAprendizaje.lecciones))
+        .where(models.RutaAprendizaje.id == ruta_id, models.RutaAprendizaje.usuario_id == usuario_id)
+    )
+    ruta = result.scalars().first()
+    if not ruta:
+        raise HTTPException(status_code=404, detail="Ruta no encontrada")
+    return ruta
 
 async def generar_ruta(db: AsyncSession, usuario_id: UUID, ruta_in: schemas.RutaAprendizajeCreate) -> models.RutaAprendizaje:
     # 1. Crear el registro base de la ruta

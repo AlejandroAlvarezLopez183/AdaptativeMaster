@@ -1,19 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { iaClient, RutaDetalle } from "@adaptativemaster/shared";
 
 interface RutaDetalleViewProps {
   setActive?: (v: string) => void;
+  rutaId?: string | null;
 }
 
-export function RutaDetalleView({ setActive }: RutaDetalleViewProps) {
-  const temas = [
-    { id: 1, nombre: 'Fundamentos', estado: 'completado' },
-    { id: 2, nombre: 'POO', estado: 'completado' },
-    { id: 3, nombre: 'HTTP', estado: 'completado' },
-    { id: 4, nombre: 'APIs REST', estado: 'actual' },
-    { id: 5, nombre: 'PostgreSQL', estado: 'bloqueado' },
-    { id: 6, nombre: 'FastAPI', estado: 'bloqueado' },
-    { id: 7, nombre: 'Docker', estado: 'bloqueado' },
-  ];
+export function RutaDetalleView({ setActive, rutaId }: RutaDetalleViewProps) {
+  const [ruta, setRuta] = useState<RutaDetalle | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDetalle = async () => {
+      const token = localStorage.getItem("token");
+      if (token && rutaId) {
+        try {
+          const data = await iaClient.getRutaDetalle(rutaId, token);
+          setRuta(data);
+        } catch (error) {
+          console.error("Error al obtener detalle de la ruta", error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+    fetchDetalle();
+  }, [rutaId]);
+
+  if (loading) {
+    return (
+      <div style={{ color: "#E8B94A", textAlign: "center", marginTop: 40 }}>
+        Cargando detalle de la ruta...
+      </div>
+    );
+  }
+
+  if (!ruta) {
+    return (
+      <div style={{ color: "#F2637B", textAlign: "center", marginTop: 40 }}>
+        No se encontró la ruta. <button onClick={() => setActive?.('aprendizaje')} style={{background: 'none', border: 'none', color: '#E8B94A', cursor: 'pointer', textDecoration: 'underline'}}>Volver</button>
+      </div>
+    );
+  }
 
   const getIcon = (estado: string) => {
     switch (estado) {
@@ -38,7 +68,7 @@ export function RutaDetalleView({ setActive }: RutaDetalleViewProps) {
 
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 36, fontWeight: 700, color: "#F5F3EE", margin: "0 0 8px" }}>
-          Python Backend
+          {ruta.titulo}
         </h1>
         <p style={{ color: "#E8B94A", margin: 0, fontSize: 15, fontWeight: 600 }}>
           Ruta de aprendizaje personalizada
@@ -51,7 +81,7 @@ export function RutaDetalleView({ setActive }: RutaDetalleViewProps) {
             Objetivo
           </span>
           <span style={{ fontSize: 18, color: '#F5F3EE', fontWeight: 600, lineHeight: 1.4 }}>
-            Crear APIs profesionales con Python
+            {ruta.objetivo}
           </span>
         </div>
         
@@ -60,7 +90,7 @@ export function RutaDetalleView({ setActive }: RutaDetalleViewProps) {
             Tu nivel
           </span>
           <span style={{ fontSize: 18, color: '#E8B94A', fontWeight: 700 }}>
-            Intermedio
+            {ruta.nivel}
           </span>
         </div>
       </div>
@@ -69,7 +99,7 @@ export function RutaDetalleView({ setActive }: RutaDetalleViewProps) {
         <h3 style={{ margin: '0 0 24px', fontSize: 18, color: '#F5F3EE', fontWeight: 600 }}>Temario</h3>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {temas.map((tema) => (
+          {ruta.temario?.map((tema) => (
             <div key={tema.id} style={{ 
               display: 'flex', 
               alignItems: 'center', 

@@ -7,7 +7,7 @@ export const iaClient = {
       headers: { Authorization: `Bearer ${token}` }
     }),
 
-  getRutaDetalle: (rutaId: number, token: string) => 
+  getRutaDetalle: (rutaId: string, token: string) => 
     apiFetch<RutaDetalle>(`/ia/rutas/${rutaId}`, {
       headers: { Authorization: `Bearer ${token}` }
     }),

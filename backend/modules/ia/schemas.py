@@ -41,9 +41,31 @@ class RutaAprendizajeCreate(RutaAprendizajeBase):
 class RutaAprendizajeResponse(RutaAprendizajeBase):
     id: UUID
     usuario_id: UUID
-    estado: str
+    estado: str = "en_curso"
     generada_en: datetime
     lecciones: List[LeccionResponse] = []
+    titulo: str = ""
+    progreso_porcentaje: int = 0
+    lecciones_completadas: int = 0
+    lecciones_totales: int = 0
 
     class Config:
         from_attributes = True
+
+class RutasDashboardResponse(BaseModel):
+    en_curso: List[RutaAprendizajeResponse] = []
+    guardado: List[RutaAprendizajeResponse] = []
+    completado: List[RutaAprendizajeResponse] = []
+
+    class Config:
+        from_attributes = True
+
+class TemaRuta(BaseModel):
+    id: UUID
+    nombre: str
+    estado: str
+
+class RutaDetalleResponse(RutaAprendizajeResponse):
+    objetivo: str
+    nivel: str
+    temario: List[TemaRuta]

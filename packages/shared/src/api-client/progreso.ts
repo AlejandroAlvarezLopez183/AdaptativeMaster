@@ -1,9 +1,9 @@
 import { apiFetch } from './index';
-import { ResumenProgresoResponse } from '../types/api';
+import { DashboardProgresoResponse } from '../types/api';
 
 export const progresoClient = {
   getResumen: (token: string) => 
-    apiFetch<ResumenProgresoResponse>('/progreso/resumen', {
+    apiFetch<DashboardProgresoResponse>('/progreso/dashboard', {
       headers: { Authorization: `Bearer ${token}` }
     })
 };

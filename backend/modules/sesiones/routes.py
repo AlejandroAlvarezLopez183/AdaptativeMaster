@@ -1,13 +1,5 @@
-"""
-Endpoints (FastAPI router) del módulo sesiones.
-Aquí solo va la capa HTTP: recibir requests, validar con Pydantic,
-llamar a services.py y devolver la respuesta. Sin lógica de negocio aquí.
-"""
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/sesiones", tags=["sesiones"])
+router = APIRouter(prefix="/sesiones", tags=["Sesiones Multijugador"])
 
-# Ejemplo:
-# @router.get("/")
-# async def listar():
-#     return await services.listar_items()
+# Los endpoints se implementarán más adelante
