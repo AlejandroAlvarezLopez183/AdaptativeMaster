@@ -14,6 +14,10 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from modules.compartido.config import settings
 from modules.compartido.database import Base
 from modules.usuarios import models as usuarios_models
+from modules.ia import models as ia_models
+from modules.progreso import models as progreso_models
+from modules.sesiones import models as sesiones_models
+from modules.pagos import models as pagos_models
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.database_url)
