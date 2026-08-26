@@ -14,6 +14,7 @@ import { RutaDetalleView } from './views/RutaDetalleView';
 import { SocialView } from './views/SocialView';
 import { TutorView } from './views/TutorView';
 import { LeccionDuolingoView } from './views/LeccionDuolingoView';
+import { LeccionContenidoView } from './views/LeccionContenidoView';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -88,7 +89,13 @@ export default function Dashboard() {
         ) : active === "social" ? (
           <SocialView />
         ) : active === "leccion_duolingo" ? (
-          <LeccionDuolingoView leccionId={selectedLeccionId} onStartTutor={(id) => { setSelectedLeccionId(id); setActive("tutor"); }} />
+          <LeccionDuolingoView leccionId={selectedLeccionId} onOpenLesson={(id) => { setSelectedLeccionId(id); setActive("leccion_contenido"); }} />
+        ) : active === "leccion_contenido" ? (
+          <LeccionContenidoView 
+            leccionId={selectedLeccionId} 
+            onGoBack={() => setActive("leccion_duolingo")} 
+            onOpenTutor={() => setActive("tutor")} 
+          />
         ) : active === "tutor" ? (
           <TutorView rutaId={selectedRutaId} leccionId={selectedLeccionId} />
         ) : active === "ruta_detalle" ? (

@@ -304,11 +304,11 @@ function ChapterHeader({ chapter, isFirst }: { chapter: Chapter; isFirst: boolea
 
 // ── Vista Principal de React (Exportada) ──────────────────────────────────────
 interface LeccionDuolingoViewProps {
-  leccionId: string | null; // La lección seleccionada en la vista anterior
-  onStartTutor: (id: string) => void; // Función para finalmente ir al tutor o lección real
+  leccionId: string | null; 
+  onOpenLesson: (id: string) => void; 
 }
 
-export function LeccionDuolingoView({ leccionId, onStartTutor }: LeccionDuolingoViewProps) {
+export function LeccionDuolingoView({ leccionId, onOpenLesson }: LeccionDuolingoViewProps) {
   let globalIndex = 0;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -384,7 +384,7 @@ export function LeccionDuolingoView({ leccionId, onStartTutor }: LeccionDuolingo
                   chapterColor={chapter.color}
                   offset={offset}
                   isLast={isLast}
-                  onActivate={() => onStartTutor(leccionId || "")}
+                  onActivate={() => onOpenLesson(leccionId || "")}
                 />
               );
             });
