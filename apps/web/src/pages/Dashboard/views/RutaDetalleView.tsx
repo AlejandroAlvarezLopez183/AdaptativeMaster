@@ -152,7 +152,7 @@ export function RutaDetalleView({ setActive, rutaId, onSelectLeccion }: RutaDeta
         } else if (ruta.temario && ruta.temario.length > 0 && onSelectLeccion) {
           onSelectLeccion(ruta.temario[0].id);
         }
-        if (setActive) setActive('tutor');
+        if (setActive) setActive('leccion_duolingo');
       }}
       onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(232,185,74,0.3)'; }}
       onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(232,185,74,0.2)'; }}

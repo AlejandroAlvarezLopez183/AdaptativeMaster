@@ -13,6 +13,7 @@ import { AprendizajeView } from './views/AprendizajeView';
 import { RutaDetalleView } from './views/RutaDetalleView';
 import { SocialView } from './views/SocialView';
 import { TutorView } from './views/TutorView';
+import { LeccionDuolingoView } from './views/LeccionDuolingoView';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -86,6 +87,8 @@ export default function Dashboard() {
           <ProgresoView />
         ) : active === "social" ? (
           <SocialView />
+        ) : active === "leccion_duolingo" ? (
+          <LeccionDuolingoView leccionId={selectedLeccionId} onStartTutor={(id) => { setSelectedLeccionId(id); setActive("tutor"); }} />
         ) : active === "tutor" ? (
           <TutorView rutaId={selectedRutaId} leccionId={selectedLeccionId} />
         ) : active === "ruta_detalle" ? (
