@@ -20,10 +20,20 @@ class UserLogin(BaseModel):
 class UserResponse(UserBase):
     id: UUID
     rol: str
+    nivel: str | None = None
+    intereses: list | None = None
+    objetivos: str | None = None
+    preferencias: list | None = None
     created_at: datetime
     
     class Config:
         from_attributes = True
+
+class UserPerfilUpdate(BaseModel):
+    nivel: str | None = None
+    intereses: list | None = None
+    objetivos: str | None = None
+    preferencias: list | None = None
 
 class Token(BaseModel):
     access_token: str

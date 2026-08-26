@@ -24,3 +24,11 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
 @router.get("/me", response_model=schemas.UserResponse)
 async def leer_usuarios_me(current_user: models.Usuario = Depends(get_current_user)):
     return current_user
+
+@router.put("/perfil", response_model=schemas.UserResponse)
+async def actualizar_perfil(
+    update_data: schemas.UserPerfilUpdate,
+    current_user: models.Usuario = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    return await services.actualizar_perfil(db, current_user, update_data)

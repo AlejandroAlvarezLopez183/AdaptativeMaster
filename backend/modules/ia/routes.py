@@ -98,3 +98,11 @@ async def chatear_con_tutor(
 ):
     # Nota: Aquí podríamos validar que la lección pertenece a una ruta del usuario
     return await services.enviar_mensaje_tutor(db, leccion_id, mensaje.text)
+
+@router.get("/lecciones/{leccion_id}/mensajes", response_model=List[schemas.MensajeTutorResponse])
+async def obtener_historial_chat(
+    leccion_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user)
+):
+    return await services.obtener_historial_chat(db, leccion_id)

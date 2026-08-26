@@ -18,6 +18,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [active, setActive] = useState("inicio");
   const [selectedRutaId, setSelectedRutaId] = useState<string | null>(null);
+  const [selectedLeccionId, setSelectedLeccionId] = useState<string | null>(null);
   const [user, setUser] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -59,7 +60,8 @@ export default function Dashboard() {
 
   return (
     <div style={{
-      minHeight: "100vh",
+      height: "100vh",
+      overflow: "hidden",
       background: "#0F2A2E",
       display: "flex",
       fontFamily: "Inter, sans-serif",
@@ -85,9 +87,9 @@ export default function Dashboard() {
         ) : active === "social" ? (
           <SocialView />
         ) : active === "tutor" ? (
-          <TutorView />
+          <TutorView rutaId={selectedRutaId} leccionId={selectedLeccionId} />
         ) : active === "ruta_detalle" ? (
-          <RutaDetalleView setActive={setActive} rutaId={selectedRutaId} />
+          <RutaDetalleView setActive={setActive} rutaId={selectedRutaId} onSelectLeccion={setSelectedLeccionId} />
         ) : active === "aprendizaje" ? (
           <AprendizajeView setActive={setActive} onSelectRuta={setSelectedRutaId} />
         ) : active === "inicio" ? (

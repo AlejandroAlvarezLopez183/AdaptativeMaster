@@ -38,12 +38,17 @@ export const auth = {
     });
   },
 
-  async getMe(token: string): Promise<UserResponse> {
-    return apiFetch<UserResponse>("/usuarios/me", {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-  }
+  getMe: (token: string) => 
+    apiFetch<UserResponse>('/usuarios/me', {
+      headers: { Authorization: `Bearer ${token}` }
+    }),
+  updatePerfil: (data: any, token: string) => 
+    apiFetch<UserResponse>('/usuarios/perfil', {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}` 
+      },
+      body: JSON.stringify(data)
+    })
 };

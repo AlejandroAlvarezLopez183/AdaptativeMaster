@@ -4,9 +4,10 @@ import { iaClient, RutaDetalle } from "@adaptativemaster/shared";
 interface RutaDetalleViewProps {
   setActive?: (v: string) => void;
   rutaId?: string | null;
+  onSelectLeccion?: (id: string) => void;
 }
 
-export function RutaDetalleView({ setActive, rutaId }: RutaDetalleViewProps) {
+export function RutaDetalleView({ setActive, rutaId, onSelectLeccion }: RutaDetalleViewProps) {
   const [ruta, setRuta] = useState<RutaDetalle | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -143,6 +144,15 @@ export function RutaDetalleView({ setActive, rutaId }: RutaDetalleViewProps) {
         width: '100%',
         transition: 'transform 0.2s, box-shadow 0.2s',
         boxShadow: '0 4px 14px rgba(232,185,74,0.2)',
+      }}
+      onClick={() => {
+        const actual = ruta.temario?.find(t => t.estado === 'actual');
+        if (actual && onSelectLeccion) {
+          onSelectLeccion(actual.id);
+        } else if (ruta.temario && ruta.temario.length > 0 && onSelectLeccion) {
+          onSelectLeccion(ruta.temario[0].id);
+        }
+        if (setActive) setActive('tutor');
       }}
       onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(232,185,74,0.3)'; }}
       onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(232,185,74,0.2)'; }}

@@ -45,23 +45,10 @@ export function ProgresoView() {
     { label: "Lecciones", value: `${leccionesCompletadas}`, icon: "📚", color: "#45C893" },
   ];
 
-  const habilidades = [
-    { nombre: "Python", progreso: 80 },
-    { nombre: "HTTP", progreso: 60 },
-    { nombre: "APIs", progreso: 40 },
-  ];
-
-  const semana = [
-    { dia: "L", completado: true },
-    { dia: "M", completado: true },
-    { dia: "M", completado: true },
-    { dia: "J", completado: true },
-    { dia: "V", completado: false },
-    { dia: "S", completado: true },
-    { dia: "D", completado: false },
-  ];
-
-  const reforzar = ["Autenticación", "Status codes", "Middleware"];
+  const habilidades = data?.habilidades || [];
+  const semana = data?.actividad_semana || [];
+  const reforzar = data?.conceptos_reforzar || [];
+  const progresoRuta = data?.progreso_ruta || 0;
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: '840px', width: '100%', margin: '0 auto', fontFamily: 'Inter, sans-serif' }}>
@@ -82,10 +69,10 @@ export function ProgresoView() {
         <div style={{ background: 'rgba(23,60,62,0.6)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 16, padding: 24, display: 'flex', flexDirection: 'column', gridColumn: '1 / -1' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 12 }}>
             <span style={{ fontSize: 14, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Progreso de la ruta</span>
-            <span style={{ fontSize: 32, fontWeight: 800, color: '#E8B94A', lineHeight: 1 }}>72%</span>
+            <span style={{ fontSize: 32, fontWeight: 800, color: '#E8B94A', lineHeight: 1 }}>{progresoRuta}%</span>
           </div>
           <div style={{ width: '100%', height: 12, background: 'rgba(0,0,0,0.3)', borderRadius: 8, overflow: 'hidden' }}>
-            <div style={{ width: '72%', height: '100%', background: 'linear-gradient(90deg, #C49A33, #E8B94A)', borderRadius: 8 }} />
+            <div style={{ width: `${progresoRuta}%`, height: '100%', background: 'linear-gradient(90deg, #C49A33, #E8B94A)', borderRadius: 8 }} />
           </div>
         </div>
 
@@ -114,10 +101,10 @@ export function ProgresoView() {
               <div key={hab.nombre}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: 14, color: '#8FA8AA', fontWeight: 500 }}>{hab.nombre}</span>
-                  <span style={{ fontSize: 14, color: '#F5F3EE', fontWeight: 600 }}>{hab.progreso}%</span>
+                  <span style={{ fontSize: 14, color: '#F5F3EE', fontWeight: 600 }}>{hab.porcentaje}%</span>
                 </div>
                 <div style={{ width: '100%', height: 6, background: 'rgba(0,0,0,0.2)', borderRadius: 4, overflow: 'hidden' }}>
-                  <div style={{ width: `${hab.progreso}%`, height: '100%', background: '#45C893', borderRadius: 4 }} />
+                  <div style={{ width: `${hab.porcentaje}%`, height: '100%', background: '#45C893', borderRadius: 4 }} />
                 </div>
               </div>
             ))}

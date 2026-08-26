@@ -79,3 +79,11 @@ async def enviar_mensaje_tutor(db: AsyncSession, leccion_id: UUID, texto: str) -
     await db.refresh(msg_tutor)
     
     return msg_tutor
+
+async def obtener_historial_chat(db: AsyncSession, leccion_id: UUID) -> List[models.MensajeTutor]:
+    result = await db.execute(
+        select(models.MensajeTutor)
+        .where(models.MensajeTutor.leccion_id == leccion_id)
+        .order_by(models.MensajeTutor.creado_en.asc())
+    )
+    return result.scalars().all()

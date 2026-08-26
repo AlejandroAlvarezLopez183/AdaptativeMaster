@@ -51,3 +51,18 @@ async def autenticar_usuario(session: AsyncSession, user_in: schemas.UserLogin) 
     
     access_token = create_access_token(data={"sub": str(user.id)})
     return schemas.Token(access_token=access_token, token_type="bearer")
+
+async def actualizar_perfil(session: AsyncSession, user: models.Usuario, update_data: schemas.UserPerfilUpdate) -> models.Usuario:
+    if update_data.nivel is not None:
+        user.nivel = update_data.nivel
+    if update_data.intereses is not None:
+        user.intereses = update_data.intereses
+    if update_data.objetivos is not None:
+        user.objetivos = update_data.objetivos
+    if update_data.preferencias is not None:
+        user.preferencias = update_data.preferencias
+        
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
+    return user

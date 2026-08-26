@@ -36,9 +36,31 @@ export interface TutorChatRequest {
   };
 }
 
+export interface UserResponse {
+  id: string;
+  email: string;
+  nombre: string;
+  rol: string;
+  nivel?: string;
+  intereses?: string[];
+  objetivos?: string;
+  preferencias?: { text: string; icon: string }[];
+  created_at: string;
+}
+
+export interface UserPerfilUpdate {
+  nivel?: string;
+  intereses?: string[];
+  objetivos?: string;
+  preferencias?: { text: string; icon: string }[];
+}
+
 export interface TutorChatResponse {
-  respuesta: string;
-  conceptos_clave_extraidos: string[];
+  id: string;
+  leccion_id: string;
+  rol: string;
+  text: string;
+  creado_en: string;
 }
 
 // Módulo Progreso
@@ -78,6 +100,10 @@ export interface DashboardProgresoResponse {
   racha: RachasResponse;
   ultimos_xp: XPHistorialResponse[];
   logros_obtenidos: LogrosResponse[];
+  progreso_ruta: number;
+  habilidades: Habilidad[];
+  actividad_semana: DiaTracker[];
+  conceptos_reforzar: string[];
 }
 
 // Módulo Sesiones

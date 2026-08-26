@@ -4,7 +4,7 @@ Usar schema de Postgres 'usuarios' para mantener separación lógica.
 """
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, String, DateTime, Boolean, ForeignKey, JSON, Text
 from sqlalchemy.dialects.postgresql import UUID
 from modules.compartido.database import Base
 
@@ -19,6 +19,9 @@ class Usuario(Base):
     rol = Column(String(50), nullable=False, default="estudiante")
     nivel = Column(String(50), nullable=True)
     plan = Column(String(50), nullable=True)
+    intereses = Column(JSON, nullable=True)
+    objetivos = Column(Text, nullable=True)
+    preferencias = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
