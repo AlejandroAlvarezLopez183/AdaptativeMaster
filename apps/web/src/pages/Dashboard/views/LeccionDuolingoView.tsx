@@ -30,8 +30,8 @@ const CHAPTERS: Chapter[] = [
       { id: 1, title: "Variables y expresiones", status: "done", xp: 20, type: "lesson" },
       { id: 2, title: "Operaciones básicas", status: "done", xp: 20, type: "lesson" },
       { id: 3, title: "Fracciones y decimales", status: "done", xp: 20, type: "lesson" },
-      { id: 4, title: "Quiz rápido", status: "done", xp: 30, type: "quiz" },
-      { id: 5, title: "Punto de control", status: "done", xp: 50, type: "checkpoint" },
+      { id: 4, title: "Quiz rápido", status: "active", xp: 30, type: "quiz" },
+      { id: 5, title: "Punto de control", status: "locked", xp: 50, type: "checkpoint" },
     ],
   },
   {
@@ -43,7 +43,7 @@ const CHAPTERS: Chapter[] = [
       { id: 6, title: "Ecuaciones de primer grado", status: "done", xp: 20, type: "lesson" },
       { id: 7, title: "Sistemas de ecuaciones", status: "active", xp: 20, type: "lesson" },
       { id: 8, title: "Ecuaciones cuadráticas", status: "locked", xp: 20, type: "lesson" },
-      { id: 9, title: "Desafío jefe", status: "locked", xp: 60, type: "boss" },
+      { id: 9, title: "Examen Final de Sección", status: "active", xp: 100, type: "boss" },
     ],
   },
   {
@@ -130,7 +130,8 @@ function LessonNode({
 
   const isBoss = type === "boss";
   const isCheckpoint = type === "checkpoint";
-  const size = isBoss || isCheckpoint ? 72 : 64;
+  const isFinalNode = isBoss || isCheckpoint;
+  const size = isFinalNode ? 90 : 64; // Aún más grande para jefes
 
   const bg = isDone ? chapterColor : isActive ? chapterColor : "#1E4A4D";
   const borderColor = isDone ? chapterColor : isActive ? chapterColor : "rgba(245,243,238,0.12)";
@@ -166,44 +167,96 @@ function LessonNode({
           </>
         )}
 
-        <button
-          onClick={() => !isLocked && onActivate(lesson.id)}
-          style={{
-            width: size,
-            height: size,
-            borderRadius: "50%",
-            background: bg,
-            border: `3px solid ${borderColor}`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: isLocked ? "default" : "pointer",
-            transition: "transform 0.18s, box-shadow 0.18s",
-            boxShadow: isActive
-              ? `0 0 0 4px ${chapterColor}30, 0 8px 24px rgba(0,0,0,0.4)`
-              : isDone
-              ? `0 4px 16px rgba(0,0,0,0.3)`
-              : "none",
-            outline: "none",
-            position: "relative",
-          }}
-          className={isActive ? "node-active-pulse" : ""}
-          onMouseEnter={e => { if (!isLocked) (e.currentTarget as HTMLElement).style.transform = "scale(1.07)"; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "scale(1)"; }}
-        >
-          {isDone ? (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M5 12L10 17L19 7" stroke="#0F2A2E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          ) : isLocked ? (
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <rect x="4" y="9" width="12" height="9" rx="2" stroke="rgba(245,243,238,0.2)" strokeWidth="1.5" fill="none"/>
-              <path d="M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9" stroke="rgba(245,243,238,0.2)" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-          ) : (
-            <NodeIcon type={type} color={iconColor} />
-          )}
-        </button>
+        {/* NODO VISUAL */}
+        {isFinalNode ? (
+          // RENDER ESPECIAL PARA EXAMEN / JEFE
+          <button
+            onClick={() => !isLocked && onActivate(lesson.id)}
+            style={{
+              width: size,
+              height: size,
+              borderRadius: "20%",
+              background: isLocked ? "#173C3E" : `linear-gradient(135deg, ${chapterColor}, ${chapterColor}aa)`,
+              border: `4px solid ${borderColor}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: isLocked ? "default" : "pointer",
+              transition: "transform 0.18s, box-shadow 0.18s",
+              boxShadow: isActive
+                ? `0 0 0 6px ${chapterColor}30, 0 12px 32px rgba(0,0,0,0.5)`
+                : isDone
+                ? `0 8px 24px rgba(0,0,0,0.4)`
+                : "none",
+              outline: "none",
+              position: "relative",
+              transform: isLocked ? "rotate(45deg)" : "rotate(0deg)"
+            }}
+            className={isActive ? "node-active-pulse" : ""}
+            onMouseEnter={e => { if (!isLocked) (e.currentTarget as HTMLElement).style.transform = isLocked ? "rotate(45deg) scale(1.07)" : "scale(1.07)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = isLocked ? "rotate(45deg) scale(1)" : "scale(1)"; }}
+          >
+            <div style={{ transform: isLocked ? "rotate(-45deg)" : "rotate(0deg)" }}>
+              {isDone ? (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12L10 17L19 7" stroke="#0F2A2E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              ) : isLocked ? (
+                <svg width="28" height="28" viewBox="0 0 20 20" fill="none">
+                  <rect x="4" y="9" width="12" height="9" rx="2" stroke="rgba(245,243,238,0.3)" strokeWidth="1.8" fill="none"/>
+                  <path d="M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9" stroke="rgba(245,243,238,0.3)" strokeWidth="1.8" strokeLinecap="round"/>
+                </svg>
+              ) : (
+                <span style={{ fontSize: 32 }}>⚔️</span>
+              )}
+            </div>
+            
+            {/* Adorno superior (como una coronita) si es jefe */}
+            {isBoss && !isLocked && (
+               <div style={{ position: 'absolute', top: -14, fontSize: 16 }}>👑</div>
+            )}
+          </button>
+        ) : (
+          // RENDER NORMAL (CIRCULO)
+          <button
+            onClick={() => !isLocked && onActivate(lesson.id)}
+            style={{
+              width: size,
+              height: size,
+              borderRadius: "50%",
+              background: bg,
+              border: `3px solid ${borderColor}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: isLocked ? "default" : "pointer",
+              transition: "transform 0.18s, box-shadow 0.18s",
+              boxShadow: isActive
+                ? `0 0 0 4px ${chapterColor}30, 0 8px 24px rgba(0,0,0,0.4)`
+                : isDone
+                ? `0 4px 16px rgba(0,0,0,0.3)`
+                : "none",
+              outline: "none",
+              position: "relative",
+            }}
+            className={isActive ? "node-active-pulse" : ""}
+            onMouseEnter={e => { if (!isLocked) (e.currentTarget as HTMLElement).style.transform = "scale(1.07)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "scale(1)"; }}
+          >
+            {isDone ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M5 12L10 17L19 7" stroke="#0F2A2E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            ) : isLocked ? (
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="4" y="9" width="12" height="9" rx="2" stroke="rgba(245,243,238,0.2)" strokeWidth="1.5" fill="none"/>
+                <path d="M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9" stroke="rgba(245,243,238,0.2)" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            ) : (
+              <NodeIcon type={type} color={iconColor} />
+            )}
+          </button>
+        )}
 
         {tooltip && (
           <div style={{
@@ -224,7 +277,7 @@ function LessonNode({
               fontFamily: "Inter, sans-serif", fontSize: 10, color: isLocked ? "#8FA8AA" : chapterColor,
               letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600, margin: "0 0 4px",
             }}>
-              {type === "boss" ? "Desafío jefe" : type === "checkpoint" ? "Punto de control" : type === "quiz" ? "Quiz" : "Lección"}
+              {type === "boss" ? "⚔️ Examen de Sección" : type === "checkpoint" ? "🚩 Punto de control" : type === "quiz" ? "Quiz" : "Lección"}
               {isLocked && " · Bloqueado"}
             </p>
             <p style={{
@@ -306,9 +359,11 @@ function ChapterHeader({ chapter, isFirst }: { chapter: Chapter; isFirst: boolea
 interface LeccionDuolingoViewProps {
   leccionId: string | null; 
   onOpenLesson: (id: string) => void; 
+  onOpenQuiz?: (id: string) => void;
+  onOpenBoss?: (id: string) => void;
 }
 
-export function LeccionDuolingoView({ leccionId, onOpenLesson }: LeccionDuolingoViewProps) {
+export function LeccionDuolingoView({ leccionId, onOpenLesson, onOpenQuiz, onOpenBoss }: LeccionDuolingoViewProps) {
   let globalIndex = 0;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -384,7 +439,12 @@ export function LeccionDuolingoView({ leccionId, onOpenLesson }: LeccionDuolingo
                   chapterColor={chapter.color}
                   offset={offset}
                   isLast={isLast}
-                  onActivate={() => onOpenLesson(leccionId || "")}
+                  onActivate={() => {
+                    const idStr = lesson.id.toString();
+                    if (lesson.type === 'boss' && onOpenBoss) onOpenBoss(idStr);
+                    else if (lesson.type === 'quiz' && onOpenQuiz) onOpenQuiz(idStr);
+                    else onOpenLesson(idStr);
+                  }}
                 />
               );
             });

@@ -16,6 +16,8 @@ import { TutorView } from './views/TutorView';
 import { LeccionDuolingoView } from './views/LeccionDuolingoView';
 import { LeccionContenidoView } from './views/LeccionContenidoView';
 import { NuevaRutaWizard } from './views/NuevaRutaWizard';
+import { ExamenView } from './views/ExamenView';
+import { MinijuegoView } from './views/MinijuegoView';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -90,7 +92,16 @@ export default function Dashboard() {
         ) : active === "social" ? (
           <SocialView />
         ) : active === "leccion_duolingo" ? (
-          <LeccionDuolingoView leccionId={selectedLeccionId} onOpenLesson={(id) => { setSelectedLeccionId(id); setActive("leccion_contenido"); }} />
+          <LeccionDuolingoView 
+            leccionId={selectedLeccionId} 
+            onOpenLesson={(id) => { setSelectedLeccionId(id); setActive("leccion_contenido"); }} 
+            onOpenQuiz={(id) => { setSelectedLeccionId(id); setActive("examen"); }}
+            onOpenBoss={(id) => { setSelectedLeccionId(id); setActive("minijuego"); }}
+          />
+        ) : active === "examen" ? (
+          <ExamenView onBack={() => setActive("leccion_duolingo")} onComplete={() => setActive("leccion_duolingo")} />
+        ) : active === "minijuego" ? (
+          <MinijuegoView onBack={() => setActive("leccion_duolingo")} onComplete={() => setActive("leccion_duolingo")} />
         ) : active === "leccion_contenido" ? (
           <LeccionContenidoView 
             leccionId={selectedLeccionId} 
