@@ -10,9 +10,12 @@ export function NuevaRutaWizard({ onComplete, onCancel }: NuevaRutaWizardProps) 
   const [tema, setTema] = useState("");
   const [nivel, setNivel] = useState("");
   const [tiempo, setTiempo] = useState("");
+  const [objetivo, setObjetivo] = useState("");
+  const [estiloAprendizaje, setEstiloAprendizaje] = useState("");
+  const [tonoTutor, setTonoTutor] = useState("");
 
   useEffect(() => {
-    if (step === 4) {
+    if (step === 7) {
       const timer = setTimeout(() => {
         onComplete();
       }, 3500);
@@ -34,7 +37,7 @@ export function NuevaRutaWizard({ onComplete, onCancel }: NuevaRutaWizardProps) 
       justifyContent: 'center'
     }}>
       
-      {step < 4 && (
+      {step < 7 && (
         <button 
           onClick={onCancel}
           style={{ background: 'transparent', border: 'none', color: '#8FA8AA', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 40, padding: 0, fontSize: 15, fontWeight: 500, alignSelf: 'flex-start' }}
@@ -197,8 +200,149 @@ export function NuevaRutaWizard({ onComplete, onCancel }: NuevaRutaWizardProps) 
         </div>
       )}
 
-      {/* STEP 4: CARGANDO MAGIA */}
+      {/* STEP 4: OBJETIVO */}
       {step === 4 && (
+        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>🎯</span>
+            <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 40, fontWeight: 800, color: '#F5F3EE', margin: '0 0 16px', letterSpacing: '-0.02em' }}>
+              ¿Por qué quieres aprender esto?
+            </h1>
+            <p style={{ color: '#8FA8AA', fontSize: 16 }}>
+              Definiremos el enfoque práctico de tu ruta.
+            </p>
+          </div>
+          
+          <div style={{ display: 'grid', gap: 16 }}>
+            {[
+              { id: 'profesional', title: 'Crecimiento profesional', desc: 'Para conseguir trabajo o ascender' },
+              { id: 'proyecto', title: 'Proyecto o escuela', desc: 'Necesito aplicarlo en un caso real' },
+              { id: 'hobby', title: 'Curiosidad o hobby', desc: 'Aprender por diversión' }
+            ].map(obj => (
+              <button 
+                key={obj.id}
+                onClick={() => { setObjetivo(obj.id); nextStep(); }}
+                style={{
+                  background: 'rgba(23,60,62,0.4)',
+                  border: '1px solid rgba(245,243,238,0.1)',
+                  borderRadius: 16,
+                  padding: '24px 32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  textAlign: 'left'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#45C893'; e.currentTarget.style.background = 'rgba(69,200,147,0.1)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(245,243,238,0.1)'; e.currentTarget.style.background = 'rgba(23,60,62,0.4)'; }}
+              >
+                <div>
+                  <h3 style={{ margin: '0 0 4px', fontSize: 20, color: '#F5F3EE', fontWeight: 600 }}>{obj.title}</h3>
+                  <p style={{ margin: 0, color: '#8FA8AA', fontSize: 14 }}>{obj.desc}</p>
+                </div>
+                <span style={{ fontSize: 24, color: '#45C893' }}>→</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* STEP 5: ESTILO */}
+      {step === 5 && (
+        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>🧠</span>
+            <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 40, fontWeight: 800, color: '#F5F3EE', margin: '0 0 16px', letterSpacing: '-0.02em' }}>
+              ¿Cómo absorbes mejor la información?
+            </h1>
+            <p style={{ color: '#8FA8AA', fontSize: 16 }}>
+              Ajustaremos el tipo de contenido que generará la IA.
+            </p>
+          </div>
+          
+          <div style={{ display: 'grid', gap: 16 }}>
+            {[
+              { id: 'visual', title: 'Visual', desc: 'Prefiero diagramas, videos y esquemas' },
+              { id: 'practico', title: 'Práctico', desc: 'Quiero código, ejercicios y retos' },
+              { id: 'teorico', title: 'Teórico', desc: 'Lecturas profundas y conceptos detallados' }
+            ].map(est => (
+              <button 
+                key={est.id}
+                onClick={() => { setEstiloAprendizaje(est.id); nextStep(); }}
+                style={{
+                  background: 'rgba(23,60,62,0.4)',
+                  border: '1px solid rgba(245,243,238,0.1)',
+                  borderRadius: 16,
+                  padding: '24px 32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  textAlign: 'left'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#E8B94A'; e.currentTarget.style.background = 'rgba(232,185,74,0.1)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(245,243,238,0.1)'; e.currentTarget.style.background = 'rgba(23,60,62,0.4)'; }}
+              >
+                <div>
+                  <h3 style={{ margin: '0 0 4px', fontSize: 20, color: '#F5F3EE', fontWeight: 600 }}>{est.title}</h3>
+                  <p style={{ margin: 0, color: '#8FA8AA', fontSize: 14 }}>{est.desc}</p>
+                </div>
+                <span style={{ fontSize: 24, color: '#E8B94A' }}>→</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* STEP 6: TONO */}
+      {step === 6 && (
+        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ fontSize: 48, marginBottom: 16, display: 'block' }}>🤖</span>
+            <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 40, fontWeight: 800, color: '#F5F3EE', margin: '0 0 16px', letterSpacing: '-0.02em' }}>
+              ¿Cómo quieres que te trate tu tutor?
+            </h1>
+            <p style={{ color: '#8FA8AA', fontSize: 16 }}>
+              Elige la personalidad de tu inteligencia artificial.
+            </p>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {[
+              { id: 'amigable', title: 'Amigable', desc: 'Como un amigo' },
+              { id: 'estricto', title: 'Estricto', desc: 'Como un profesor' },
+              { id: 'directo', title: 'Directo', desc: 'Respuestas cortas' }
+            ].map(tono => (
+              <button 
+                key={tono.id}
+                onClick={() => { setTonoTutor(tono.id); nextStep(); }}
+                style={{
+                  background: 'rgba(23,60,62,0.4)',
+                  border: '1px solid rgba(245,243,238,0.1)',
+                  borderRadius: 16,
+                  padding: '32px 20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  textAlign: 'center'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#45C893'; e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 24px rgba(69,200,147,0.15)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(245,243,238,0.1)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+              >
+                <h3 style={{ margin: '0 0 8px', fontSize: 24, color: '#F5F3EE', fontWeight: 700 }}>{tono.title}</h3>
+                <p style={{ margin: 0, color: '#8FA8AA', fontSize: 14 }}>{tono.desc}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* STEP 7: CARGANDO MAGIA */}
+      {step === 7 && (
         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 32, padding: 40 }}>
           
           <div style={{ position: 'relative', width: 120, height: 120 }}>
