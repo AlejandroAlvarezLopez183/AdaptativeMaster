@@ -15,6 +15,19 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
   const [sending, setSending] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Menciones state
+  const [showMentions, setShowMentions] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState("");
+  const [mentionIndex, setMentionIndex] = useState(-1);
+
+  const MENTIONS = [
+    { id: "ruta_actual", label: "@ruta_actual", desc: "Contexto de tu ruta completa" },
+    { id: "leccion_actual", label: "@leccion_actual", desc: "Contexto de la lección actual" },
+    { id: "mis_errores", label: "@mis_errores", desc: "Análisis de tus fallos recientes" },
+  ];
+  
+  const filteredMentions = MENTIONS.filter(m => m.id.toLowerCase().includes(mentionQuery.toLowerCase()));
+
   const sugerencias = [
     "Explícame los conceptos básicos",
     "Ponme un ejercicio",
@@ -82,6 +95,32 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setInputMsg(val);
+    
+    // Buscar la última palabra escrita
+    const words = val.split(' ');
+    const lastWord = words[words.length - 1];
+    
+    if (lastWord.startsWith('@')) {
+      setShowMentions(true);
+      setMentionQuery(lastWord.substring(1));
+      setMentionIndex(val.lastIndexOf(lastWord));
+    } else {
+      setShowMentions(false);
+    }
+  };
+
+  const handleMentionSelect = (mentionLabel: string) => {
+    if (mentionIndex !== -1) {
+      const before = inputMsg.substring(0, mentionIndex);
+      setInputMsg(before + mentionLabel + " ");
+    }
+    setShowMentions(false);
+    // Para devolver el foco al input se puede hacer con un ref, pero por simplicidad de la plantilla:
+  };
+
   if (loading) {
     return (
       <div style={{ color: "#E8B94A", textAlign: "center", marginTop: 40 }}>
@@ -112,16 +151,40 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
         <span>←</span> Volver al temario
       </button>
 
-      {/* Contexto Actual Compacto */}
+      {/* Contexto Actual Compacto (Seleccionable) */}
       <div style={{ background: 'rgba(0,0,0,0.15)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 12, padding: '16px 24px', display: 'flex', alignItems: 'center', gap: 24, marginBottom: 24 }}>
         <div style={{ flex: 1, display: 'flex', gap: 32 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <span style={{ fontSize: 11, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Ruta</span>
-            <span style={{ fontSize: 14, color: '#F5F3EE', fontWeight: 600 }}>{ruta.titulo}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+            <span style={{ fontSize: 11, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contexto: Ruta</span>
+            <select 
+              style={{
+                background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.1)', 
+                color: '#F5F3EE', padding: '8px 12px', borderRadius: 8, fontSize: 14, outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              <option value={ruta.id} style={{background: '#0F2A2E', color: '#F5F3EE'}}>{ruta.titulo}</option>
+              <option value="frontend" style={{background: '#0F2A2E', color: '#F5F3EE'}}>Frontend React Experto (Ejemplo)</option>
+              <option value="data" style={{background: '#0F2A2E', color: '#F5F3EE'}}>Data Science con Python (Ejemplo)</option>
+            </select>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <span style={{ fontSize: 11, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Lección Actual</span>
-            <span style={{ fontSize: 14, color: '#E8B94A', fontWeight: 600 }}>{leccionActiva?.nombre || 'Lección'}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+            <span style={{ fontSize: 11, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contexto: Lección Actual</span>
+            <select 
+              value={leccionId || ''}
+              onChange={() => {}} // Solo visual por ahora
+              style={{
+                background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(232,185,74,0.3)', 
+                color: '#E8B94A', padding: '8px 12px', borderRadius: 8, fontSize: 14, outline: 'none',
+                cursor: 'pointer', fontWeight: 600
+              }}
+            >
+              {ruta.temario?.map(t => (
+                <option key={t.id} value={t.id} style={{background: '#0F2A2E', color: '#E8B94A'}}>
+                  {t.nombre}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
@@ -179,13 +242,53 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
         <div ref={chatEndRef} />
       </div>
 
-      {/* Input */}
+      {/* Input y Popover de Menciones */}
       <div style={{ position: 'relative', boxShadow: '0 8px 32px rgba(0,0,0,0.2)', marginTop: 'auto' }}>
+        
+        {/* Menú de menciones */}
+        {showMentions && filteredMentions.length > 0 && (
+          <div style={{
+            position: 'absolute',
+            bottom: '100%', 
+            left: 24,
+            marginBottom: 8,
+            background: '#173C3E',
+            border: '1px solid rgba(232,185,74,0.3)',
+            borderRadius: 12,
+            padding: '8px 0',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+            zIndex: 50,
+            minWidth: 250
+          }}>
+            <div style={{ padding: '0 16px 8px', fontSize: 12, color: '#8FA8AA', borderBottom: '1px solid rgba(245,243,238,0.1)', marginBottom: 4 }}>
+              Sugerencias de contexto
+            </div>
+            {filteredMentions.map(m => (
+              <div 
+                key={m.id}
+                onClick={() => handleMentionSelect(m.label)}
+                style={{
+                  padding: '10px 16px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 4
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(232,185,74,0.1)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <span style={{ color: '#E8B94A', fontWeight: 600, fontSize: 14 }}>{m.label}</span>
+                <span style={{ color: '#8FA8AA', fontSize: 12 }}>{m.desc}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
         <input 
           type="text" 
           placeholder={`Pregúntame sobre ${leccionActiva?.nombre || 'esta lección'}...`}
           value={inputMsg}
-          onChange={(e) => setInputMsg(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           disabled={sending}
           style={{
