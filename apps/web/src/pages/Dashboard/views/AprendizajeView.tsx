@@ -137,7 +137,6 @@ export function AprendizajeView({ setActive, onSelectRuta }: AprendizajeViewProp
              </div>
           )}
 
-          {/* Botón Crear nueva ruta */}
           <div style={{ 
             background: 'rgba(0,0,0,0.15)', 
             border: '1px dashed rgba(245,243,238,0.2)', 
@@ -151,6 +150,7 @@ export function AprendizajeView({ setActive, onSelectRuta }: AprendizajeViewProp
             transition: 'all 0.2s',
             minHeight: 220,
           }}
+          onClick={() => { if (setActive) setActive('nueva_ruta_wizard') }}
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232,185,74,0.05)'; e.currentTarget.style.borderColor = 'rgba(232,185,74,0.4)'; }}
           onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.15)'; e.currentTarget.style.borderColor = 'rgba(245,243,238,0.2)'; }}
           >

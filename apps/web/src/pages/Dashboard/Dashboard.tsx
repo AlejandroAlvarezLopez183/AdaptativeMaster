@@ -15,6 +15,7 @@ import { SocialView } from './views/SocialView';
 import { TutorView } from './views/TutorView';
 import { LeccionDuolingoView } from './views/LeccionDuolingoView';
 import { LeccionContenidoView } from './views/LeccionContenidoView';
+import { NuevaRutaWizard } from './views/NuevaRutaWizard';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -102,6 +103,11 @@ export default function Dashboard() {
           <RutaDetalleView setActive={setActive} rutaId={selectedRutaId} onSelectLeccion={setSelectedLeccionId} />
         ) : active === "aprendizaje" ? (
           <AprendizajeView setActive={setActive} onSelectRuta={setSelectedRutaId} />
+        ) : active === "nueva_ruta_wizard" ? (
+          <NuevaRutaWizard 
+            onCancel={() => setActive("aprendizaje")}
+            onComplete={() => setActive("aprendizaje")} // Por ahora simulamos que vuelve al inicio de aprendizaje
+          />
         ) : active === "inicio" ? (
           <InicioView user={user} setActive={setActive} onSelectRuta={setSelectedRutaId} />
         ) : (
