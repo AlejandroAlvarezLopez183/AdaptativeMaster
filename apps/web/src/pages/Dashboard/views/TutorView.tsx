@@ -14,6 +14,10 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  
+  const [activeRutaId, setActiveRutaId] = useState<string | null>(rutaId || null);
+  const [activeLeccionId, setActiveLeccionId] = useState<string | null>(leccionId || null);
+  const [todasLasRutas, setTodasLasRutas] = useState<{id: string, titulo: string}[]>([]);
 
   // Menciones state
   const [showMentions, setShowMentions] = useState(false);
@@ -38,20 +42,34 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
-      if (token && rutaId && leccionId) {
-        try {
-          const [rutaData, msgsData] = await Promise.all([
-            iaClient.getRutaDetalle(rutaId, token),
-            iaClient.getHistorialChat(leccionId, token)
-          ]);
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      try {
+        const rutasAll = await iaClient.getRutas(token);
+        const rutasEnCurso = rutasAll?.en_curso || [];
+        setTodasLasRutas(rutasEnCurso);
+
+        let targetRutaId = rutaId || (rutasEnCurso.length > 0 ? rutasEnCurso[0].id : null);
+        
+        if (targetRutaId) {
+          setActiveRutaId(targetRutaId);
+          const rutaData = await iaClient.getRutaDetalle(targetRutaId, token);
           setRuta(rutaData);
-          setMensajes(msgsData);
-        } catch (error) {
-          console.error("Error al obtener datos del tutor", error);
-        } finally {
-          setLoading(false);
+          
+          let targetLeccionId = leccionId || (rutaData.temario?.length > 0 ? rutaData.temario[0].id : null);
+          
+          if (targetLeccionId) {
+            setActiveLeccionId(targetLeccionId);
+            const msgsData = await iaClient.getHistorialChat(targetLeccionId, token);
+            setMensajes(msgsData);
+          }
         }
-      } else {
+      } catch (error) {
+        console.error("Error inicializando tutor", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -63,7 +81,7 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
   }, [mensajes]);
 
   const handleSend = async (text: string) => {
-    if (!text.trim() || !leccionId) return;
+    if (!text.trim() || !activeLeccionId) return;
     const token = localStorage.getItem("token");
     if (!token) return;
 
@@ -71,7 +89,7 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
     const tempId = Date.now().toString();
     setMensajes(prev => [...prev, {
       id: tempId,
-      leccion_id: leccionId,
+      leccion_id: activeLeccionId,
       rol: 'user',
       text: text,
       creado_en: new Date().toISOString()
@@ -80,7 +98,7 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
     setSending(true);
 
     try {
-      const res = await iaClient.chatTutor(leccionId, { text }, token);
+      const res = await iaClient.chatTutor(activeLeccionId, { text }, token);
       setMensajes(prev => [...prev, res]);
     } catch (error) {
       console.error("Error al enviar mensaje", error);
@@ -129,7 +147,7 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
     );
   }
 
-  if (!ruta || !leccionId) {
+  if (!ruta || !activeLeccionId) {
     return (
       <div style={{ color: "#F2637B", textAlign: "center", marginTop: 40 }}>
         No se pudo cargar la lección. <button onClick={() => setActive?.('ruta_detalle')} style={{background: 'none', border: 'none', color: '#E8B94A', cursor: 'pointer', textDecoration: 'underline'}}>Volver</button>
@@ -137,7 +155,7 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
     );
   }
 
-  const leccionActiva = ruta.temario?.find(t => t.id === leccionId);
+  const leccionActiva = ruta.temario?.find(t => t.id === activeLeccionId);
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: '800px', width: '100%', margin: '0 auto', fontFamily: 'Inter, sans-serif', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)' }}>
@@ -157,6 +175,8 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
             <span style={{ fontSize: 11, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contexto: Ruta</span>
             <select 
+              value={activeRutaId || ''}
+              onChange={(e) => setActiveRutaId(e.target.value)}
               style={{
                 background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.1)', 
                 color: '#F5F3EE', padding: '8px 12px', borderRadius: 8, fontSize: 14, outline: 'none',
@@ -164,15 +184,17 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
               }}
             >
               <option value={ruta.id} style={{background: '#0F2A2E', color: '#F5F3EE'}}>{ruta.titulo}</option>
+              {todasLasRutas.filter(r => r.id !== ruta.id).map(r => (
+                <option key={r.id} value={r.id} style={{background: '#0F2A2E', color: '#F5F3EE'}}>{r.titulo}</option>
+              ))}
               <option value="frontend" style={{background: '#0F2A2E', color: '#F5F3EE'}}>Frontend React Experto (Ejemplo)</option>
-              <option value="data" style={{background: '#0F2A2E', color: '#F5F3EE'}}>Data Science con Python (Ejemplo)</option>
             </select>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
             <span style={{ fontSize: 11, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contexto: Lección Actual</span>
             <select 
-              value={leccionId || ''}
-              onChange={() => {}} // Solo visual por ahora
+              value={activeLeccionId || ''}
+              onChange={(e) => setActiveLeccionId(e.target.value)}
               style={{
                 background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(232,185,74,0.3)', 
                 color: '#E8B94A', padding: '8px 12px', borderRadius: 8, fontSize: 14, outline: 'none',
