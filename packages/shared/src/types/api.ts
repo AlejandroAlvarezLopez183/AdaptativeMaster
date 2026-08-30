@@ -7,6 +7,19 @@ export interface TemaRuta {
   estado: 'completado' | 'actual' | 'bloqueado';
 }
 
+export interface Leccion {
+  id: string;
+  ruta_id: string;
+  orden: number;
+  titulo: string;
+  dificultad: string;
+  contenido: {
+    teoria?: string;
+    video_url?: string;
+    [key: string]: any;
+  } | null;
+}
+
 export interface RutaAprendizaje {
   id: string;
   titulo: string;

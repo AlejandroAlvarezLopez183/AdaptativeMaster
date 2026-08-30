@@ -89,6 +89,14 @@ async def crear_ruta(
 ):
     return await services.generar_ruta(db, current_user.id, ruta_in)
 
+@router.get("/lecciones/{leccion_id}", response_model=schemas.LeccionResponse)
+async def obtener_leccion(
+    leccion_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user)
+):
+    return await services.obtener_leccion_por_id(db, leccion_id)
+
 @router.post("/lecciones/{leccion_id}/tutor", response_model=schemas.MensajeTutorResponse)
 async def chatear_con_tutor(
     leccion_id: UUID,

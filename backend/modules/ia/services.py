@@ -27,6 +27,15 @@ async def obtener_ruta_por_id(db: AsyncSession, ruta_id: UUID, usuario_id: UUID)
         raise HTTPException(status_code=404, detail="Ruta no encontrada")
     return ruta
 
+async def obtener_leccion_por_id(db: AsyncSession, leccion_id: UUID) -> models.Leccion:
+    result = await db.execute(
+        select(models.Leccion).where(models.Leccion.id == leccion_id)
+    )
+    leccion = result.scalars().first()
+    if not leccion:
+        raise HTTPException(status_code=404, detail="Leccion no encontrada")
+    return leccion
+
 async def generar_ruta(db: AsyncSession, usuario_id: UUID, ruta_in: schemas.RutaAprendizajeCreate) -> models.RutaAprendizaje:
     # 1. Crear el registro base de la ruta
     nueva_ruta = models.RutaAprendizaje(

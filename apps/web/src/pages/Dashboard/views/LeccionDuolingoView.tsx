@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
+import { iaClient, RutaDetalle } from "@adaptativemaster/shared";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type NodeStatus = "done" | "active" | "locked";
 
 interface Lesson {
-  id: number;
+  id: string;
   title: string;
   status: NodeStatus;
   xp: number;
@@ -19,46 +20,7 @@ interface Chapter {
   lessons: Lesson[];
 }
 
-// ── Data (Plantilla) ──────────────────────────────────────────────────────────
-const CHAPTERS: Chapter[] = [
-  {
-    id: 1,
-    title: "Fundamentos",
-    subtitle: "Álgebra básica",
-    color: "#E8B94A",
-    lessons: [
-      { id: 1, title: "Variables y expresiones", status: "done", xp: 20, type: "lesson" },
-      { id: 2, title: "Operaciones básicas", status: "done", xp: 20, type: "lesson" },
-      { id: 3, title: "Fracciones y decimales", status: "done", xp: 20, type: "lesson" },
-      { id: 4, title: "Quiz rápido", status: "active", xp: 30, type: "quiz" },
-      { id: 5, title: "Punto de control", status: "locked", xp: 50, type: "checkpoint" },
-    ],
-  },
-  {
-    id: 2,
-    title: "Ecuaciones",
-    subtitle: "Lineales y cuadráticas",
-    color: "#7EC8C8",
-    lessons: [
-      { id: 6, title: "Ecuaciones de primer grado", status: "done", xp: 20, type: "lesson" },
-      { id: 7, title: "Sistemas de ecuaciones", status: "active", xp: 20, type: "lesson" },
-      { id: 8, title: "Ecuaciones cuadráticas", status: "locked", xp: 20, type: "lesson" },
-      { id: 9, title: "Examen Final de Sección", status: "active", xp: 100, type: "boss" },
-    ],
-  },
-  {
-    id: 3,
-    title: "Geometría",
-    subtitle: "Formas y espacios",
-    color: "#F2637B",
-    lessons: [
-      { id: 10, title: "Ángulos y triángulos", status: "locked", xp: 20, type: "lesson" },
-      { id: 11, title: "Áreas y perímetros", status: "locked", xp: 20, type: "lesson" },
-      { id: 12, title: "Geometría analítica", status: "locked", xp: 25, type: "lesson" },
-      { id: 13, title: "Quiz rápido", status: "locked", xp: 30, type: "quiz" },
-    ],
-  },
-];
+// (Los capítulos se cargarán dinámicamente)
 
 // ── Icons ─────────────────────────────────────────────────────────────────────
 function IconLesson({ color }: { color: string }) {
@@ -119,7 +81,7 @@ function LessonNode({
   chapterColor: string;
   offset: number;
   isLast: boolean;
-  onActivate: (id: number) => void;
+  onActivate: (id: string) => void;
 }) {
   const [tooltip, setTooltip] = useState(false);
   const { status, type } = lesson;
@@ -355,17 +317,85 @@ function ChapterHeader({ chapter, isFirst }: { chapter: Chapter; isFirst: boolea
   );
 }
 
-// ── Vista Principal de React (Exportada) ──────────────────────────────────────
 interface LeccionDuolingoViewProps {
+  rutaId?: string | null;
   leccionId: string | null; 
   onOpenLesson: (id: string) => void; 
   onOpenQuiz?: (id: string) => void;
   onOpenBoss?: (id: string) => void;
 }
 
-export function LeccionDuolingoView({ leccionId, onOpenLesson, onOpenQuiz, onOpenBoss }: LeccionDuolingoViewProps) {
+export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQuiz, onOpenBoss }: LeccionDuolingoViewProps) {
   let globalIndex = 0;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRuta = async () => {
+      const token = localStorage.getItem("token");
+      if (!token || !rutaId) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const data = await iaClient.getRutaDetalle(rutaId, token);
+        
+        // Mapear los datos reales a la estructura visual de "Chapters"
+        const leccionesList = data.lecciones || [];
+        // Ordenamos por orden numérico
+        leccionesList.sort((a, b) => a.orden - b.orden);
+
+        // Agrupar lecciones por secciones de 5 para crear los "chapters" visuales
+        const groupSize = 5;
+        const newChapters: Chapter[] = [];
+        const colors = ["#E8B94A", "#7EC8C8", "#F2637B", "#A388EE"];
+
+        for (let i = 0; i < leccionesList.length; i += groupSize) {
+          const slice = leccionesList.slice(i, i + groupSize);
+          const color = colors[(i / groupSize) % colors.length];
+          
+          const chapterLessons = slice.map((lec, idx) => {
+            const isBoss = (i + idx === leccionesList.length - 1);
+            // Por simplicidad, tomamos el estado del temario que la API devuelve (si tenemos la info).
+            // Pero "data.temario" viene como [{id, nombre, estado}].
+            const temarioRef = data.temario?.find(t => t.id === lec.id);
+            let status: NodeStatus = 'locked';
+            if (temarioRef) {
+              if (temarioRef.estado === 'completado') status = 'done';
+              if (temarioRef.estado === 'actual') status = 'active';
+            } else {
+              // Fallback básico: la primera es activa, las demás bloqueadas
+              if (i === 0 && idx === 0) status = 'active';
+            }
+
+            return {
+              id: lec.id,
+              title: lec.titulo,
+              status: status,
+              xp: isBoss ? 100 : 20,
+              type: isBoss ? "boss" : "lesson" as any
+            };
+          });
+
+          newChapters.push({
+            id: (i / groupSize) + 1,
+            title: i === 0 ? data.titulo : `Sección ${(i / groupSize) + 1}`,
+            subtitle: data.nivel,
+            color: color,
+            lessons: chapterLessons
+          });
+        }
+        
+        setChapters(newChapters);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRuta();
+  }, [rutaId]);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -381,7 +411,23 @@ export function LeccionDuolingoView({ leccionId, onOpenLesson, onOpenQuiz, onOpe
 
     container.addEventListener("wheel", handleWheel, { passive: false });
     return () => container.removeEventListener("wheel", handleWheel);
-  }, []);
+  }, [loading, chapters]);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '100px 0', color: '#E8B94A' }}>
+        <p>Cargando ruta...</p>
+      </div>
+    );
+  }
+
+  if (chapters.length === 0) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '100px 0', color: '#8FA8AA' }}>
+        <p>No se encontraron lecciones en esta ruta.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in" style={{
@@ -426,7 +472,7 @@ export function LeccionDuolingoView({ leccionId, onOpenLesson, onOpenQuiz, onOpe
         }}>
           
           {/* Chapters */}
-          {CHAPTERS.map((chapter, ci) => {
+          {chapters.map((chapter, ci) => {
             const nodes = chapter.lessons.map((lesson, li) => {
               const idx = globalIndex++;
               const offset = OFFSETS[idx % OFFSETS.length];
@@ -440,7 +486,7 @@ export function LeccionDuolingoView({ leccionId, onOpenLesson, onOpenQuiz, onOpe
                   offset={offset}
                   isLast={isLast}
                   onActivate={() => {
-                    const idStr = lesson.id.toString();
+                    const idStr = lesson.id;
                     if (lesson.type === 'boss' && onOpenBoss) onOpenBoss(idStr);
                     else if (lesson.type === 'quiz' && onOpenQuiz) onOpenQuiz(idStr);
                     else onOpenLesson(idStr);
@@ -455,7 +501,7 @@ export function LeccionDuolingoView({ leccionId, onOpenLesson, onOpenQuiz, onOpe
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                   {nodes}
                 </div>
-                {ci < CHAPTERS.length - 1 && (
+                {ci < chapters.length - 1 && (
                   <div style={{ height: 3, width: 40, background: "rgba(245,243,238,0.06)", borderRadius: 4, margin: "0" }} />
                 )}
               </div>

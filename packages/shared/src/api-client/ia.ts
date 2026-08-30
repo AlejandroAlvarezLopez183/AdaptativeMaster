@@ -12,6 +12,11 @@ export const iaClient = {
       headers: { Authorization: `Bearer ${token}` }
     }),
 
+  getLeccion: (leccionId: string, token: string) =>
+    apiFetch<any>(`/ia/lecciones/${leccionId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }),
+
   getHistorialChat: (leccionId: string, token: string) =>
     apiFetch<TutorChatResponse[]>(`/ia/lecciones/${leccionId}/mensajes`, {
       headers: { Authorization: `Bearer ${token}` }

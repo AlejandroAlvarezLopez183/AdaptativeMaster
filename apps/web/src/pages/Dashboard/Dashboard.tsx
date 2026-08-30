@@ -93,6 +93,7 @@ export default function Dashboard() {
           <SocialView />
         ) : active === "leccion_duolingo" ? (
           <LeccionDuolingoView 
+            rutaId={selectedRutaId}
             leccionId={selectedLeccionId} 
             onOpenLesson={(id) => { setSelectedLeccionId(id); setActive("leccion_contenido"); }} 
             onOpenQuiz={(id) => { setSelectedLeccionId(id); setActive("examen"); }}

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { iaClient, Leccion } from '@adaptativemaster/shared';
 
 interface LeccionContenidoViewProps {
   leccionId: string | null;
@@ -7,19 +8,44 @@ interface LeccionContenidoViewProps {
 }
 
 export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: LeccionContenidoViewProps) {
-  // Datos mockeados / plantilla para el contenido de la lección
-  const lesson = {
-    title: "Sistemas de Ecuaciones",
-    chapter: "Ecuaciones · Sección 2",
-    duration: "15 min",
-    points: 20,
-    content: `Un sistema de ecuaciones es un conjunto de dos o más ecuaciones con varias incógnitas en las que deseamos encontrar una solución común. En esta lección aprenderemos los tres métodos principales para resolverlos:
-    
-1. **Sustitución**: Despejar una variable y sustituirla en la otra ecuación.
-2. **Igualación**: Despejar la misma variable en ambas y emparejar los resultados.
-3. **Reducción**: Sumar o restar las ecuaciones para eliminar una incógnita.`,
-    videoUrl: "https://www.youtube-nocookie.com/embed/placeholder", // Simulación
-  };
+  const [lesson, setLesson] = useState<Leccion | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLeccion = async () => {
+      if (!leccionId) return;
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        setLoading(true);
+        const data = await iaClient.getLeccion(leccionId, token);
+        setLesson(data);
+      } catch (error) {
+        console.error("Error fetching leccion:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLeccion();
+  }, [leccionId]);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '100px 0', color: '#E8B94A' }}>
+        <p>Cargando lección...</p>
+      </div>
+    );
+  }
+
+  if (!lesson) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '100px 0', color: '#8FA8AA' }}>
+        <p>No se pudo cargar la lección.</p>
+        <button onClick={onGoBack} style={{ marginTop: 20, padding: '10px 20px', background: '#173C3E', border: 'none', color: '#fff', borderRadius: 8, cursor: 'pointer' }}>Volver</button>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in" style={{
@@ -63,7 +89,7 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
             Lección teórica
           </span>
           <span style={{ fontSize: 13, color: '#8FA8AA', fontWeight: 500 }}>
-            {lesson.chapter}
+            Lección {lesson.orden} · Dificultad: {lesson.dificultad}
           </span>
         </div>
         
@@ -72,12 +98,12 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
           fontWeight: 800, color: '#F5F3EE', margin: '0 0 16px',
           letterSpacing: '-0.02em'
         }}>
-          {lesson.title}
+          {lesson.titulo}
         </h1>
         
         <div style={{ display: 'flex', gap: 24, color: '#8FA8AA', fontSize: 14 }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>⏱ {lesson.duration}</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>✨ +{lesson.points} XP al completar</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>⏱ 15 min</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>✨ +20 XP al completar</span>
         </div>
       </div>
 
@@ -111,7 +137,7 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
             Resumen de la lección
           </h3>
           <div style={{ color: '#E4EAEB', fontSize: 16, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
-            {lesson.content}
+            {lesson.contenido?.teoria || "No hay teoría disponible para esta lección."}
           </div>
         </div>
 
