@@ -1,0 +1,31 @@
+name: Deploy Automático a Droplet 🚀
+
+on:
+  push:
+    branches:
+      - main # Cambia a 'master' si tu rama principal se llama así
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Descargar código
+      uses: actions/checkout@v3
+
+    - name: 🚀 Conectar por SSH y Desplegar
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: ${{ secrets.DROPLET_USER }}
+        key: ${{ secrets.DROPLET_SSH_KEY }}
+        script: |
+          # 1. Entrar a la carpeta del proyecto
+          # IMPORTANTE: Cambia esta ruta por la ruta exacta donde clonaste tu repo en el Droplet
+          cd /root/EstudiLabAi
+          
+          # 2. Descargar los últimos cambios
+          git pull origin main
+          
+          # 3. Reconstruir y reiniciar los contenedores (solo los que hayan cambiado)
+          docker compose up -d --build
