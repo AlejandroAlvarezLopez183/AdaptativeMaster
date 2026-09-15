@@ -30,5 +30,22 @@ export const iaClient = {
         Authorization: `Bearer ${token}` 
       },
       body: JSON.stringify(data)
-    })
+    }),
+
+  crearRuta: (data: {
+    tema: string;
+    nivel_objetivo: string;
+    tiempo?: string;
+    objetivo?: string;
+    estilo_aprendizaje?: string;
+    tono_tutor?: string;
+  }, token: string) =>
+    apiFetch<any>('/ia/rutas', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(data)
+    }),
 };

@@ -36,7 +36,10 @@ class RutaAprendizajeBase(BaseModel):
     nivel_objetivo: str
 
 class RutaAprendizajeCreate(RutaAprendizajeBase):
-    pass
+    tiempo: Optional[str] = "30 minutos al dia"
+    objetivo: Optional[str] = "Crecimiento profesional"
+    estilo_aprendizaje: Optional[str] = "Practico"
+    tono_tutor: Optional[str] = "Amigable"
 
 class RutaAprendizajeResponse(RutaAprendizajeBase):
     id: UUID

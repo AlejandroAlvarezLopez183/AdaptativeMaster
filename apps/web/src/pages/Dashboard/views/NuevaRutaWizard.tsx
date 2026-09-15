@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { iaClient } from "@adaptativemaster/shared";
 
 interface NuevaRutaWizardProps {
   onComplete: () => void;
@@ -13,15 +14,34 @@ export function NuevaRutaWizard({ onComplete, onCancel }: NuevaRutaWizardProps) 
   const [objetivo, setObjetivo] = useState("");
   const [estiloAprendizaje, setEstiloAprendizaje] = useState("");
   const [tonoTutor, setTonoTutor] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     if (step === 7) {
-      const timer = setTimeout(() => {
-        onComplete();
-      }, 3500);
-      return () => clearTimeout(timer);
+      const crearRuta = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) { onComplete(); return; }
+        try {
+          await iaClient.crearRuta(
+            {
+              tema,
+              nivel_objetivo: nivel,
+              tiempo,
+              objetivo,
+              estilo_aprendizaje: estiloAprendizaje,
+              tono_tutor: tonoTutor,
+            },
+            token
+          );
+          // Esperamos un momento para que el usuario vea la animación
+          setTimeout(onComplete, 2500);
+        } catch (err: any) {
+          setErrorMsg(err.message || "Error al generar la ruta. Intenta de nuevo.");
+        }
+      };
+      crearRuta();
     }
-  }, [step, onComplete]);
+  }, [step]);
 
   const nextStep = () => setStep(s => s + 1);
 
@@ -345,27 +365,50 @@ export function NuevaRutaWizard({ onComplete, onCancel }: NuevaRutaWizardProps) 
       {step === 7 && (
         <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 32, padding: 40 }}>
           
-          <div style={{ position: 'relative', width: 120, height: 120 }}>
-            {/* Círculo brillante central */}
-            <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, #E8B94A 0%, transparent 60%)', animation: 'pulse 2s infinite' }} />
-            
-            {/* Spinner perimetral */}
-            <svg style={{ position: 'absolute', inset: -20, animation: 'spin 3s linear infinite' }} viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(232,185,74,0.2)" strokeWidth="2" />
-              <circle cx="50" cy="50" r="45" fill="none" stroke="#E8B94A" strokeWidth="2" strokeDasharray="60 200" strokeLinecap="round" />
-            </svg>
-            
-            <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 40 }}>✨</span>
-          </div>
+          {!errorMsg ? (
+            <>
+              <div style={{ position: 'relative', width: 120, height: 120 }}>
+                {/* Círculo brillante central */}
+                <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, #E8B94A 0%, transparent 60%)', animation: 'pulse 2s infinite' }} />
+                
+                {/* Spinner perimetral */}
+                <svg style={{ position: 'absolute', inset: -20, animation: 'spin 3s linear infinite' }} viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(232,185,74,0.2)" strokeWidth="2" />
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="#E8B94A" strokeWidth="2" strokeDasharray="60 200" strokeLinecap="round" />
+                </svg>
+                
+                <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 40 }}>✨</span>
+              </div>
 
-          <div style={{ textAlign: 'center' }}>
-            <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 28, color: '#F5F3EE', margin: '0 0 12px' }}>
-              Creando tu ruta maestra...
-            </h2>
-            <p style={{ color: '#8FA8AA', fontSize: 16 }}>
-              La IA está organizando el temario de <strong>{tema}</strong>
-            </p>
-          </div>
+              <div style={{ textAlign: 'center' }}>
+                <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 28, color: '#F5F3EE', margin: '0 0 12px' }}>
+                  Creando tu ruta maestra...
+                </h2>
+                <p style={{ color: '#8FA8AA', fontSize: 16 }}>
+                  La IA está organizando el temario de <strong>{tema}</strong>
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <span style={{ fontSize: 56 }}>😵</span>
+              <div style={{ textAlign: 'center' }}>
+                <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 24, color: '#F2637B', margin: '0 0 12px' }}>
+                  Algo salió mal
+                </h2>
+                <p style={{ color: '#8FA8AA', fontSize: 14, marginBottom: 24 }}>{errorMsg}</p>
+                <button
+                  onClick={() => { setStep(1); setErrorMsg(""); }}
+                  style={{
+                    background: '#E8B94A', color: '#0F2A2E', border: 'none', padding: '12px 24px',
+                    borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: 'pointer'
+                  }}
+                >
+                  Intentar de nuevo
+                </button>
+              </div>
+            </>
+          )}
           
           <style>
             {`

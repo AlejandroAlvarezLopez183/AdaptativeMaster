@@ -6,6 +6,8 @@ from typing import List
 
 from sqlalchemy.orm import selectinload
 from . import models, schemas
+from modules.compartido.openrouter_client import chat_completion, chat_completion_json
+from modules.compartido.prompts import TUTOR_SYSTEM_PROMPT, RUTA_GENERATION_PROMPT
 
 async def listar_rutas(db: AsyncSession, usuario_id: UUID) -> List[models.RutaAprendizaje]:
     result = await db.execute(
@@ -36,7 +38,11 @@ async def obtener_leccion_por_id(db: AsyncSession, leccion_id: UUID) -> models.L
         raise HTTPException(status_code=404, detail="Leccion no encontrada")
     return leccion
 
-async def generar_ruta(db: AsyncSession, usuario_id: UUID, ruta_in: schemas.RutaAprendizajeCreate) -> models.RutaAprendizaje:
+async def generar_ruta(
+    db: AsyncSession,
+    usuario_id: UUID,
+    ruta_in: schemas.RutaAprendizajeCreate
+) -> models.RutaAprendizaje:
     # 1. Crear el registro base de la ruta
     nueva_ruta = models.RutaAprendizaje(
         usuario_id=usuario_id,
@@ -44,27 +50,79 @@ async def generar_ruta(db: AsyncSession, usuario_id: UUID, ruta_in: schemas.Ruta
         nivel_objetivo=ruta_in.nivel_objetivo
     )
     db.add(nueva_ruta)
-    await db.flush() # Para obtener el ID
+    await db.flush()  # Obtenemos el ID antes del commit
 
-    # TODO: Aquí llamaremos al LLM (OpenAI o Anthropic) para que genere 
-    # el JSON con las lecciones basadas en el tema y nivel_objetivo.
-    # Por ahora creamos lecciones hardcodeadas de prueba.
-    
-    leccion_1 = models.Leccion(
-        ruta_id=nueva_ruta.id,
-        orden=1,
-        titulo=f"Introducción a {ruta_in.tema}",
-        dificultad="Principiante",
-        contenido={"texto": "Aquí aprenderás los conceptos básicos."}
+    # 2. Construir el prompt con el perfil del usuario y llamar al LLM
+    prompt_usuario = RUTA_GENERATION_PROMPT.format(
+        tema=ruta_in.tema,
+        nivel=ruta_in.nivel_objetivo,
+        tiempo=getattr(ruta_in, 'tiempo', '30 minutos al dia'),
+        objetivo=getattr(ruta_in, 'objetivo', 'Crecimiento profesional'),
+        estilo_aprendizaje=getattr(ruta_in, 'estilo_aprendizaje', 'Practico'),
+        tono_tutor=getattr(ruta_in, 'tono_tutor', 'Amigable'),
     )
-    db.add(leccion_1)
-    
+
+    try:
+        ruta_generada = await chat_completion_json(
+            messages=[
+                {"role": "user", "content": prompt_usuario}
+            ],
+            model_key="ruta",
+            temperature=0.4,
+        )
+    except Exception as e:
+        # Si la IA falla, hacemos rollback de la ruta base (no dejamos basura en la BD)
+        await db.rollback()
+        print(f"[ERROR] Falló OpenRouter al generar ruta: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="La IA está saturada y no pudo generar tu temario. Por favor intenta de nuevo."
+        )
+
+    # 3. Persistir las lecciones generadas por el LLM
+    lecciones_json = ruta_generada.get("lecciones", [])
+    for lec_data in lecciones_json:
+        leccion = models.Leccion(
+            ruta_id=nueva_ruta.id,
+            orden=lec_data.get("orden", 1),
+            titulo=lec_data.get("titulo", "Sin título"),
+            dificultad=lec_data.get("dificultad", "Principiante"),
+            contenido={
+                "resumen": lec_data.get("resumen", ""),
+                "objetivos": lec_data.get("objetivos", []),
+                "tipo": lec_data.get("tipo", "lesson"),
+            }
+        )
+        db.add(leccion)
+
     await db.commit()
-    await db.refresh(nueva_ruta)
+    # Refrescamos la ruta cargando explícitamente la relación lecciones recién creadas
+    await db.refresh(nueva_ruta, ["lecciones"])
     return nueva_ruta
 
-async def enviar_mensaje_tutor(db: AsyncSession, leccion_id: UUID, texto: str) -> schemas.MensajeTutorResponse:
-    # 1. Guardar mensaje del usuario
+async def enviar_mensaje_tutor(
+    db: AsyncSession,
+    leccion_id: UUID,
+    texto: str,
+    usuario_id: UUID | None = None
+) -> schemas.MensajeTutorResponse:
+    # 1. Recuperar la lección para obtener contexto
+    leccion = await obtener_leccion_por_id(db, leccion_id)
+    contenido_leccion = leccion.contenido or {}
+    leccion_contexto = (
+        f"Lección: {leccion.titulo}\n"
+        f"Resumen: {contenido_leccion.get('resumen', 'No disponible')}\n"
+        f"Objetivos: {', '.join(contenido_leccion.get('objetivos', []))}"
+    )
+
+    # 2. Recuperar historial de la conversación (últimos 10 mensajes)
+    historial = await obtener_historial_chat(db, leccion_id)
+    mensajes_previos = [
+        {"role": m.rol, "content": m.text}
+        for m in historial[-10:]  # Solo los últimos 10 para no exceder el contexto
+    ]
+
+    # 3. Guardar mensaje del usuario en la BD
     msg_usuario = models.MensajeTutor(
         leccion_id=leccion_id,
         rol="user",
@@ -73,11 +131,33 @@ async def enviar_mensaje_tutor(db: AsyncSession, leccion_id: UUID, texto: str) -
     db.add(msg_usuario)
     await db.flush()
 
-    # TODO: Aquí recuperaremos el historial de mensajes de esta lección,
-    # llamaremos al LLM y le pediremos la respuesta del Tutor.
-    # Por ahora mockeamos la respuesta.
-    respuesta_llm = f"He recibido tu duda sobre la lección. Te ayudaré a entenderlo. (Mock LLM)"
+    # 4. Construir el payload de mensajes para el LLM
+    system_prompt = TUTOR_SYSTEM_PROMPT.format(
+        leccion_contexto=leccion_contexto,
+        objetivo_usuario="Crecimiento profesional",  # TODO: leer del perfil del usuario
+        estilo_aprendizaje="Práctico",               # TODO: leer del perfil del usuario
+        tono_tutor="Amigable",                        # TODO: leer del perfil del usuario
+    )
 
+    messages = [
+        {"role": "system", "content": system_prompt},
+        *mensajes_previos,
+        {"role": "user", "content": texto},
+    ]
+
+    # 5. Llamar al LLM
+    try:
+        respuesta_llm = await chat_completion(
+            messages=messages,
+            model_key="tutor",
+            temperature=0.7,
+            max_tokens=800,
+        )
+    except Exception as e:
+        respuesta_llm = "Lo siento, tuve un problema al procesar tu pregunta. Intenta de nuevo en un momento. 🙏"
+        print(f"[ERROR] Fallo llamada a OpenRouter (tutor): {e}")
+
+    # 6. Guardar respuesta del tutor en la BD
     msg_tutor = models.MensajeTutor(
         leccion_id=leccion_id,
         rol="assistant",
@@ -86,7 +166,7 @@ async def enviar_mensaje_tutor(db: AsyncSession, leccion_id: UUID, texto: str) -
     db.add(msg_tutor)
     await db.commit()
     await db.refresh(msg_tutor)
-    
+
     return msg_tutor
 
 async def obtener_historial_chat(db: AsyncSession, leccion_id: UUID) -> List[models.MensajeTutor]:
