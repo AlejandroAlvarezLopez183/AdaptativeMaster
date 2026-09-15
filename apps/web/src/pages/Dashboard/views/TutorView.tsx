@@ -249,16 +249,54 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
               borderRadius: 16,
               maxWidth: '80%',
               color: msg.rol === 'user' ? '#E8B94A' : '#F5F3EE',
-              lineHeight: 1.5,
+              lineHeight: 1.6,
               fontSize: 15,
-            }}>
-              {msg.text}
-            </div>
+            }} dangerouslySetInnerHTML={{ 
+              __html: msg.rol === 'user' 
+                ? msg.text 
+                : msg.text
+                    // Proteger los saltos de línea reales
+                    .replace(/\n/g, '<br/>')
+                    // Headers H3 (ej. ### El Reto:)
+                    .replace(/### (.*?)(<br\/>|$)/g, '<h3 style="color: #F5F3EE; margin: 16px 0 8px 0; font-size: 16px;">$1</h3>')
+                    // Negritas (ej. **Texto**)
+                    .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #45C893;">$1</strong>')
+                    // Quitar saltos de línea dobles innecesarios que dejan huecos gigantes
+                    .replace(/(<br\/>\s*){3,}/g, '<br/><br/>')
+            }} />
           ))
         )}
         {sending && (
-          <div className="animate-pulse" style={{ alignSelf: 'flex-start', background: 'rgba(23,60,62,0.4)', padding: '12px 20px', borderRadius: 16, color: '#8FA8AA', fontSize: 14 }}>
-            Tutor escribiendo...
+          <div style={{
+            alignSelf: 'flex-start',
+            background: 'rgba(23,60,62,0.6)',
+            border: '1px solid rgba(245,243,238,0.06)',
+            padding: '16px 20px',
+            borderRadius: 16,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <span style={{ color: '#E8B94A', fontSize: 14, fontWeight: 500, marginRight: '8px' }}>Pensando</span>
+            <style>{`
+              @keyframes bounce {
+                0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+                40% { transform: translateY(-4px); opacity: 1; }
+              }
+              .dot {
+                width: 6px;
+                height: 6px;
+                background-color: #E8B94A;
+                border-radius: 50%;
+                display: inline-block;
+                animation: bounce 1.4s infinite ease-in-out both;
+              }
+              .dot1 { animation-delay: -0.32s; }
+              .dot2 { animation-delay: -0.16s; }
+            `}</style>
+            <div className="dot dot1"></div>
+            <div className="dot dot2"></div>
+            <div className="dot dot3"></div>
           </div>
         )}
         <div ref={chatEndRef} />

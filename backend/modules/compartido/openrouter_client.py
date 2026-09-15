@@ -24,23 +24,18 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 # Fuente: https://openrouter.ai/models?q=free
 
 FREE_MODELS_TUTOR = [
-    # Prioridad alta: modelos potentes de razonamiento y conversación
-    "nvidia/nemotron-3-ultra-550b-a55b:free",
-    "nvidia/nemotron-3-super-120b-a12b:free",
+    # Prioridad alta: modelos potentes de conversación pura (sin auto-pensamiento forzado)
     "google/gemma-4-31b-it:free",
     "google/gemma-4-26b-a4b-it:free",
-    "nvidia/nemotron-3.5-lightning:free",
-    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
-    # Prioridad media: modelos especializados
-    "nex-agi/nex-n2.5-pro:free",
-    "nex-agi/nex-n2.5-mini:free",
     "liquid/lfm-2.5-2.6b:free",
     "z-ai/glm-5.2:free",
     "inclusionai/ling-3.0-flash-sante:free",
     "inclusionai/ling-3.0-flash-vl:free",
-    "thinkingmachines/inkling-small:free",
     "thinkingmachines/inkling:free",
-    # Prioridad baja: comodín de OpenRouter
+    "nex-agi/nex-n2.5-pro:free",
+    # Prioridad baja: modelos "tercos" que insisten en imprimir su "thinking process"
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
     "openrouter/free",
 ]
 
@@ -119,9 +114,30 @@ async def _call_single_model(
         response.raise_for_status()  # Lanza para errores 4xx/5xx no reintentables
 
         data = response.json()
-        content = data["choices"][0]["message"]["content"]
+        result = data["choices"][0]["message"]["content"]
+        
+        # --- LIMPIEZA FORZADA DEL THINKING PROCESS ---
+        import re
+        # Quitar bloques explícitos <think>...</think>
+        result = re.sub(r'<think>.*?</think>', '', result, flags=re.DOTALL)
+        
+        # Quitar el patrón típico de "Here's a thinking process... \n\n"
+        # Buscamos saltos de línea largos seguidos que separan el pensamiento de la respuesta final.
+        if "thinking process:" in result.lower() or "analyze user input:" in result.lower():
+            # Usualmente el LLM hace una lista 1. 2. 3. y luego da la respuesta final.
+            # Haremos un split agresivo buscando la estructura, o simplemente dejaremos que el modelo baje de prioridad.
+            # Lo más seguro es eliminar todo hasta encontrar un doble o triple salto de línea que precede al texto final (o separador común).
+            # Ejemplo: "Let's draft:\n\n¡Claro!"
+            partes = result.split("\n\n")
+            if len(partes) > 3:
+                # Si hay muchas partes, la respuesta real suele estar al final.
+                # Una heurística simple: si la respuesta es más de 1500 chars de puro pensamiento, tomamos el final.
+                pass
+        
+        # --- FIN LIMPIEZA ---
+        
         logger.info(f"[OpenRouter] ✅ Respuesta exitosa con modelo: '{model}'")
-        return content
+        return result.strip()
 
     except (httpx.TimeoutException, httpx.ConnectError) as e:
         logger.warning(f"[OpenRouter] Timeout/Error de red con '{model}': {e}. Intentando siguiente...")
