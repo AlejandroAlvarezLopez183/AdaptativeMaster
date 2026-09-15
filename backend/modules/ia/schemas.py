@@ -7,8 +7,9 @@ class MensajeTutorBase(BaseModel):
     rol: str
     text: str
 
-class MensajeTutorCreate(MensajeTutorBase):
-    pass
+class MensajeTutorCreate(BaseModel):
+    text: str
+    rol: str = "user"
 
 class MensajeTutorResponse(MensajeTutorBase):
     id: UUID
