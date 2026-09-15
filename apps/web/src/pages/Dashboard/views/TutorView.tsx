@@ -252,17 +252,56 @@ export function TutorView({ setActive, rutaId, leccionId }: TutorViewProps) {
               lineHeight: 1.6,
               fontSize: 15,
             }} dangerouslySetInnerHTML={{ 
-              __html: msg.rol === 'user' 
-                ? msg.text 
-                : msg.text
-                    // Proteger los saltos de línea reales
-                    .replace(/\n/g, '<br/>')
+              __html: (() => {
+                if (msg.rol === 'user') return msg.text;
+                
+                // Parseo básico de tablas
+                const lines = msg.text.split('\n');
+                let inTable = false;
+                let htmlStr = '';
+                
+                for (let i = 0; i < lines.length; i++) {
+                  const line = lines[i].trim();
+                  
+                  if (line.startsWith('|') && line.endsWith('|')) {
+                    if (!inTable) {
+                      htmlStr += '<div style="overflow-x: auto; margin: 16px 0;"><table style="width:100%; border-collapse: collapse; border: 1px solid rgba(245,243,238,0.1); border-radius: 8px; overflow: hidden;">';
+                      inTable = true;
+                    }
+                    
+                    if (line.match(/^\|[\s\-\|]+\|$/)) continue; // Separador
+                    
+                    const cells = line.split('|').filter((_, idx, arr) => idx !== 0 && idx !== arr.length - 1);
+                    const isHeader = htmlStr.endsWith('<table style="width:100%; border-collapse: collapse; border: 1px solid rgba(245,243,238,0.1); border-radius: 8px; overflow: hidden;">');
+                    
+                    htmlStr += '<tr style="border-bottom: 1px solid rgba(245,243,238,0.05);">';
+                    cells.forEach(c => {
+                      const tag = isHeader ? 'th' : 'td';
+                      const weight = isHeader ? 'bold' : 'normal';
+                      const bg = isHeader ? 'rgba(232,185,74,0.1)' : 'rgba(23,60,62,0.2)';
+                      const color = isHeader ? '#E8B94A' : '#F5F3EE';
+                      htmlStr += `<${tag} style="padding: 12px 16px; text-align: left; color: ${color}; font-weight: ${weight}; background: ${bg}; border-right: 1px solid rgba(245,243,238,0.05);">${c.trim()}</${tag}>`;
+                    });
+                    htmlStr += '</tr>';
+                  } else {
+                    if (inTable) {
+                      htmlStr += '</table></div>';
+                      inTable = false;
+                    }
+                    // Línea normal: agregamos <br/> al final en vez de \n
+                    htmlStr += lines[i] + '<br/>';
+                  }
+                }
+                if (inTable) htmlStr += '</table></div>';
+                
+                return htmlStr
                     // Headers H3 (ej. ### El Reto:)
                     .replace(/### (.*?)(<br\/>|$)/g, '<h3 style="color: #F5F3EE; margin: 16px 0 8px 0; font-size: 16px;">$1</h3>')
                     // Negritas (ej. **Texto**)
                     .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #45C893;">$1</strong>')
-                    // Quitar saltos de línea dobles innecesarios que dejan huecos gigantes
-                    .replace(/(<br\/>\s*){3,}/g, '<br/><br/>')
+                    // Quitar saltos de línea dobles innecesarios al inicio/fin de listas o tablas
+                    .replace(/(<br\/>\s*){3,}/g, '<br/><br/>');
+              })()
             }} />
           ))
         )}
