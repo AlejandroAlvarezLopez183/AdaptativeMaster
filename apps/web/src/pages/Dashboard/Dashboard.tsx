@@ -24,6 +24,7 @@ export default function Dashboard() {
   const [active, setActive] = useState("inicio");
   const [selectedRutaId, setSelectedRutaId] = useState<string | null>(null);
   const [selectedLeccionId, setSelectedLeccionId] = useState<string | null>(null);
+  const [selectedMinijuego, setSelectedMinijuego] = useState<{ tipo?: string; datos?: any; titulo?: string } | null>(null);
   const [user, setUser] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -97,12 +98,23 @@ export default function Dashboard() {
             leccionId={selectedLeccionId} 
             onOpenLesson={(id) => { setSelectedLeccionId(id); setActive("leccion_contenido"); }} 
             onOpenQuiz={(id) => { setSelectedLeccionId(id); setActive("examen"); }}
-            onOpenBoss={(id) => { setSelectedLeccionId(id); setActive("minijuego"); }}
+            onOpenBoss={(id) => { setSelectedLeccionId(id); setActive("examen"); }}
+            onOpenMinijuego={(id, tipo, datos, titulo) => { 
+              setSelectedLeccionId(id); 
+              setSelectedMinijuego({ tipo, datos, titulo });
+              setActive("minijuego"); 
+            }}
           />
         ) : active === "examen" ? (
           <ExamenView onBack={() => setActive("leccion_duolingo")} onComplete={() => setActive("leccion_duolingo")} />
         ) : active === "minijuego" ? (
-          <MinijuegoView onBack={() => setActive("leccion_duolingo")} onComplete={() => setActive("leccion_duolingo")} />
+          <MinijuegoView
+            onBack={() => setActive("leccion_duolingo")}
+            onComplete={() => setActive("leccion_duolingo")}
+            tipoMinijuego={selectedMinijuego?.tipo as any}
+            datosMinijuego={selectedMinijuego?.datos}
+            titulo={selectedMinijuego?.titulo}
+          />
         ) : active === "leccion_contenido" ? (
           <LeccionContenidoView 
             leccionId={selectedLeccionId} 

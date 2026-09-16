@@ -69,6 +69,7 @@ async def generar_ruta(
             ],
             model_key="ruta",
             temperature=0.4,
+            max_tokens=8000,
         )
     except Exception as e:
         # Si la IA falla, hacemos rollback de la ruta base (no dejamos basura en la BD)
@@ -91,6 +92,8 @@ async def generar_ruta(
                 "resumen": lec_data.get("resumen", ""),
                 "objetivos": lec_data.get("objetivos", []),
                 "tipo": lec_data.get("tipo", "lesson"),
+                "tipo_minijuego": lec_data.get("tipo_minijuego", None),
+                "datos_minijuego": lec_data.get("datos_minijuego", None),
             }
         )
         db.add(leccion)

@@ -9,7 +9,9 @@ interface Lesson {
   title: string;
   status: NodeStatus;
   xp: number;
-  type: "lesson" | "quiz" | "boss" | "checkpoint";
+  type: "lesson" | "quiz" | "boss" | "checkpoint" | "minijuego";
+  tipoMinijuego?: string;
+  datosMinijuego?: any;
 }
 
 interface Chapter {
@@ -323,9 +325,10 @@ interface LeccionDuolingoViewProps {
   onOpenLesson: (id: string) => void; 
   onOpenQuiz?: (id: string) => void;
   onOpenBoss?: (id: string) => void;
+  onOpenMinijuego?: (id: string, tipo?: string, datos?: any, titulo?: string) => void;
 }
 
-export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQuiz, onOpenBoss }: LeccionDuolingoViewProps) {
+export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQuiz, onOpenBoss, onOpenMinijuego }: LeccionDuolingoViewProps) {
   let globalIndex = 0;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
@@ -373,8 +376,10 @@ export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQui
               id: lec.id,
               title: lec.titulo,
               status: status,
-              xp: isBoss ? 100 : 20,
-              type: isBoss ? "boss" : "lesson" as any
+              xp: isBoss ? 100 : lec.contenido?.tipo === 'minijuego' ? 50 : 20,
+              type: isBoss ? "boss" : (lec.contenido?.tipo as any) || "lesson",
+              tipoMinijuego: lec.contenido?.tipo_minijuego,
+              datosMinijuego: lec.contenido?.datos_minijuego,
             };
           });
 
@@ -488,6 +493,7 @@ export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQui
                   onActivate={() => {
                     const idStr = lesson.id;
                     if (lesson.type === 'boss' && onOpenBoss) onOpenBoss(idStr);
+                    else if (lesson.type === 'minijuego' && onOpenMinijuego) onOpenMinijuego(idStr, lesson.tipoMinijuego, lesson.datosMinijuego, lesson.title);
                     else if (lesson.type === 'quiz' && onOpenQuiz) onOpenQuiz(idStr);
                     else onOpenLesson(idStr);
                   }}

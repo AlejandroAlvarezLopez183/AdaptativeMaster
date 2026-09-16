@@ -42,6 +42,7 @@ DEBES envolver tu respuesta completa en un bloque de código markdown de la sigu
 ```json
 {{ ... aquí va el json ... }}
 ```
+
 **Estructura requerida del JSON:**
 {{
   "titulo": "Título atractivo del curso",
@@ -59,21 +60,86 @@ DEBES envolver tu respuesta completa en un bloque de código markdown de la sigu
     }},
     {{
       "orden": 2,
-      "titulo": "Quiz: Conceptos Básicos",
+      "titulo": "Minijuego: Empareja los Conceptos",
       "dificultad": "Principiante",
-      "resumen": "Evaluación de los conceptos vistos en la lección anterior",
-      "objetivos": ["Evaluar comprensión"],
-      "tipo": "quiz"
+      "resumen": "Practica emparejando términos con sus definiciones",
+      "objetivos": ["Reforzar vocabulario de la lección anterior"],
+      "tipo": "minijuego",
+      "tipo_minijuego": "EMPAREJAR",
+      "datos_minijuego": {{
+        "pares": [
+          {{"termino": "Concepto A", "definicion": "Explicación de A"}},
+          {{"termino": "Concepto B", "definicion": "Explicación de B"}},
+          {{"termino": "Concepto C", "definicion": "Explicación de C"}}
+        ]
+      }}
+    }},
+    {{
+      "orden": 3,
+      "titulo": "Minijuego: ¿Verdadero o Falso?",
+      "dificultad": "Intermedio",
+      "resumen": "Decide si las afirmaciones son verdaderas o falsas",
+      "objetivos": ["Detectar mitos y errores comunes"],
+      "tipo": "minijuego",
+      "tipo_minijuego": "VERDADERO_FALSO",
+      "datos_minijuego": {{
+        "preguntas": [
+          {{"afirmacion": "Afirmación A", "es_verdad": true, "explicacion": "Porque..."}},
+          {{"afirmacion": "Afirmación B", "es_verdad": false, "explicacion": "En realidad..."}}
+        ]
+      }}
+    }},
+    {{
+      "orden": 4,
+      "titulo": "Minijuego: Rellena el Espacio",
+      "dificultad": "Intermedio",
+      "resumen": "Completa las frases con el término correcto",
+      "objetivos": ["Aplicar conceptos en contexto"],
+      "tipo": "minijuego",
+      "tipo_minijuego": "RELLENAR",
+      "datos_minijuego": {{
+        "ejercicios": [
+          {{"frase": "La función ___ se usa para declarar estado en React", "respuesta": "useState", "opciones": ["useState", "useEffect", "useRef", "useContext"]}},
+          {{"frase": "___ permite ejecutar efectos secundarios", "respuesta": "useEffect", "opciones": ["useState", "useEffect", "useMemo", "useCallback"]}}
+        ]
+      }}
+    }},
+    {{
+      "orden": 5,
+      "titulo": "Minijuego: Ordena el Código",
+      "dificultad": "Avanzado",
+      "resumen": "Arrastra los fragmentos para construir el código correcto",
+      "objetivos": ["Practicar la sintaxis y el flujo lógico"],
+      "tipo": "minijuego",
+      "tipo_minijuego": "ORDENAR",
+      "datos_minijuego": {{
+        "fragmentos": ["const [count, setCount] = useState(0);", "import React, {{ useState }} from 'react';", "function Counter() {{", "  return <button onClick={{() => setCount(count + 1)}}>{{count}}</button>;", "}}"],
+        "orden_correcto": [1, 0, 2, 3, 4]
+      }}
+    }},
+    {{
+      "orden": 6,
+      "titulo": "Examen Final",
+      "dificultad": "Avanzado",
+      "resumen": "Evaluación completa de todos los conceptos del curso",
+      "objetivos": ["Demostrar dominio del tema"],
+      "tipo": "boss"
     }}
   ]
 }}
 
 **Reglas de construcción del temario:**
-- Genera entre 6 y 10 lecciones dependiendo de la complejidad del tema.
-- Cada 3-4 lecciones de tipo "lesson", incluye UNA de tipo "quiz".
-- Al final del temario, incluye SIEMPRE una lección de tipo "boss" (el examen final).
+- Genera entre 7 y 12 lecciones dependiendo de la complejidad del tema.
+- Cada 2-3 lecciones de tipo "lesson", incluye UN minijuego (tipo "minijuego").
+- Elige el `tipo_minijuego` que mejor se adapte al contenido de las lecciones previas:
+  * EMPAREJAR: vocabulario, términos técnicos, conceptos con definiciones.
+  * VERDADERO_FALSO: mitos, errores comunes, afirmaciones sobre el tema.
+  * RELLENAR: sintaxis, fórmulas, código incompleto, fechas, nombres propios.
+  * ORDENAR: pasos de un proceso, algoritmos, código que debe ir en orden.
+- Al final del temario, incluye SIEMPRE una lección de tipo "boss" (examen final).
 - Las lecciones deben ir de menor a mayor dificultad de forma progresiva.
 - Adapta la profundidad del contenido al nivel y tiempo disponible del estudiante.
+- Los `datos_minijuego` deben contener contenido REAL relacionado al tema del curso (no ejemplos genéricos).
 
 **Perfil del estudiante para quien debes generar la ruta:**
 - Tema a aprender: {tema}

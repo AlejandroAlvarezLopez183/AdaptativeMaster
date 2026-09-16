@@ -115,23 +115,25 @@ async def _call_single_model(
 
         data = response.json()
         result = data["choices"][0]["message"]["content"]
-        
+
+        # Algunos modelos con razonamiento interno devuelven content=null
+        # cuando "piensan" en silencio. Saltamos al siguiente modelo.
+        if result is None:
+            logger.warning(
+                f"[OpenRouter] Modelo '{model}' devolvió content=null (razonamiento interno sin texto). "
+                f"Intentando siguiente..."
+            )
+            return None
+
         # --- LIMPIEZA FORZADA DEL THINKING PROCESS ---
         import re
         # Quitar bloques explícitos <think>...</think>
         result = re.sub(r'<think>.*?</think>', '', result, flags=re.DOTALL)
         
         # Quitar el patrón típico de "Here's a thinking process... \n\n"
-        # Buscamos saltos de línea largos seguidos que separan el pensamiento de la respuesta final.
         if "thinking process:" in result.lower() or "analyze user input:" in result.lower():
-            # Usualmente el LLM hace una lista 1. 2. 3. y luego da la respuesta final.
-            # Haremos un split agresivo buscando la estructura, o simplemente dejaremos que el modelo baje de prioridad.
-            # Lo más seguro es eliminar todo hasta encontrar un doble o triple salto de línea que precede al texto final (o separador común).
-            # Ejemplo: "Let's draft:\n\n¡Claro!"
             partes = result.split("\n\n")
             if len(partes) > 3:
-                # Si hay muchas partes, la respuesta real suele estar al final.
-                # Una heurística simple: si la respuesta es más de 1500 chars de puro pensamiento, tomamos el final.
                 pass
         
         # --- FIN LIMPIEZA ---
@@ -201,7 +203,7 @@ async def chat_completion_json(
     messages: list[dict],
     model_key: str = "ruta",
     temperature: float = 0.3,
-    max_tokens: int = 3000,
+    max_tokens: int = 8000,
 ) -> dict:
     """
     Variante de chat_completion que extrae y parsea JSON de la respuesta del modelo.
