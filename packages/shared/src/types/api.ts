@@ -57,7 +57,7 @@ export interface UserResponse {
   nivel?: string;
   intereses?: string[];
   objetivos?: string;
-  preferencias?: { text: string; icon: string }[];
+  preferencias?: Record<string, any>;
   created_at: string;
 }
 
@@ -65,7 +65,7 @@ export interface UserPerfilUpdate {
   nivel?: string;
   intereses?: string[];
   objetivos?: string;
-  preferencias?: { text: string; icon: string }[];
+  preferencias?: Record<string, any>;
 }
 
 export interface TutorChatResponse {

@@ -84,7 +84,7 @@ export default function Dashboard() {
         {active === "ayuda" ? (
           <AyudaView />
         ) : active === "config" ? (
-          <ConfigView onLogout={handleLogout} />
+          <ConfigView onLogout={handleLogout} user={user} onUpdateUser={setUser} />
         ) : active === "perfil" ? (
           <PerfilView user={user} />
         ) : active === "progreso" ? (

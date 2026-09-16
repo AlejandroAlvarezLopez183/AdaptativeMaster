@@ -1,19 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
+import { UserResponse } from '@adaptativemaster/shared';
+
+// Importar subcomponentes
+import { ConfigCuenta } from "./ConfigSections/ConfigCuenta";
+import { ConfigNotificaciones } from "./ConfigSections/ConfigNotificaciones";
+import { ConfigPrivacidad } from "./ConfigSections/ConfigPrivacidad";
+import { ConfigPreferencias } from "./ConfigSections/ConfigPreferencias";
+import { ConfigIdioma } from "./ConfigSections/ConfigIdioma";
+import { ConfigSeguridad } from "./ConfigSections/ConfigSeguridad";
 
 interface ConfigViewProps {
   onLogout: () => void;
+  user: UserResponse | null;
+  onUpdateUser?: (user: UserResponse) => void;
 }
 
-export function ConfigView({ onLogout }: ConfigViewProps) {
+export function ConfigView({ onLogout, user, onUpdateUser }: ConfigViewProps) {
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
   const opciones = [
-    { id: "cuenta", label: "Cuenta", icon: "👤", action: () => console.log("Cuenta") },
-    { id: "notificaciones", label: "Notificaciones", icon: "🔔", action: () => console.log("Notif") },
-    { id: "privacidad", label: "Privacidad", icon: "👁️", action: () => console.log("Privacidad") },
-    { id: "preferencias", label: "Preferencias de estudio", icon: "🎯", action: () => console.log("Prefs") },
-    { id: "idioma", label: "Idioma", icon: "🌐", action: () => console.log("Idioma") },
-    { id: "seguridad", label: "Seguridad", icon: "🔒", action: () => console.log("Seguridad") },
+    { id: "cuenta", label: "Cuenta", icon: "👤", action: () => setActiveSection("cuenta") },
+    { id: "notificaciones", label: "Notificaciones", icon: "🔔", action: () => setActiveSection("notificaciones") },
+    { id: "privacidad", label: "Privacidad", icon: "👁️", action: () => setActiveSection("privacidad") },
+    { id: "preferencias", label: "Preferencias de estudio", icon: "🎯", action: () => setActiveSection("preferencias") },
+    { id: "idioma", label: "Idioma", icon: "🌐", action: () => setActiveSection("idioma") },
+    { id: "seguridad", label: "Seguridad", icon: "🔒", action: () => setActiveSection("seguridad") },
     { id: "logout", label: "Cerrar sesión", icon: "🚪", action: onLogout, danger: true },
   ];
+
+  if (activeSection) {
+    const commonProps = {
+      user,
+      onBack: () => setActiveSection(null),
+      onUpdateUser
+    };
+
+    return (
+      <div style={{ maxWidth: '800px', width: '100%', margin: '0 auto' }}>
+        {activeSection === "cuenta" && <ConfigCuenta {...commonProps} />}
+        {activeSection === "notificaciones" && <ConfigNotificaciones {...commonProps} />}
+        {activeSection === "privacidad" && <ConfigPrivacidad {...commonProps} />}
+        {activeSection === "preferencias" && <ConfigPreferencias {...commonProps} />}
+        {activeSection === "idioma" && <ConfigIdioma {...commonProps} />}
+        {activeSection === "seguridad" && <ConfigSeguridad onBack={commonProps.onBack} />}
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: '800px', width: '100%', margin: '0 auto' }}>
