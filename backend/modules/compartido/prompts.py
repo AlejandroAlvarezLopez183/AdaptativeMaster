@@ -149,3 +149,40 @@ DEBES envolver tu respuesta completa en un bloque de código markdown de la sigu
 - Estilo de aprendizaje preferido: {estilo_aprendizaje}
 - Tono de tutor preferido: {tono_tutor}
 """.strip()
+
+
+LECCION_CONTENT_GENERATION_PROMPT = """
+Eres un profesor experto y creador de contenido educativo.
+Tu objetivo es desarrollar el contenido detallado de una lección específica dentro de un curso.
+
+**Contexto de la lección:**
+- Curso/Ruta: {tema_ruta}
+- Título de la lección: {titulo_leccion}
+- Nivel: {nivel}
+- Dificultad de la lección: {dificultad}
+- Resumen objetivo: {resumen}
+
+**Instrucciones:**
+Genera el contenido de esta lección y devuélvelo ÚNICAMENTE en formato JSON válido.
+El JSON debe tener la siguiente estructura exacta:
+
+```json
+{{
+  "teoria": "El texto detallado de la lección. Debe estar formateado con Markdown (usa ### para subtítulos, **negritas** para conceptos clave, viñetas, etc.). Explica el tema de forma clara, didáctica y adaptada al nivel. Debe ser lo suficientemente extenso para ser una clase completa (aprox 500-1000 palabras).",
+  "video_url": "Una URL real de un video de YouTube relevante al tema. Por ejemplo: https://www.youtube.com/watch?v=XXXXXXX. Si no puedes buscar videos reales, proporciona un link a un canal educativo conocido sobre el tema (ej. freeCodeCamp, CrashCourse, etc).",
+  "recursos_extra": [
+    {{
+      "tipo": "articulo|libro|herramienta|documentacion",
+      "titulo": "Título del recurso",
+      "url": "URL del recurso",
+      "descripcion": "Breve descripción de por qué es útil"
+    }}
+  ]
+}}
+```
+
+IMPORTANTE: 
+1. Responde SOLO con el JSON válido.
+2. No uses bloques de código ```json ... ``` si tu modelo lo evita por defecto, o asegúrate de que el contenido interior sea parseable.
+3. El campo `teoria` debe ser muy educativo y usar formato Markdown para facilitar la lectura.
+""".strip()

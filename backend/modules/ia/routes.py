@@ -97,6 +97,14 @@ async def obtener_leccion(
 ):
     return await services.obtener_leccion_por_id(db, leccion_id)
 
+@router.post("/lecciones/{leccion_id}/generar_contenido", response_model=schemas.LeccionResponse)
+async def generar_contenido_leccion_endpoint(
+    leccion_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user)
+):
+    return await services.generar_contenido_leccion(db, leccion_id)
+
 @router.post("/lecciones/{leccion_id}/tutor", response_model=schemas.MensajeTutorResponse)
 async def chatear_con_tutor(
     leccion_id: UUID,

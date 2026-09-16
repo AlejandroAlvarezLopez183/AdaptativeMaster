@@ -141,11 +141,15 @@ async def _call_single_model(
         logger.info(f"[OpenRouter] ✅ Respuesta exitosa con modelo: '{model}'")
         return result.strip()
 
-    except (httpx.TimeoutException, httpx.ConnectError) as e:
+    except httpx.HTTPStatusError as e:
+        logger.warning(f"[OpenRouter] El modelo '{model}' rechazó la petición (HTTP {e.response.status_code}). Intentando siguiente...")
+        return None
+
+    except (httpx.TimeoutException, httpx.ConnectError, httpx.RequestError) as e:
         logger.warning(f"[OpenRouter] Timeout/Error de red con '{model}': {e}. Intentando siguiente...")
         return None
 
-    except (KeyError, IndexError) as e:
+    except (KeyError, IndexError, json.JSONDecodeError) as e:
         logger.warning(f"[OpenRouter] Respuesta inesperada de '{model}': {e}. Intentando siguiente...")
         return None
 

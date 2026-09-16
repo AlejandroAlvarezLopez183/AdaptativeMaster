@@ -17,6 +17,13 @@ export const iaClient = {
       headers: { Authorization: `Bearer ${token}` }
     }),
 
+  generarContenidoLeccion: (leccionId: string, token: string) =>
+    apiFetch<any>(`/ia/lecciones/${leccionId}/generar_contenido`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` }
+    }),
+
+
   getHistorialChat: (leccionId: string, token: string) =>
     apiFetch<TutorChatResponse[]>(`/ia/lecciones/${leccionId}/mensajes`, {
       headers: { Authorization: `Bearer ${token}` }

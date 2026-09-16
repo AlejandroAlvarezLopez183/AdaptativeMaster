@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { iaClient, Leccion } from '@adaptativemaster/shared';
 
 interface LeccionContenidoViewProps {
@@ -10,6 +11,7 @@ interface LeccionContenidoViewProps {
 export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: LeccionContenidoViewProps) {
   const [lesson, setLesson] = useState<Leccion | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     const fetchLeccion = async () => {
@@ -19,7 +21,20 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
 
       try {
         setLoading(true);
-        const data = await iaClient.getLeccion(leccionId, token);
+        let data = await iaClient.getLeccion(leccionId, token);
+        
+        // Si no hay teoría, la IA genera el contenido on-the-fly
+        if (!data.contenido || !data.contenido.teoria) {
+          setIsGenerating(true);
+          try {
+            data = await iaClient.generarContenidoLeccion(leccionId, token);
+          } catch (error) {
+            console.error("Error generando contenido de la lección:", error);
+          } finally {
+            setIsGenerating(false);
+          }
+        }
+        
         setLesson(data);
       } catch (error) {
         console.error("Error fetching leccion:", error);
@@ -30,10 +45,13 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
     fetchLeccion();
   }, [leccionId]);
 
-  if (loading) {
+  if (loading || isGenerating) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '100px 0', color: '#E8B94A' }}>
-        <p>Cargando lección...</p>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '100px 0', color: '#E8B94A', gap: 16 }}>
+        <span className="animate-spin" style={{ fontSize: 48 }}>⚙️</span>
+        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 18 }}>
+          {isGenerating ? "Generando contenido de la lección..." : "Cargando lección..."}
+        </p>
       </div>
     );
   }
@@ -110,23 +128,31 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
       {/* Área principal (Video + Texto) */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32, marginBottom: 40 }}>
         
-        {/* Placeholder de Video */}
-        <div style={{ 
-          width: '100%', aspectRatio: '16/9', background: '#173C3E', 
-          borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          border: '1px solid rgba(245,243,238,0.06)', position: 'relative', overflow: 'hidden'
-        }}>
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, rgba(126,200,200,0.15) 0%, transparent 70%)' }} />
+        {/* Video */}
+        {lesson.contenido?.video_url ? (
           <div style={{ 
-            width: 72, height: 72, borderRadius: '50%', background: 'rgba(245,243,238,0.1)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-            backdropFilter: 'blur(4px)', border: '1px solid rgba(245,243,238,0.2)'
+            width: '100%', aspectRatio: '16/9', background: '#173C3E', 
+            borderRadius: 24, overflow: 'hidden', border: '1px solid rgba(245,243,238,0.06)'
           }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#F5F3EE" style={{ marginLeft: 4 }}>
-              <path d="M5 3L19 12L5 21V3Z" />
-            </svg>
+            <iframe 
+              width="100%" 
+              height="100%" 
+              src={lesson.contenido.video_url.replace("watch?v=", "embed/")} 
+              title="Video de la lección"
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen>
+            </iframe>
           </div>
-        </div>
+        ) : (
+          <div style={{ 
+            width: '100%', aspectRatio: '16/9', background: '#173C3E', 
+            borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            border: '1px solid rgba(245,243,238,0.06)', position: 'relative', overflow: 'hidden'
+          }}>
+            <p style={{ color: '#8FA8AA' }}>No hay video disponible para esta lección</p>
+          </div>
+        )}
 
         {/* Teoría */}
         <div style={{ 
@@ -136,10 +162,46 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
           <h3 style={{ margin: '0 0 16px', fontSize: 20, color: '#F5F3EE', fontWeight: 600 }}>
             Resumen de la lección
           </h3>
-          <div style={{ color: '#E4EAEB', fontSize: 16, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
-            {lesson.contenido?.teoria || "No hay teoría disponible para esta lección."}
+          <div className="markdown-content" style={{ color: '#E4EAEB', fontSize: 16, lineHeight: 1.7 }}>
+            {lesson.contenido?.teoria ? (
+              <ReactMarkdown>{lesson.contenido.teoria}</ReactMarkdown>
+            ) : (
+              "No hay teoría disponible para esta lección."
+            )}
           </div>
         </div>
+
+        {/* Recursos extra */}
+        {lesson.contenido?.recursos_extra && lesson.contenido.recursos_extra.length > 0 && (
+          <div style={{ 
+            background: 'rgba(23,60,62,0.4)', borderRadius: 20, padding: 32,
+            border: '1px solid rgba(245,243,238,0.06)'
+          }}>
+            <h3 style={{ margin: '0 0 16px', fontSize: 20, color: '#F5F3EE', fontWeight: 600 }}>
+              Recursos adicionales
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {lesson.contenido.recursos_extra.map((rec: any, idx: number) => (
+                <a key={idx} href={rec.url} target="_blank" rel="noreferrer" style={{
+                  display: 'flex', alignItems: 'center', gap: 16, padding: '16px',
+                  background: 'rgba(245,243,238,0.03)', borderRadius: 12, textDecoration: 'none',
+                  border: '1px solid rgba(245,243,238,0.05)', transition: 'background 0.2s'
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(245,243,238,0.08)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(245,243,238,0.03)'}
+                >
+                  <span style={{ fontSize: 24 }}>
+                    {rec.tipo === 'video' ? '🎥' : rec.tipo === 'libro' ? '📘' : rec.tipo === 'herramienta' ? '🛠️' : '📄'}
+                  </span>
+                  <div>
+                    <h4 style={{ margin: '0 0 4px', color: '#7EC8C8', fontSize: 16 }}>{rec.titulo}</h4>
+                    <p style={{ margin: 0, color: '#8FA8AA', fontSize: 14 }}>{rec.descripcion}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
 
       </div>
 

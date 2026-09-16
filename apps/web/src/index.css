@@ -119,3 +119,37 @@ scrollbar-width: none;
   background: radial-gradient(circle at top right, rgba(232, 185, 74, 0.1), transparent 40%),
               radial-gradient(circle at bottom left, rgba(15, 42, 46, 1), #081618);
 }
+
+/* Markdown Styling */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+  color: #F5F3EE;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+.markdown-content h1 { font-size: 1.75rem; }
+.markdown-content h2 { font-size: 1.5rem; }
+.markdown-content h3 { font-size: 1.25rem; }
+.markdown-content p {
+  margin-bottom: 1em;
+  line-height: 1.7;
+}
+.markdown-content ul, .markdown-content ol {
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+.markdown-content li {
+  margin-bottom: 0.5em;
+}
+.markdown-content strong {
+  color: #E8B94A;
+  font-weight: 600;
+}
+.markdown-content a {
+  color: #7EC8C8;
+  text-decoration: none;
+}
+.markdown-content a:hover {
+  text-decoration: underline;
+}

@@ -179,3 +179,52 @@ async def obtener_historial_chat(db: AsyncSession, leccion_id: UUID) -> List[mod
         .order_by(models.MensajeTutor.creado_en.asc())
     )
     return result.scalars().all()
+
+
+async def generar_contenido_leccion(db: AsyncSession, leccion_id: UUID) -> models.Leccion:
+    from modules.compartido.prompts import LECCION_CONTENT_GENERATION_PROMPT
+    from modules.compartido.openrouter_client import chat_completion_json
+    
+    # 1. Obtener la lección y su ruta
+    leccion = await obtener_leccion_por_id(db, leccion_id)
+    result = await db.execute(select(models.RutaAprendizaje).where(models.RutaAprendizaje.id == leccion.ruta_id))
+    ruta = result.scalars().first()
+    
+    if not ruta:
+        raise HTTPException(status_code=404, detail="Ruta no encontrada para esta lección")
+
+    # 2. Preparar el prompt
+    prompt = LECCION_CONTENT_GENERATION_PROMPT.format(
+        tema_ruta=ruta.tema,
+        titulo_leccion=leccion.titulo,
+        nivel=ruta.nivel_objetivo,
+        dificultad=leccion.dificultad,
+        resumen=leccion.contenido.get("resumen", "") if leccion.contenido else ""
+    )
+
+    # 3. Llamar a la IA
+    try:
+        contenido_generado = await chat_completion_json(
+            messages=[{"role": "user", "content": prompt}],
+            model_key="ruta",
+            temperature=0.5,
+            max_tokens=4000
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generando contenido de lección: {e}")
+
+    # 4. Actualizar la lección en DB (haciendo un merge con el contenido existente si lo hay)
+    contenido_actual = dict(leccion.contenido) if leccion.contenido else {}
+    
+    contenido_actual["teoria"] = contenido_generado.get("teoria", "")
+    contenido_actual["video_url"] = contenido_generado.get("video_url", "")
+    contenido_actual["recursos_extra"] = contenido_generado.get("recursos_extra", [])
+    
+    from sqlalchemy.orm.attributes import flag_modified
+    leccion.contenido = contenido_actual
+    flag_modified(leccion, "contenido")
+
+    await db.commit()
+    await db.refresh(leccion)
+    
+    return leccion
