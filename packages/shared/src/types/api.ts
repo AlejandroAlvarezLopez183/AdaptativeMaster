@@ -33,6 +33,7 @@ export interface RutaDetalle extends RutaAprendizaje {
   objetivo: string;
   nivel: string;
   temario: TemaRuta[];
+  lecciones?: Leccion[];
 }
 
 export interface RutasResponse {

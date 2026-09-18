@@ -10,9 +10,5 @@ export interface Usuario {
   plan: "free" | "premium";
 }
 
-export interface RutaAprendizaje {
-  id: string;
-  usuarioId: string;
-  tema: string;
-  nivelObjetivo: string;
-}
+// Export API types
+export * from "./api";

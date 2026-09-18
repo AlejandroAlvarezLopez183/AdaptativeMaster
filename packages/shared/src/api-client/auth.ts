@@ -1,16 +1,10 @@
 import { apiFetch } from "./index";
 
+import { UserResponse } from "../types";
+
 export interface TokenResponse {
   access_token: string;
   token_type: string;
-}
-
-export interface UserResponse {
-  id: string;
-  email: string;
-  nombre: string;
-  rol: string;
-  created_at: string;
 }
 
 export const auth = {
