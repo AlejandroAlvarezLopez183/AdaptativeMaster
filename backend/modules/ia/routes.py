@@ -53,17 +53,38 @@ async def obtener_detalle_ruta(
     temario = []
     # Ordenar lecciones por orden
     lecciones_ordenadas = sorted(ruta.lecciones, key=lambda x: x.orden) if ruta.lecciones else []
+    
+    # Obtener progreso real de la base de datos
+    from sqlalchemy.future import select
+    from modules.progreso.models import ProgresoLeccion
+    
+    lecciones_completadas_ids = set()
+    if lecciones_ordenadas:
+        result_progreso = await db.execute(
+            select(ProgresoLeccion.leccion_id)
+            .where(
+                ProgresoLeccion.usuario_id == current_user.id,
+                ProgresoLeccion.leccion_id.in_([l.id for l in lecciones_ordenadas]),
+                ProgresoLeccion.completado == True
+            )
+        )
+        lecciones_completadas_ids = set(result_progreso.scalars().all())
+
     for i, lec in enumerate(lecciones_ordenadas):
-        estado = "bloqueado"
-        if i == 0:
-            estado = "actual"
+        if lec.id in lecciones_completadas_ids:
+            estado = "completado"
+        else:
+            # Si no está completada, pero la anterior sí (o es la primera), es la actual
+            if i == 0 or lecciones_ordenadas[i-1].id in lecciones_completadas_ids:
+                estado = "actual"
+            else:
+                estado = "bloqueado"
             
         temario.append(schemas.TemaRuta(
             id=lec.id,
             nombre=lec.titulo,
             estado=estado
         ))
-        
     return schemas.RutaDetalleResponse(
         id=ruta.id,
         usuario_id=ruta.usuario_id,

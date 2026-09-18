@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { iaClient, Leccion } from '@adaptativemaster/shared';
+import { iaClient, progresoClient, Leccion } from '@adaptativemaster/shared';
 
 interface LeccionContenidoViewProps {
   leccionId: string | null;
   onGoBack: () => void;
   onOpenTutor: () => void;
+  onComplete: () => void;
 }
 
-export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: LeccionContenidoViewProps) {
+export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor, onComplete }: LeccionContenidoViewProps) {
   const [lesson, setLesson] = useState<Leccion | null>(null);
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const generationRef = React.useRef(false);
 
   useEffect(() => {
     const fetchLeccion = async () => {
@@ -24,7 +27,8 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
         let data = await iaClient.getLeccion(leccionId, token);
         
         // Si no hay teoría, la IA genera el contenido on-the-fly
-        if (!data.contenido || !data.contenido.teoria) {
+        if ((!data.contenido || !data.contenido.teoria) && !generationRef.current) {
+          generationRef.current = true;
           setIsGenerating(true);
           try {
             data = await iaClient.generarContenidoLeccion(leccionId, token);
@@ -32,6 +36,7 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
             console.error("Error generando contenido de la lección:", error);
           } finally {
             setIsGenerating(false);
+            generationRef.current = false;
           }
         }
         
@@ -246,6 +251,19 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor }: Lecci
         }}
         onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
         onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+        onClick={async () => {
+          if (!leccionId) return;
+          const token = localStorage.getItem('token');
+          if (!token) return;
+          try {
+            await progresoClient.completarLeccion(leccionId, token);
+            onComplete();
+          } catch (error) {
+            console.error("Error completando la lección:", error);
+            // Even if it fails, let's go back so the user isn't stuck
+            onComplete();
+          }
+        }}
         >
           Marcar como completada ✔
         </button>

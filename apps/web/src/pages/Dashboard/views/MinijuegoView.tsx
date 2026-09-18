@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { progresoClient } from '@adaptativemaster/shared';
 import { EmparejadorGame } from "./Minijuegos/EmparejadorGame";
 import { VerdaderoFalsoGame } from "./Minijuegos/VerdaderoFalsoGame";
 import { RellenarGame } from "./Minijuegos/RellenarGame";
@@ -7,6 +8,7 @@ import { OrdenarGame } from "./Minijuegos/OrdenarGame";
 type TipoMinijuego = "EMPAREJAR" | "VERDADERO_FALSO" | "RELLENAR" | "ORDENAR";
 
 interface MinijuegoViewProps {
+  leccionId: string | null;
   onBack: () => void;
   onComplete: () => void;
   tipoMinijuego?: TipoMinijuego;
@@ -56,7 +58,7 @@ const DEMO_DATA: Record<TipoMinijuego, any> = {
   },
 };
 
-export function MinijuegoView({ onBack, onComplete, tipoMinijuego, datosMinijuego, titulo }: MinijuegoViewProps) {
+export function MinijuegoView({ leccionId, onBack, onComplete, tipoMinijuego, datosMinijuego, titulo }: MinijuegoViewProps) {
   const [gameStarted, setGameStarted] = useState(false);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [victory, setVictory] = useState(false);
@@ -99,7 +101,19 @@ export function MinijuegoView({ onBack, onComplete, tipoMinijuego, datosMinijueg
               ← Salir
             </button>
           )}
-          <button onClick={onComplete}
+          <button onClick={async () => {
+            if (victory && leccionId) {
+              const token = localStorage.getItem('token');
+              if (token) {
+                try {
+                  await progresoClient.completarLeccion(leccionId, token);
+                } catch (e) {
+                  console.error(e);
+                }
+              }
+            }
+            onComplete();
+          }}
             style={{
               background: "#E8B94A", color: "#0F2A2E", border: "none", borderRadius: 12,
               padding: "14px 32px", fontSize: 16, fontWeight: 700, cursor: "pointer",

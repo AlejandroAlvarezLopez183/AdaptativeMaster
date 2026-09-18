@@ -61,15 +61,30 @@ async def marcar_leccion_completada(db: AsyncSession, usuario_id: UUID, leccion_
     if not leccion:
         raise ValueError("La lección no existe")
 
-    # Registrar progreso
-    progreso = models.ProgresoLeccion(
-        usuario_id=usuario_id,
-        leccion_id=leccion_id,
-        completado=True,
-        puntaje=100, # Por ahora estático
-        completado_en=datetime.utcnow()
+    # Verificar si ya está completada
+    result_prog = await db.execute(
+        select(models.ProgresoLeccion).where(
+            models.ProgresoLeccion.usuario_id == usuario_id,
+            models.ProgresoLeccion.leccion_id == leccion_id
+        )
     )
-    db.add(progreso)
+    progreso = result_prog.scalars().first()
+    
+    if progreso and progreso.completado:
+        return progreso # Ya estaba completada
+
+    if progreso:
+        progreso.completado = True
+        progreso.completado_en = datetime.utcnow()
+    else:
+        progreso = models.ProgresoLeccion(
+            usuario_id=usuario_id,
+            leccion_id=leccion_id,
+            completado=True,
+            puntaje=100, # Por ahora estático
+            completado_en=datetime.utcnow()
+        )
+        db.add(progreso)
     
     # Lógica de gamificación
     await otorgar_xp(db, usuario_id, cantidad=50, motivo=f"Lección completada: {leccion.titulo}")

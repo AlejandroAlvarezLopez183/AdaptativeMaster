@@ -109,6 +109,7 @@ export default function Dashboard() {
           <ExamenView onBack={() => setActive("leccion_duolingo")} onComplete={() => setActive("leccion_duolingo")} />
         ) : active === "minijuego" ? (
           <MinijuegoView
+            leccionId={selectedLeccionId}
             onBack={() => setActive("leccion_duolingo")}
             onComplete={() => setActive("leccion_duolingo")}
             tipoMinijuego={selectedMinijuego?.tipo as any}
@@ -120,6 +121,7 @@ export default function Dashboard() {
             leccionId={selectedLeccionId} 
             onGoBack={() => setActive("leccion_duolingo")} 
             onOpenTutor={() => setActive("tutor")} 
+            onComplete={() => setActive("leccion_duolingo")}
           />
         ) : active === "tutor" ? (
           <TutorView rutaId={selectedRutaId} leccionId={selectedLeccionId} />
