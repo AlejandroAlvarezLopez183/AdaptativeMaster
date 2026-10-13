@@ -26,13 +26,13 @@ docs/
 
 Cada módulo del backend sigue el patrón de capas: `routes.py` → `services.py` → `repository.py`.
 
-## 🚀 Requisitos previos
+##  Requisitos previos
 
 Para correr este proyecto en tu entorno local, solo necesitas tener instalado:
 - **[Docker](https://docs.docker.com/get-docker/)** y **Docker Compose**.
 - _Opcional_: Node.js v20+ (solo si deseas correr el frontend fuera de Docker para desarrollo avanzado en la app móvil).
 
-## 💻 Cómo levantar el proyecto localmente
+##  Cómo levantar el proyecto localmente
 
 1. **Configurar variables de entorno**
    Copia el archivo de ejemplo en el backend para crear tu `.env`:
