@@ -1,6 +1,6 @@
 # 1. Nombre y descripción del proyecto
 
-**Nombre:**Adaptative Master — Plataforma de Aprendizaje Adaptativo e Inteligente Impulsada por IA.
+**Nombre:** Adaptative Master — Plataforma de Aprendizaje Adaptativo e Inteligente Impulsada por IA.
 
 **Descripción:** Es una plataforma web educativa interactiva diseñada para transformar el aprendizaje autodidacta en una experiencia personalizada, gamificada y pedagógicamente asistida. El sistema elimina las rutas de estudio lineales y genéricas mediante el uso de Modelos de Lenguaje Grande (LLMs a través de OpenRouter), generando mallas curriculares dinámicas adaptadas a las metas y tiempos de cada estudiante. Integra un mapa de progreso visual en serpentina estilo Duolingo, minijuegos interactivos de evaluación generados en tiempo real, un tutor conversacional con contexto pedagógico profundo y salas de estudio colaborativas en vivo para fomentar la constancia y el aprendizaje social.
 
