@@ -23,9 +23,7 @@ export function ConfigSeguridad({ onBack }: ConfigSeguridadProps) {
     setSuccess(false);
 
     try {
-      // Simulación de actualización de contraseña
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise(resolve => setTimeout(resolve, 800));
       setSuccess(true);
       setCurrentPassword('');
       setNewPassword('');
@@ -41,76 +39,88 @@ export function ConfigSeguridad({ onBack }: ConfigSeguridadProps) {
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <button onClick={onBack} style={{
-        background: 'transparent', border: 'none', color: '#8FA8AA', cursor: 'pointer',
-        display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', padding: 0,
-        width: 'fit-content', fontFamily: 'Inter, sans-serif'
+        background: 'transparent', border: 'none', color: '#64748B', cursor: 'pointer',
+        display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', padding: 0,
+        width: 'fit-content', fontWeight: 500
       }}>
         ← Volver a Configuración
       </button>
 
       <div style={{
-        background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: '16px',
-        padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px'
+        background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px',
+        padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ fontSize: '32px' }}>🔒</div>
-          <div>
-            <h2 style={{ margin: 0, color: '#F5F3EE', fontSize: '20px', fontFamily: "'Fraunces', Georgia, serif" }}>Seguridad</h2>
-            <p style={{ margin: '4px 0 0 0', color: '#8FA8AA', fontSize: '14px' }}>Actualiza tu contraseña para mantener tu cuenta segura.</p>
-          </div>
+        <div>
+          <h2 style={{ margin: '0 0 4px', color: '#0F172A', fontSize: '18px', fontWeight: 700 }}>Seguridad</h2>
+          <p style={{ margin: 0, color: '#64748B', fontSize: '14px' }}>Actualiza tu contraseña para mantener tu cuenta segura.</p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={{ color: '#F5F3EE', fontSize: '14px', fontWeight: 500 }}>Contraseña actual</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label style={{ color: '#0F172A', fontSize: '13px', fontWeight: 600 }}>Contraseña actual</label>
             <input 
               type="password" 
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               style={{
-                background: 'rgba(15,42,46,0.6)', border: '1px solid rgba(245,243,238,0.1)',
-                borderRadius: '8px', padding: '12px 16px', color: '#F5F3EE', fontSize: '15px',
-                outline: 'none', fontFamily: 'Inter, sans-serif'
+                background: '#FFFFFF', border: '1px solid #CBD5E1',
+                borderRadius: '8px', padding: '10px 14px', color: '#0F172A', fontSize: '14px',
+                outline: 'none'
               }}
             />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={{ color: '#F5F3EE', fontSize: '14px', fontWeight: 500 }}>Nueva contraseña</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label style={{ color: '#0F172A', fontSize: '13px', fontWeight: 600 }}>Nueva contraseña</label>
             <input 
               type="password" 
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               style={{
-                background: 'rgba(15,42,46,0.6)', border: '1px solid rgba(245,243,238,0.1)',
-                borderRadius: '8px', padding: '12px 16px', color: '#F5F3EE', fontSize: '15px',
-                outline: 'none', fontFamily: 'Inter, sans-serif'
+                background: '#FFFFFF', border: '1px solid #CBD5E1',
+                borderRadius: '8px', padding: '10px 14px', color: '#0F172A', fontSize: '14px',
+                outline: 'none'
               }}
             />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <label style={{ color: '#F5F3EE', fontSize: '14px', fontWeight: 500 }}>Confirmar nueva contraseña</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label style={{ color: '#0F172A', fontSize: '13px', fontWeight: 600 }}>Confirmar nueva contraseña</label>
             <input 
               type="password" 
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               style={{
-                background: 'rgba(15,42,46,0.6)', border: '1px solid rgba(245,243,238,0.1)',
-                borderRadius: '8px', padding: '12px 16px', color: '#F5F3EE', fontSize: '15px',
-                outline: 'none', fontFamily: 'Inter, sans-serif'
+                background: '#FFFFFF', border: '1px solid #CBD5E1',
+                borderRadius: '8px', padding: '10px 14px', color: '#0F172A', fontSize: '14px',
+                outline: 'none'
               }}
             />
           </div>
         </div>
 
-        {error && <div style={{ color: '#F2637B', fontSize: '14px' }}>{error}</div>}
-        {success && <div style={{ color: '#4CAF50', fontSize: '14px' }}>¡Contraseña actualizada con éxito!</div>}
+        {error && <div style={{ color: '#DC2626', fontSize: '13px', background: '#FEF2F2', padding: 10, borderRadius: 6 }}>{error}</div>}
+        {success && <div style={{ color: '#047857', fontSize: '13px', background: '#ECFDF5', padding: 10, borderRadius: 6 }}>¡Contraseña actualizada correctamente!</div>}
 
-        <button onClick={handleSave} disabled={loading || !currentPassword || !newPassword} style={{
-          background: '#E8B94A', color: '#0F2A2E', border: 'none', borderRadius: '8px',
-          padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: (loading || !currentPassword || !newPassword) ? 'not-allowed' : 'pointer',
-          alignSelf: 'flex-start', opacity: (loading || !currentPassword || !newPassword) ? 0.5 : 1, transition: 'opacity 0.2s'
-        }}>
-          {loading ? 'Guardando...' : 'Cambiar contraseña'}
+        <button 
+          onClick={handleSave}
+          disabled={loading}
+          style={{
+            background: '#0F172A',
+            color: '#FFFFFF',
+            border: 'none',
+            borderRadius: '8px',
+            padding: '10px 20px',
+            fontSize: '14px',
+            fontWeight: 600,
+            cursor: loading ? 'wait' : 'pointer',
+            alignSelf: 'flex-start',
+            opacity: loading ? 0.7 : 1,
+            transition: 'all 0.15s ease'
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = '#1E293B')}
+          onMouseLeave={e => (e.currentTarget.style.background = '#0F172A')}
+        >
+          {loading ? 'Actualizando...' : 'Actualizar contraseña'}
         </button>
       </div>
     </div>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { iaClient, progresoClient, Leccion } from '@adaptativemaster/shared';
+import React, { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import { iaClient, progresoClient } from "@adaptativemaster/shared";
 
 interface LeccionContenidoViewProps {
   leccionId: string | null;
@@ -9,53 +9,62 @@ interface LeccionContenidoViewProps {
   onComplete: () => void;
 }
 
-export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor, onComplete }: LeccionContenidoViewProps) {
-  const [lesson, setLesson] = useState<Leccion | null>(null);
+export function LeccionContenidoView({ 
+  leccionId, 
+  onGoBack, 
+  onOpenTutor,
+  onComplete 
+}: LeccionContenidoViewProps) {
+  const [lesson, setLesson] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
-
-  const generationRef = React.useRef(false);
 
   useEffect(() => {
     const fetchLeccion = async () => {
       if (!leccionId) return;
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) return;
 
       try {
         setLoading(true);
-        let data = await iaClient.getLeccion(leccionId, token);
-        
-        // Si no hay teoría, la IA genera el contenido on-the-fly
-        if ((!data.contenido || !data.contenido.teoria) && !generationRef.current) {
-          generationRef.current = true;
+        const data = await iaClient.getLeccion(leccionId, token);
+        setLesson(data);
+
+        // Si no tiene contenido teórico y video_url, llamar a generar
+        if (!data.contenido?.teoria) {
           setIsGenerating(true);
           try {
-            data = await iaClient.generarContenidoLeccion(leccionId, token);
-          } catch (error) {
-            console.error("Error generando contenido de la lección:", error);
+            const updated = await iaClient.generarContenidoLeccion(leccionId, token);
+            setLesson(updated);
+          } catch (genError) {
+            console.error("Error generando contenido de lección:", genError);
           } finally {
             setIsGenerating(false);
-            generationRef.current = false;
           }
         }
-        
-        setLesson(data);
       } catch (error) {
-        console.error("Error fetching leccion:", error);
+        console.error("Error al obtener la lección:", error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchLeccion();
   }, [leccionId]);
 
   if (loading || isGenerating) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '100px 0', color: '#E8B94A', gap: 16 }}>
-        <span className="animate-spin" style={{ fontSize: 48 }}>⚙️</span>
-        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 18 }}>
-          {isGenerating ? "Generando contenido de la lección..." : "Cargando lección..."}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '100px 0', color: '#0F172A', gap: 16 }}>
+        <div style={{
+          width: 44,
+          height: 44,
+          border: '3px solid #E2E8F0',
+          borderTopColor: '#2563EB',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite',
+        }} />
+        <p style={{ fontSize: 16, fontWeight: 600, color: '#0F172A', margin: 0 }}>
+          {isGenerating ? "Generando contenido personalizado de la lección..." : "Cargando lección..."}
         </p>
       </div>
     );
@@ -63,20 +72,20 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor, onCompl
 
   if (!lesson) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '100px 0', color: '#8FA8AA' }}>
-        <p>No se pudo cargar la lección.</p>
-        <button onClick={onGoBack} style={{ marginTop: 20, padding: '10px 20px', background: '#173C3E', border: 'none', color: '#fff', borderRadius: 8, cursor: 'pointer' }}>Volver</button>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '100px 0', color: '#64748B' }}>
+        <p>No se pudo cargar la información de la lección.</p>
+        <button onClick={onGoBack} style={{ marginTop: 16, padding: '9px 18px', background: '#0F172A', border: 'none', color: '#fff', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>Volver al mapa</button>
       </div>
     );
   }
 
   return (
     <div className="animate-fade-in" style={{
-      maxWidth: '800px',
+      maxWidth: '860px',
       width: '100%',
       margin: '0 auto',
-      padding: '40px 20px',
-      fontFamily: 'Inter, sans-serif'
+      padding: '24px 20px 48px',
+      fontFamily: "'Open Sans', system-ui, sans-serif"
     }}>
       
       {/* Botón Volver */}
@@ -85,59 +94,67 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor, onCompl
         style={{
           background: 'transparent',
           border: 'none',
-          color: '#8FA8AA',
+          color: '#64748B',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
-          gap: 8,
-          marginBottom: 32,
+          gap: 6,
+          marginBottom: 24,
           padding: 0,
-          fontSize: 15,
+          fontSize: 14,
           fontWeight: 500
         }}
-        onMouseEnter={e => e.currentTarget.style.color = '#F5F3EE'}
-        onMouseLeave={e => e.currentTarget.style.color = '#8FA8AA'}
+        onMouseEnter={e => (e.currentTarget.style.color = '#0F172A')}
+        onMouseLeave={e => (e.currentTarget.style.color = '#64748B')}
       >
         <span>←</span> Volver al mapa de la ruta
       </button>
 
       {/* Cabecera */}
-      <div style={{ marginBottom: 40 }}>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
+      <div style={{
+        background: '#FFFFFF',
+        border: '1px solid #E2E8F0',
+        borderRadius: 14,
+        padding: '28px 32px',
+        marginBottom: 24,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+      }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 12 }}>
           <span style={{ 
-            fontSize: 11, fontWeight: 700, color: '#0F2A2E', 
-            background: '#7EC8C8', padding: '4px 10px', 
-            borderRadius: 12, textTransform: 'uppercase', letterSpacing: '0.05em' 
+            fontSize: 11, fontWeight: 600, color: '#1D4ED8', 
+            background: '#EFF6FF', border: '1px solid #DBEAFE', padding: '3px 10px', 
+            borderRadius: 6, textTransform: 'uppercase', letterSpacing: '0.04em' 
           }}>
             Lección teórica
           </span>
-          <span style={{ fontSize: 13, color: '#8FA8AA', fontWeight: 500 }}>
-            Lección {lesson.orden} · Dificultad: {lesson.dificultad}
+          <span style={{ fontSize: 13, color: '#64748B', fontWeight: 500 }}>
+            Módulo {lesson.orden} · Nivel: {lesson.dificultad}
           </span>
         </div>
         
         <h1 style={{ 
-          fontFamily: "'Fraunces', Georgia, serif", fontSize: 40, 
-          fontWeight: 800, color: '#F5F3EE', margin: '0 0 16px',
-          letterSpacing: '-0.02em'
+          fontSize: 26, fontWeight: 700, color: '#0F172A', margin: '0 0 12px',
+          letterSpacing: '-0.01em'
         }}>
           {lesson.titulo}
         </h1>
         
-        <div style={{ display: 'flex', gap: 24, color: '#8FA8AA', fontSize: 14 }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>⏱ 15 min</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>✨ +20 XP al completar</span>
+        <div style={{ display: 'flex', gap: 20, color: '#64748B', fontSize: 13 }}>
+          <span>Duración estimada: 15 min</span>
+          <span>·</span>
+          <span>Recompensa: +20 XP</span>
         </div>
       </div>
 
       {/* Área principal (Video + Texto) */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 32, marginBottom: 40 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 32 }}>
         
-        {/* Video */}
-        {lesson.contenido?.video_url ? (
+        {/* Video si está disponible */}
+        {lesson.contenido?.video_url && (
           <div style={{ 
-            width: '100%', aspectRatio: '16/9', background: '#173C3E', 
-            borderRadius: 24, overflow: 'hidden', border: '1px solid rgba(245,243,238,0.06)'
+            width: '100%', aspectRatio: '16/9', background: '#0F172A', 
+            borderRadius: 14, overflow: 'hidden', border: '1px solid #E2E8F0',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
           }}>
             <iframe 
               width="100%" 
@@ -149,25 +166,17 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor, onCompl
               allowFullScreen>
             </iframe>
           </div>
-        ) : (
-          <div style={{ 
-            width: '100%', aspectRatio: '16/9', background: '#173C3E', 
-            borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: '1px solid rgba(245,243,238,0.06)', position: 'relative', overflow: 'hidden'
-          }}>
-            <p style={{ color: '#8FA8AA' }}>No hay video disponible para esta lección</p>
-          </div>
         )}
 
-        {/* Teoría */}
+        {/* Teoría y contenido */}
         <div style={{ 
-          background: 'rgba(23,60,62,0.4)', borderRadius: 20, padding: 32,
-          border: '1px solid rgba(245,243,238,0.06)'
+          background: '#FFFFFF', borderRadius: 14, padding: '32px',
+          border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
         }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: 20, color: '#F5F3EE', fontWeight: 600 }}>
-            Resumen de la lección
+          <h3 style={{ margin: '0 0 20px', fontSize: 18, color: '#0F172A', fontWeight: 700 }}>
+            Contenido de estudio
           </h3>
-          <div className="markdown-content" style={{ color: '#E4EAEB', fontSize: 16, lineHeight: 1.7 }}>
+          <div className="markdown-content" style={{ color: '#334155', fontSize: 15, lineHeight: 1.8 }}>
             {lesson.contenido?.teoria ? (
               <ReactMarkdown>{lesson.contenido.teoria}</ReactMarkdown>
             ) : (
@@ -176,32 +185,36 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor, onCompl
           </div>
         </div>
 
-        {/* Recursos extra */}
+        {/* Recursos adicionales */}
         {lesson.contenido?.recursos_extra && lesson.contenido.recursos_extra.length > 0 && (
           <div style={{ 
-            background: 'rgba(23,60,62,0.4)', borderRadius: 20, padding: 32,
-            border: '1px solid rgba(245,243,238,0.06)'
+            background: '#FFFFFF', borderRadius: 14, padding: 28,
+            border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
           }}>
-            <h3 style={{ margin: '0 0 16px', fontSize: 20, color: '#F5F3EE', fontWeight: 600 }}>
-              Recursos adicionales
+            <h3 style={{ margin: '0 0 16px', fontSize: 16, color: '#0F172A', fontWeight: 700 }}>
+              Recursos de lectura recomendados
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {lesson.contenido.recursos_extra.map((rec: any, idx: number) => (
                 <a key={idx} href={rec.url} target="_blank" rel="noreferrer" style={{
-                  display: 'flex', alignItems: 'center', gap: 16, padding: '16px',
-                  background: 'rgba(245,243,238,0.03)', borderRadius: 12, textDecoration: 'none',
-                  border: '1px solid rgba(245,243,238,0.05)', transition: 'background 0.2s'
+                  display: 'flex', alignItems: 'center', gap: 14, padding: '12px 16px',
+                  background: '#F8FAFC', borderRadius: 8, textDecoration: 'none',
+                  border: '1px solid #E2E8F0', transition: 'all 0.15s ease'
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(245,243,238,0.08)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(245,243,238,0.03)'}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = '#EFF6FF';
+                  e.currentTarget.style.borderColor = '#DBEAFE';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = '#F8FAFC';
+                  e.currentTarget.style.borderColor = '#E2E8F0';
+                }}
                 >
-                  <span style={{ fontSize: 24 }}>
-                    {rec.tipo === 'video' ? '🎥' : rec.tipo === 'libro' ? '📘' : rec.tipo === 'herramienta' ? '🛠️' : '📄'}
-                  </span>
-                  <div>
-                    <h4 style={{ margin: '0 0 4px', color: '#7EC8C8', fontSize: 16 }}>{rec.titulo}</h4>
-                    <p style={{ margin: 0, color: '#8FA8AA', fontSize: 14 }}>{rec.descripcion}</p>
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{ margin: '0 0 2px', color: '#1D4ED8', fontSize: 14, fontWeight: 600 }}>{rec.titulo}</h4>
+                    <p style={{ margin: 0, color: '#64748B', fontSize: 12 }}>{rec.descripcion}</p>
                   </div>
+                  <span style={{ color: '#94A3B8', fontSize: 16 }}>↗</span>
                 </a>
               ))}
             </div>
@@ -210,47 +223,52 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor, onCompl
 
       </div>
 
-      {/* Botones de acción fijos al final */}
+      {/* Botones de acción */}
       <div style={{ 
-        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, 
-        paddingTop: 32, borderTop: '1px solid rgba(245,243,238,0.1)' 
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14, 
+        paddingTop: 24, borderTop: '1px solid #E2E8F0' 
       }}>
         <button style={{
-          background: 'transparent',
-          color: '#E8B94A',
-          border: '2px solid rgba(232,185,74,0.3)',
-          borderRadius: 14,
-          padding: '16px 24px',
-          fontSize: 16,
+          background: '#FFFFFF',
+          color: '#0F172A',
+          border: '1px solid #CBD5E1',
+          borderRadius: 8,
+          padding: '12px 20px',
+          fontSize: 14,
           fontWeight: 600,
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 10,
-          transition: 'all 0.2s'
+          gap: 8,
+          transition: 'all 0.15s ease'
         }}
-        onMouseEnter={e => e.currentTarget.style.background = 'rgba(232,185,74,0.1)'}
-        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = '#F8FAFC';
+          e.currentTarget.style.borderColor = '#94A3B8';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = '#FFFFFF';
+          e.currentTarget.style.borderColor = '#CBD5E1';
+        }}
         onClick={onOpenTutor}
         >
-          <span>🤖</span> Practicar con Tutor IA
+          Consultar dudas con Tutor IA
         </button>
 
         <button style={{
-          background: '#7EC8C8',
-          color: '#0F2A2E',
+          background: '#0F172A',
+          color: '#FFFFFF',
           border: 'none',
-          borderRadius: 14,
-          padding: '16px 24px',
-          fontSize: 16,
-          fontWeight: 700,
+          borderRadius: 8,
+          padding: '12px 20px',
+          fontSize: 14,
+          fontWeight: 600,
           cursor: 'pointer',
-          boxShadow: '0 4px 20px rgba(126,200,200,0.2)',
-          transition: 'all 0.2s'
+          transition: 'all 0.15s ease'
         }}
-        onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-        onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+        onMouseEnter={e => (e.currentTarget.style.background = '#1E293B')}
+        onMouseLeave={e => (e.currentTarget.style.background = '#0F172A')}
         onClick={async () => {
           if (!leccionId) return;
           const token = localStorage.getItem('token');
@@ -260,12 +278,11 @@ export function LeccionContenidoView({ leccionId, onGoBack, onOpenTutor, onCompl
             onComplete();
           } catch (error) {
             console.error("Error completando la lección:", error);
-            // Even if it fails, let's go back so the user isn't stuck
             onComplete();
           }
         }}
         >
-          Marcar como completada ✔
+          Marcar lección como completada
         </button>
       </div>
 

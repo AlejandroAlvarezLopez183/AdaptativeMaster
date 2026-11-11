@@ -27,7 +27,7 @@ export function OrdenarGame({ datos, onComplete }) {
             onComplete(esOk ? 300 : 50);
         }, 2000);
     };
-    return (_jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 20, width: "100%", maxWidth: 680, margin: "0 auto" }, children: [_jsx("div", { style: { textAlign: "center" }, children: _jsx("p", { style: { color: "#8FA8AA", fontSize: 14, margin: 0 }, children: "\uD83D\uDDB1\uFE0F Arrastra los fragmentos para ordenarlos correctamente" }) }), _jsx("div", { style: { display: "flex", flexDirection: "column", gap: 8 }, children: items.map((itemIdx, pos) => {
+    return (_jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 20, width: "100%", maxWidth: 680, margin: "0 auto" }, children: [_jsx("div", { style: { textAlign: "center" }, children: _jsx("p", { style: { color: "#8FA8AA", fontSize: 14, margin: 0 }, children: "Arrastra los fragmentos para ordenarlos correctamente" }) }), _jsx("div", { style: { display: "flex", flexDirection: "column", gap: 8 }, children: items.map((itemIdx, pos) => {
                     const isCorrect = verificado && orden_correcto[pos] === itemIdx;
                     const isWrong = verificado && orden_correcto[pos] !== itemIdx;
                     return (_jsxs("div", { draggable: !verificado, onDragStart: () => handleDragStart(pos), onDragOver: (e) => handleDragOver(e, pos), onDragEnd: handleDragEnd, style: {
@@ -42,8 +42,8 @@ export function OrdenarGame({ datos, onComplete }) {
                                     fontFamily: "'Fira Code', 'Courier New', monospace",
                                     fontSize: 14, color: isCorrect ? "#45C893" : isWrong ? "#F2637B" : "#F5F3EE",
                                     flex: 1, lineHeight: 1.5
-                                }, children: fragmentos[itemIdx] }), !verificado && _jsx("span", { style: { color: "#8FA8AA", fontSize: 18 }, children: "\u283F" }), isCorrect && _jsx("span", { children: "\u2705" }), isWrong && _jsx("span", { children: "\u274C" })] }, itemIdx));
-                }) }), verificado ? (_jsx("div", { style: { textAlign: "center", color: esCorrecto ? "#45C893" : "#F2637B", fontWeight: 700, fontSize: 18 }, children: esCorrecto ? "🎉 ¡Orden perfecto!" : "❌ Orden incorrecto. ¡Sigue practicando!" })) : (_jsx("button", { onClick: handleVerificar, style: {
+                                }, children: fragmentos[itemIdx] }), !verificado && _jsx("span", { style: { color: "#8FA8AA", fontSize: 18 }, children: "\u283F" }), isCorrect && _jsx("span", {}), isWrong && _jsx("span", {})] }, itemIdx));
+                }) }), verificado ? (_jsx("div", { style: { textAlign: "center", color: esCorrecto ? "#45C893" : "#F2637B", fontWeight: 700, fontSize: 18 }, children: esCorrecto ? " ¡Orden perfecto!" : " Orden incorrecto. ¡Sigue practicando!" })) : (_jsx("button", { onClick: handleVerificar, style: {
                     background: "#E8B94A", color: "#0F2A2E", border: "none", borderRadius: 12,
                     padding: "14px 48px", fontSize: 16, fontWeight: 700, cursor: "pointer",
                     alignSelf: "center", transition: "transform 0.2s"

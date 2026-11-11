@@ -97,9 +97,9 @@ function LessonNode({
   const isFinalNode = isBoss || isCheckpoint;
   const size = isFinalNode ? 90 : 64; // Aún más grande para jefes
 
-  const bg = isDone ? chapterColor : isActive ? chapterColor : "#1E4A4D";
-  const borderColor = isDone ? chapterColor : isActive ? chapterColor : "rgba(245,243,238,0.12)";
-  const iconColor = isDone || isActive ? "#0F2A2E" : "rgba(245,243,238,0.25)";
+  const bg = isDone ? chapterColor : isActive ? chapterColor : "#F1F5F9";
+  const borderColor = isDone ? chapterColor : isActive ? chapterColor : "#E2E8F0";
+  const iconColor = isDone || isActive ? "#FFFFFF" : "#94A3B8";
 
   return (
     <div style={{ display: "flex", flexDirection: "row", alignItems: "center", position: "relative" }}>
@@ -113,7 +113,7 @@ function LessonNode({
           width: 48,
           background: isDone
             ? `linear-gradient(to right, ${chapterColor}, ${chapterColor}88)`
-            : "rgba(245,243,238,0.08)",
+            : "#E2E8F0",
           borderRadius: 4,
           zIndex: 0,
         }} />
@@ -140,7 +140,7 @@ function LessonNode({
               width: size,
               height: size,
               borderRadius: "20%",
-              background: isLocked ? "#173C3E" : `linear-gradient(135deg, ${chapterColor}, ${chapterColor}aa)`,
+              background: isLocked ? "#F1F5F9" : `linear-gradient(135deg, ${chapterColor}, ${chapterColor}aa)`,
               border: `4px solid ${borderColor}`,
               display: "flex",
               alignItems: "center",
@@ -148,9 +148,9 @@ function LessonNode({
               cursor: isLocked ? "default" : "pointer",
               transition: "transform 0.18s, box-shadow 0.18s",
               boxShadow: isActive
-                ? `0 0 0 6px ${chapterColor}30, 0 12px 32px rgba(0,0,0,0.5)`
+                ? `0 0 0 6px ${chapterColor}30, 0 12px 32px rgba(0,0,0,0.12)`
                 : isDone
-                ? `0 8px 24px rgba(0,0,0,0.4)`
+                ? `0 4px 12px rgba(0,0,0,0.08)`
                 : "none",
               outline: "none",
               position: "relative",
@@ -163,21 +163,21 @@ function LessonNode({
             <div style={{ transform: isLocked ? "rotate(-45deg)" : "rotate(0deg)" }}>
               {isDone ? (
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                  <path d="M5 12L10 17L19 7" stroke="#0F2A2E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M5 12L10 17L19 7" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               ) : isLocked ? (
                 <svg width="28" height="28" viewBox="0 0 20 20" fill="none">
-                  <rect x="4" y="9" width="12" height="9" rx="2" stroke="rgba(245,243,238,0.3)" strokeWidth="1.8" fill="none"/>
-                  <path d="M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9" stroke="rgba(245,243,238,0.3)" strokeWidth="1.8" strokeLinecap="round"/>
+                  <rect x="4" y="9" width="12" height="9" rx="2" stroke="#94A3B8" strokeWidth="1.8" fill="none"/>
+                  <path d="M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9" stroke="#94A3B8" strokeWidth="1.8" strokeLinecap="round"/>
                 </svg>
               ) : (
-                <span style={{ fontSize: 32 }}>⚔️</span>
+                <span style={{ fontSize: 32 }}></span>
               )}
             </div>
             
             {/* Adorno superior (como una coronita) si es jefe */}
             {isBoss && !isLocked && (
-               <div style={{ position: 'absolute', top: -14, fontSize: 16 }}>👑</div>
+               <div style={{ position: 'absolute', top: -14, fontSize: 16 }}></div>
             )}
           </button>
         ) : (
@@ -196,9 +196,9 @@ function LessonNode({
               cursor: isLocked ? "default" : "pointer",
               transition: "transform 0.18s, box-shadow 0.18s",
               boxShadow: isActive
-                ? `0 0 0 4px ${chapterColor}30, 0 8px 24px rgba(0,0,0,0.4)`
+                ? `0 0 0 4px ${chapterColor}30, 0 8px 20px rgba(0,0,0,0.1)`
                 : isDone
-                ? `0 4px 16px rgba(0,0,0,0.3)`
+                ? `0 2px 8px rgba(0,0,0,0.06)`
                 : "none",
               outline: "none",
               position: "relative",
@@ -209,12 +209,12 @@ function LessonNode({
           >
             {isDone ? (
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12L10 17L19 7" stroke="#0F2A2E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M5 12L10 17L19 7" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             ) : isLocked ? (
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="4" y="9" width="12" height="9" rx="2" stroke="rgba(245,243,238,0.2)" strokeWidth="1.5" fill="none"/>
-                <path d="M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9" stroke="rgba(245,243,238,0.2)" strokeWidth="1.5" strokeLinecap="round"/>
+                <rect x="4" y="9" width="12" height="9" rx="2" stroke="#94A3B8" strokeWidth="1.5" fill="none"/>
+                <path d="M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9" stroke="#94A3B8" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
             ) : (
               <NodeIcon type={type} color={iconColor} />
@@ -228,36 +228,36 @@ function LessonNode({
             bottom: size + 10,
             left: "50%",
             transform: "translateX(-50%)",
-            background: "#173C3E",
-            border: `1px solid ${isLocked ? "rgba(245,243,238,0.1)" : chapterColor + "50"}`,
+            background: "#FFFFFF",
+            border: `1px solid ${isLocked ? "#E2E8F0" : chapterColor + "50"}`,
             borderRadius: 12,
             padding: "10px 14px",
             minWidth: 170,
             zIndex: 20,
             pointerEvents: "none",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
           }}>
             <p style={{
-              fontFamily: "Inter, sans-serif", fontSize: 10, color: isLocked ? "#8FA8AA" : chapterColor,
-              letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600, margin: "0 0 4px",
+              fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 10, color: isLocked ? "#64748B" : chapterColor,
+              letterSpacing: "0.06em", textTransform: "uppercase", fontWeight: 700, margin: "0 0 4px",
             }}>
-              {type === "boss" ? "⚔️ Examen de Sección" : type === "checkpoint" ? "🚩 Punto de control" : type === "quiz" ? "Quiz" : "Lección"}
+              {type === "boss" ? "Examen de Sección" : type === "checkpoint" ? "Punto de control" : type === "quiz" ? "Quiz" : "Lección"}
               {isLocked && " · Bloqueado"}
             </p>
             <p style={{
-              fontFamily: "'Fraunces', Georgia, serif", fontSize: 14, fontWeight: 600,
-              color: "#F5F3EE", margin: "0 0 6px", lineHeight: 1.3,
+              fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 13, fontWeight: 700,
+              color: "#0F172A", margin: "0 0 4px", lineHeight: 1.3,
             }}>
               {lesson.title}
             </p>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 11, color: "#8FA8AA", margin: 0 }}>
+            <p style={{ fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 11, color: "#64748B", margin: 0 }}>
               +{lesson.xp} XP
             </p>
             <div style={{
               position: "absolute", bottom: -6, left: "50%", transform: "translateX(-50%) rotate(45deg)",
-              width: 10, height: 10, background: "#173C3E",
-              borderRight: `1px solid ${isLocked ? "rgba(245,243,238,0.1)" : chapterColor + "50"}`,
-              borderBottom: `1px solid ${isLocked ? "rgba(245,243,238,0.1)" : chapterColor + "50"}`,
+              width: 10, height: 10, background: "#FFFFFF",
+              borderRight: `1px solid ${isLocked ? "#E2E8F0" : chapterColor + "50"}`,
+              borderBottom: `1px solid ${isLocked ? "#E2E8F0" : chapterColor + "50"}`,
             }} />
           </div>
         )}
@@ -293,28 +293,27 @@ function ChapterHeader({ chapter, isFirst }: { chapter: Chapter; isFirst: boolea
   return (
     <div style={{ display: "flex", flexDirection: "row", alignItems: "center", marginRight: 32, marginLeft: isFirst ? 0 : 48, position: "relative" }}>
       <div style={{
-        background: `${chapter.color}15`, border: `1px solid ${chapter.color}35`,
+        background: "#FFFFFF", border: `1px solid #E2E8F0`,
         borderRadius: 14, padding: "14px 28px", textAlign: "center", position: "relative", overflow: "hidden",
-        whiteSpace: "nowrap",
+        whiteSpace: "nowrap", boxShadow: "0 1px 3px rgba(0,0,0,0.03)"
       }}>
-        <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse at 50% 0%, ${chapter.color}12 0%, transparent 60%)` }} />
         <p style={{
-          fontFamily: "Inter, sans-serif", fontSize: 10, color: chapter.color,
-          letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700, margin: "0 0 4px", position: "relative",
+          fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 10, color: chapter.color,
+          letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 700, margin: "0 0 4px", position: "relative",
         }}>
           Sección {chapter.id}
         </p>
         <h3 style={{
-          fontFamily: "'Fraunces', Georgia, serif", fontSize: 20, fontWeight: 800,
-          color: "#F5F3EE", margin: "0 0 2px", letterSpacing: "-0.01em", position: "relative",
+          fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 16, fontWeight: 700,
+          color: "#0F172A", margin: "0 0 2px", letterSpacing: "-0.01em", position: "relative",
         }}>
           {chapter.title}
         </h3>
-        <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#8FA8AA", margin: 0, position: "relative" }}>
+        <p style={{ fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 12, color: "#64748B", margin: 0, position: "relative" }}>
           {chapter.subtitle}
         </p>
       </div>
-      <div style={{ height: 3, width: 28, background: `${chapter.color}40`, borderRadius: 4, marginLeft: 0 }} />
+      <div style={{ height: 3, width: 28, background: "#E2E8F0", borderRadius: 4, marginLeft: 0 }} />
     </div>
   );
 }
@@ -445,13 +444,13 @@ export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQui
       {/* Titulo superior (Fijo arriba o arriba del scroll horizontal) */}
       <div style={{ textAlign: "center", marginBottom: 24, width: "100%", flexShrink: 0 }}>
         <h1 style={{
-          fontFamily: "'Fraunces', Georgia, serif", fontSize: 32, fontWeight: 800,
-          color: "#F5F3EE", margin: "0 0 8px", letterSpacing: "-0.02em",
+          fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 26, fontWeight: 700,
+          color: "#0F172A", margin: "0 0 6px", letterSpacing: "-0.01em",
         }}>
-          Ruta Temática
+          Mapa interactivo de lecciones
         </h1>
-        <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "#8FA8AA", margin: 0 }}>
-          Sigue el camino horizontalmente para avanzar
+        <p style={{ fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 13, color: "#64748B", margin: 0 }}>
+          Sigue el camino horizontal para completar tus módulos paso a paso
         </p>
       </div>
 
@@ -517,14 +516,13 @@ export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQui
           {/* Final */}
           <div style={{ 
             display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", 
-            marginLeft: 48, padding: "28px 24px", background: "#173C3E", borderRadius: 18, 
-            border: "1px solid rgba(232,185,74,0.2)", minWidth: 200 
+            marginLeft: 48, padding: "28px 24px", background: "#FFFFFF", borderRadius: 14, 
+            border: "1px solid #E2E8F0", minWidth: 200, boxShadow: "0 1px 3px rgba(0,0,0,0.03)"
           }}>
-            <div style={{ fontSize: 32, marginBottom: 10 }}>🏆</div>
-            <p style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 18, fontWeight: 700, color: "#F5F3EE", margin: "0 0 6px" }}>
-              Maestría
+            <p style={{ fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 16, fontWeight: 700, color: "#0F172A", margin: "0 0 4px" }}>
+              Meta del curso
             </p>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#8FA8AA", margin: 0 }}>
+            <p style={{ fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 12, color: "#64748B", margin: 0 }}>
               Completa todas las secciones
             </p>
           </div>

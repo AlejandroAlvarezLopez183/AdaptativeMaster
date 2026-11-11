@@ -50,7 +50,7 @@ export function RellenarGame({ datos, onComplete }: RellenarGameProps) {
       {/* Progress */}
       <div style={{ display: "flex", justifyContent: "space-between", width: "100%", color: "#8FA8AA", fontSize: 14, fontWeight: 600 }}>
         <span>Pregunta {index + 1} de {ejercicios.length}</span>
-        <span>💎 {score} XP</span>
+        <span> {score} XP</span>
       </div>
 
       {/* Frase con hueco */}
@@ -71,7 +71,7 @@ export function RellenarGame({ datos, onComplete }: RellenarGameProps) {
         </p>
         {confirmado && (
           <p style={{ color: seleccion === ejercicio.respuesta ? "#45C893" : "#F2637B", marginTop: 16, fontSize: 14 }}>
-            {seleccion === ejercicio.respuesta ? "✅ ¡Correcto!" : `❌ La respuesta correcta era: "${ejercicio.respuesta}"`}
+            {seleccion === ejercicio.respuesta ? " ¡Correcto!" : ` La respuesta correcta era: "${ejercicio.respuesta}"`}
           </p>
         )}
       </div>

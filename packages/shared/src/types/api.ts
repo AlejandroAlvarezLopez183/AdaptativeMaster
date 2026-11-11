@@ -122,7 +122,7 @@ export interface DashboardProgresoResponse {
 
 // Módulo Sesiones
 export interface CompaneroSugerido {
-  id: number;
+  id: string | number;
   nombre: string;
   ruta_actual: string;
   nivel: string;
@@ -139,12 +139,54 @@ export interface BusquedaSesionesResponse {
 }
 
 export interface SesionProxima {
-  id: number;
+  id: string | number;
   fecha_hora: string;
   participantes_count: number;
+  tema?: string;
+  codigo_invitacion?: string;
 }
 
 export interface ProximaSesionResponse {
   hay_sesion: boolean;
   sesion?: SesionProxima;
+}
+
+export interface ParticipanteInfo {
+  id: string;
+  usuario_id: string;
+  nombre: string;
+  conectado: boolean;
+  unido_en: string;
+}
+
+export interface MensajeSesionResponse {
+  id: string;
+  sesion_id: string;
+  usuario_id: string;
+  usuario_nombre: string;
+  text: string;
+  enviado_en: string;
+}
+
+export interface SesionDetalleResponse {
+  id: string;
+  creador_id: string;
+  creador_nombre: string;
+  tema: string;
+  codigo_invitacion: string;
+  estado: string;
+  creada_en: string;
+  participantes: ParticipanteInfo[];
+  mensajes_recientes: MensajeSesionResponse[];
+}
+
+export interface SesionListItem {
+  id: string;
+  creador_id: string;
+  creador_nombre: string;
+  tema: string;
+  codigo_invitacion: string;
+  estado: string;
+  participantes_count: number;
+  creada_en: string;
 }

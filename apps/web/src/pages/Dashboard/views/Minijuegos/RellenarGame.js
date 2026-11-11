@@ -32,14 +32,14 @@ export function RellenarGame({ datos, onComplete }) {
     };
     // Resaltar el ___ en la frase
     const partes = ejercicio.frase.split("___");
-    return (_jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 32, alignItems: "center", width: "100%", maxWidth: 680, margin: "0 auto" }, children: [_jsxs("div", { style: { display: "flex", justifyContent: "space-between", width: "100%", color: "#8FA8AA", fontSize: 14, fontWeight: 600 }, children: [_jsxs("span", { children: ["Pregunta ", index + 1, " de ", ejercicios.length] }), _jsxs("span", { children: ["\uD83D\uDC8E ", score, " XP"] })] }), _jsxs("div", { style: {
+    return (_jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 32, alignItems: "center", width: "100%", maxWidth: 680, margin: "0 auto" }, children: [_jsxs("div", { style: { display: "flex", justifyContent: "space-between", width: "100%", color: "#8FA8AA", fontSize: 14, fontWeight: 600 }, children: [_jsxs("span", { children: ["Pregunta ", index + 1, " de ", ejercicios.length] }), _jsxs("span", { children: [" ", score, " XP"] })] }), _jsxs("div", { style: {
                     background: "rgba(23,60,62,0.4)", border: "1px solid rgba(245,243,238,0.08)",
                     borderRadius: 20, padding: "36px 32px", width: "100%", textAlign: "center"
                 }, children: [_jsxs("p", { style: { color: "#F5F3EE", fontSize: 22, lineHeight: 1.8, fontWeight: 500, margin: 0 }, children: [partes[0], _jsx("span", { style: {
                                     display: "inline-block", minWidth: 120, borderBottom: `3px solid ${confirmado ? (seleccion === ejercicio.respuesta ? "#45C893" : "#F2637B") : "#E8B94A"}`,
                                     color: confirmado ? (seleccion === ejercicio.respuesta ? "#45C893" : "#F2637B") : "#E8B94A",
                                     padding: "0 12px", fontWeight: 700, transition: "all 0.3s"
-                                }, children: seleccion || " " }), partes[1]] }), confirmado && (_jsx("p", { style: { color: seleccion === ejercicio.respuesta ? "#45C893" : "#F2637B", marginTop: 16, fontSize: 14 }, children: seleccion === ejercicio.respuesta ? "✅ ¡Correcto!" : `❌ La respuesta correcta era: "${ejercicio.respuesta}"` }))] }), _jsx("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, width: "100%" }, children: ejercicio.opciones.map(op => {
+                                }, children: seleccion || " " }), partes[1]] }), confirmado && (_jsx("p", { style: { color: seleccion === ejercicio.respuesta ? "#45C893" : "#F2637B", marginTop: 16, fontSize: 14 }, children: seleccion === ejercicio.respuesta ? " ¡Correcto!" : ` La respuesta correcta era: "${ejercicio.respuesta}"` }))] }), _jsx("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, width: "100%" }, children: ejercicio.opciones.map(op => {
                     let bg = "rgba(23,60,62,0.4)";
                     let border = "rgba(245,243,238,0.1)";
                     let color = "#F5F3EE";

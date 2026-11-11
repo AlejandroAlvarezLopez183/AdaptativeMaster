@@ -1,4 +1,4 @@
-name: Deploy Automático a Droplet 🚀
+name: Deploy Automático a Droplet
 
 on:
   push:
@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Descargar código
+    - name:  Descargar código
       uses: actions/checkout@v3
 
-    - name: 🚀 Conectar por SSH y Desplegar
+    - name:  Conectar por SSH y Desplegar
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.DROPLET_IP }}

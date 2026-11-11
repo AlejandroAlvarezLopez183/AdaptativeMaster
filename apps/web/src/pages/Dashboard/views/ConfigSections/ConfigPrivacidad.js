@@ -34,26 +34,40 @@ export function ConfigPrivacidad({ user, onBack, onUpdateUser }) {
             setLoading(false);
         }
     };
-    const Toggle = ({ label, desc, checked, onChange }) => (_jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(245,243,238,0.05)' }, children: [_jsxs("div", { children: [_jsx("div", { style: { color: '#F5F3EE', fontSize: '15px', fontWeight: 500 }, children: label }), _jsx("div", { style: { color: '#8FA8AA', fontSize: '13px', marginTop: '4px' }, children: desc })] }), _jsx("div", { onClick: () => onChange(!checked), style: {
-                    width: '48px', height: '26px', borderRadius: '13px',
-                    background: checked ? '#E8B94A' : 'rgba(15,42,46,0.8)',
-                    cursor: 'pointer', position: 'relative', transition: 'background 0.3s'
+    const Toggle = ({ label, desc, checked, onChange }) => (_jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid #F1F5F9' }, children: [_jsxs("div", { children: [_jsx("div", { style: { color: '#0F172A', fontSize: '14px', fontWeight: 600 }, children: label }), _jsx("div", { style: { color: '#64748B', fontSize: '13px', marginTop: '2px' }, children: desc })] }), _jsx("div", { onClick: () => onChange(!checked), style: {
+                    width: '44px', height: '24px', borderRadius: '12px',
+                    background: checked ? '#2563EB' : '#CBD5E1',
+                    cursor: 'pointer', position: 'relative', transition: 'background 0.2s ease',
+                    flexShrink: 0
                 }, children: _jsx("div", { style: {
-                        position: 'absolute', top: '3px', left: checked ? '25px' : '3px',
-                        width: '20px', height: '20px', borderRadius: '50%',
-                        background: checked ? '#0F2A2E' : '#8FA8AA',
-                        transition: 'left 0.3s, background 0.3s'
+                        width: '20px', height: '20px', borderRadius: '50%', background: '#FFFFFF',
+                        position: 'absolute', top: '2px', left: checked ? '22px' : '2px',
+                        transition: 'left 0.2s ease', boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
                     } }) })] }));
     return (_jsxs("div", { className: "animate-fade-in", style: { display: 'flex', flexDirection: 'column', gap: '20px' }, children: [_jsx("button", { onClick: onBack, style: {
-                    background: 'transparent', border: 'none', color: '#8FA8AA', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', padding: 0,
-                    width: 'fit-content', fontFamily: 'Inter, sans-serif'
+                    background: 'transparent', border: 'none', color: '#64748B', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', padding: 0,
+                    width: 'fit-content', fontWeight: 500
                 }, children: "\u2190 Volver a Configuraci\u00F3n" }), _jsxs("div", { style: {
-                    background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: '16px',
-                    padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px'
-                }, children: [_jsxs("div", { style: { display: 'flex', alignItems: 'center', gap: '16px' }, children: [_jsx("div", { style: { fontSize: '32px' }, children: "\uD83D\uDC41\uFE0F" }), _jsxs("div", { children: [_jsx("h2", { style: { margin: 0, color: '#F5F3EE', fontSize: '20px', fontFamily: "'Fraunces', Georgia, serif" }, children: "Privacidad" }), _jsx("p", { style: { margin: '4px 0 0 0', color: '#8FA8AA', fontSize: '14px' }, children: "Controla qui\u00E9n puede ver tu actividad." })] })] }), _jsxs("div", { style: { display: 'flex', flexDirection: 'column' }, children: [_jsx(Toggle, { label: "Perfil P\u00FAblico", desc: "Permite que otros estudiantes te encuentren y vean tu perfil.", checked: perfilPublico, onChange: setPerfilPublico }), _jsx(Toggle, { label: "Mostrar Progreso", desc: "Muestra tus logros y avance en las tablas de clasificaci\u00F3n.", checked: mostrarProgreso, onChange: setMostrarProgreso })] }), error && _jsx("div", { style: { color: '#F2637B', fontSize: '14px' }, children: error }), success && _jsx("div", { style: { color: '#4CAF50', fontSize: '14px' }, children: "\u00A1Privacidad actualizada!" }), _jsx("button", { onClick: handleSave, disabled: loading, style: {
-                            background: '#E8B94A', color: '#0F2A2E', border: 'none', borderRadius: '8px',
-                            padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: loading ? 'wait' : 'pointer',
-                            alignSelf: 'flex-start', opacity: loading ? 0.7 : 1, transition: 'opacity 0.2s'
-                        }, children: loading ? 'Guardando...' : 'Guardar privacidad' })] })] }));
+                    background: '#FFFFFF',
+                    border: '1px solid #E2E8F0',
+                    borderRadius: '12px',
+                    padding: '32px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '24px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+                }, children: [_jsxs("div", { children: [_jsx("h2", { style: { margin: '0 0 4px', color: '#0F172A', fontSize: '18px', fontWeight: 700 }, children: "Privacidad" }), _jsx("p", { style: { margin: 0, color: '#64748B', fontSize: '14px' }, children: "Controla la visibilidad p\u00FAblica de tu perfil." })] }), _jsxs("div", { style: { display: 'flex', flexDirection: 'column' }, children: [_jsx(Toggle, { label: "Perfil p\u00FAblico", desc: "Permite que otros estudiantes encuentren tu perfil y vean tus intereses.", checked: perfilPublico, onChange: setPerfilPublico }), _jsx(Toggle, { label: "Mostrar progreso y logros", desc: "Tus estad\u00EDsticas y racha ser\u00E1n visibles en salas de estudio grupales.", checked: mostrarProgreso, onChange: setMostrarProgreso })] }), error && _jsx("div", { style: { color: '#DC2626', fontSize: '13px', background: '#FEF2F2', padding: 10, borderRadius: 6 }, children: error }), success && _jsx("div", { style: { color: '#047857', fontSize: '13px', background: '#ECFDF5', padding: 10, borderRadius: 6 }, children: "\u00A1Privacidad actualizada!" }), _jsx("button", { onClick: handleSave, disabled: loading, style: {
+                            background: '#0F172A',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '10px 20px',
+                            fontSize: '14px',
+                            fontWeight: 600,
+                            cursor: loading ? 'wait' : 'pointer',
+                            alignSelf: 'flex-start',
+                            opacity: loading ? 0.7 : 1,
+                            transition: 'all 0.15s ease'
+                        }, onMouseEnter: e => (e.currentTarget.style.background = '#1E293B'), onMouseLeave: e => (e.currentTarget.style.background = '#0F172A'), children: loading ? 'Guardando...' : 'Guardar cambios' })] })] }));
 }

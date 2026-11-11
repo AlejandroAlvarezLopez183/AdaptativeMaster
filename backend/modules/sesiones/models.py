@@ -14,6 +14,7 @@ class SesionesEstudio(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     creador_id = Column(UUID(as_uuid=True), ForeignKey("usuarios.usuario.id", ondelete="CASCADE"), nullable=False)
+    tema = Column(String(255), nullable=False, default="Estudio Colaborativo")
     codigo_invitacion = Column(String(50), nullable=False, unique=True)
     estado = Column(String(50), nullable=False, default="activa")
     creada_en = Column(DateTime, default=datetime.utcnow, nullable=False)

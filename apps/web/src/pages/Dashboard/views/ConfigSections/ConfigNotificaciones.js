@@ -36,26 +36,40 @@ export function ConfigNotificaciones({ user, onBack, onUpdateUser }) {
             setLoading(false);
         }
     };
-    const Toggle = ({ label, desc, checked, onChange }) => (_jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(245,243,238,0.05)' }, children: [_jsxs("div", { children: [_jsx("div", { style: { color: '#F5F3EE', fontSize: '15px', fontWeight: 500 }, children: label }), _jsx("div", { style: { color: '#8FA8AA', fontSize: '13px', marginTop: '4px' }, children: desc })] }), _jsx("div", { onClick: () => onChange(!checked), style: {
-                    width: '48px', height: '26px', borderRadius: '13px',
-                    background: checked ? '#E8B94A' : 'rgba(15,42,46,0.8)',
-                    cursor: 'pointer', position: 'relative', transition: 'background 0.3s'
+    const Toggle = ({ label, desc, checked, onChange }) => (_jsxs("div", { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid #F1F5F9' }, children: [_jsxs("div", { children: [_jsx("div", { style: { color: '#0F172A', fontSize: '14px', fontWeight: 600 }, children: label }), _jsx("div", { style: { color: '#64748B', fontSize: '13px', marginTop: '2px' }, children: desc })] }), _jsx("div", { onClick: () => onChange(!checked), style: {
+                    width: '44px', height: '24px', borderRadius: '12px',
+                    background: checked ? '#2563EB' : '#CBD5E1',
+                    cursor: 'pointer', position: 'relative', transition: 'background 0.2s ease',
+                    flexShrink: 0
                 }, children: _jsx("div", { style: {
-                        position: 'absolute', top: '3px', left: checked ? '25px' : '3px',
-                        width: '20px', height: '20px', borderRadius: '50%',
-                        background: checked ? '#0F2A2E' : '#8FA8AA',
-                        transition: 'left 0.3s, background 0.3s'
+                        width: '20px', height: '20px', borderRadius: '50%', background: '#FFFFFF',
+                        position: 'absolute', top: '2px', left: checked ? '22px' : '2px',
+                        transition: 'left 0.2s ease', boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
                     } }) })] }));
     return (_jsxs("div", { className: "animate-fade-in", style: { display: 'flex', flexDirection: 'column', gap: '20px' }, children: [_jsx("button", { onClick: onBack, style: {
-                    background: 'transparent', border: 'none', color: '#8FA8AA', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px', padding: 0,
-                    width: 'fit-content', fontFamily: 'Inter, sans-serif'
+                    background: 'transparent', border: 'none', color: '#64748B', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', padding: 0,
+                    width: 'fit-content', fontWeight: 500
                 }, children: "\u2190 Volver a Configuraci\u00F3n" }), _jsxs("div", { style: {
-                    background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: '16px',
-                    padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px'
-                }, children: [_jsxs("div", { style: { display: 'flex', alignItems: 'center', gap: '16px' }, children: [_jsx("div", { style: { fontSize: '32px' }, children: "\uD83D\uDD14" }), _jsxs("div", { children: [_jsx("h2", { style: { margin: 0, color: '#F5F3EE', fontSize: '20px', fontFamily: "'Fraunces', Georgia, serif" }, children: "Notificaciones" }), _jsx("p", { style: { margin: '4px 0 0 0', color: '#8FA8AA', fontSize: '14px' }, children: "Elige c\u00F3mo y cu\u00E1ndo quieres que nos comuniquemos contigo." })] })] }), _jsxs("div", { style: { display: 'flex', flexDirection: 'column' }, children: [_jsx(Toggle, { label: "Correos electr\u00F3nicos", desc: "Recibe actualizaciones importantes y alertas por correo.", checked: emailAlerts, onChange: setEmailAlerts }), _jsx(Toggle, { label: "Notificaciones Push", desc: "Alertas en tiempo real en tu navegador.", checked: pushAlerts, onChange: setPushAlerts }), _jsx(Toggle, { label: "Resumen Semanal", desc: "Un correo cada semana con tu progreso de estudio.", checked: weeklyReport, onChange: setWeeklyReport })] }), error && _jsx("div", { style: { color: '#F2637B', fontSize: '14px' }, children: error }), success && _jsx("div", { style: { color: '#4CAF50', fontSize: '14px' }, children: "\u00A1Preferencias guardadas!" }), _jsx("button", { onClick: handleSave, disabled: loading, style: {
-                            background: '#E8B94A', color: '#0F2A2E', border: 'none', borderRadius: '8px',
-                            padding: '12px 24px', fontSize: '15px', fontWeight: 600, cursor: loading ? 'wait' : 'pointer',
-                            alignSelf: 'flex-start', opacity: loading ? 0.7 : 1, transition: 'opacity 0.2s'
-                        }, children: loading ? 'Guardando...' : 'Guardar preferencias' })] })] }));
+                    background: '#FFFFFF',
+                    border: '1px solid #E2E8F0',
+                    borderRadius: '12px',
+                    padding: '32px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '24px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+                }, children: [_jsxs("div", { children: [_jsx("h2", { style: { margin: '0 0 4px', color: '#0F172A', fontSize: '18px', fontWeight: 700 }, children: "Notificaciones" }), _jsx("p", { style: { margin: 0, color: '#64748B', fontSize: '14px' }, children: "Elige qu\u00E9 recordatorios y avisos deseas recibir." })] }), _jsxs("div", { style: { display: 'flex', flexDirection: 'column' }, children: [_jsx(Toggle, { label: "Recordatorios de racha por correo", desc: "Avisos diarios si est\u00E1s por perder tu racha de estudio.", checked: emailAlerts, onChange: setEmailAlerts }), _jsx(Toggle, { label: "Notificaciones de nuevas actividades", desc: "Avisos sobre retos y nuevas lecciones recomendadas.", checked: pushAlerts, onChange: setPushAlerts }), _jsx(Toggle, { label: "Reporte de progreso semanal", desc: "Un resumen de tus avances y habilidades dominadas los domingos.", checked: weeklyReport, onChange: setWeeklyReport })] }), error && _jsx("div", { style: { color: '#DC2626', fontSize: '13px', background: '#FEF2F2', padding: 10, borderRadius: 6 }, children: error }), success && _jsx("div", { style: { color: '#047857', fontSize: '13px', background: '#ECFDF5', padding: 10, borderRadius: 6 }, children: "\u00A1Preferencias guardadas!" }), _jsx("button", { onClick: handleSave, disabled: loading, style: {
+                            background: '#0F172A',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '10px 20px',
+                            fontSize: '14px',
+                            fontWeight: 600,
+                            cursor: loading ? 'wait' : 'pointer',
+                            alignSelf: 'flex-start',
+                            opacity: loading ? 0.7 : 1,
+                            transition: 'all 0.15s ease'
+                        }, onMouseEnter: e => (e.currentTarget.style.background = '#1E293B'), onMouseLeave: e => (e.currentTarget.style.background = '#0F172A'), children: loading ? 'Guardando...' : 'Guardar cambios' })] })] }));
 }

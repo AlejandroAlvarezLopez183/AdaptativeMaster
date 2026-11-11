@@ -26,7 +26,7 @@ services:
   web:
     image: node:20-slim
     working_dir: /app
-    command: sh -c "npx turbo run dev --filter=@adaptativemaster/web"
+    command: sh -c "npm install && npx turbo run dev --filter=@adaptativemaster/web"
     ports:
       - "5173:5173"
     volumes:
@@ -42,7 +42,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@estudilab.ai
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "5050:80"
+      - "5051:80"
     depends_on:
       - db
 

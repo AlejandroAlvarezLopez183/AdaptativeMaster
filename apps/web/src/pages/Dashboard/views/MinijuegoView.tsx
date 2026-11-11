@@ -16,14 +16,13 @@ interface MinijuegoViewProps {
   titulo?: string;
 }
 
-const TIPO_META: Record<TipoMinijuego, { emoji: string; nombre: string; descripcion: string }> = {
-  EMPAREJAR:       { emoji: "🔗", nombre: "Batalla de Conceptos", descripcion: "Empareja los términos con sus definiciones." },
-  VERDADERO_FALSO: { emoji: "⚡", nombre: "¿Verdadero o Falso?", descripcion: "Decide rápido si las afirmaciones son ciertas." },
-  RELLENAR:        { emoji: "✏️", nombre: "Rellena el Espacio",   descripcion: "Elige la palabra que completa la frase." },
-  ORDENAR:         { emoji: "🧩", nombre: "Ordena el Código",     descripcion: "Arrastra los fragmentos al lugar correcto." },
+const TIPO_META: Record<TipoMinijuego, { nombre: string; descripcion: string }> = {
+  EMPAREJAR:       { nombre: "Batalla de Conceptos", descripcion: "Empareja cada término con su definición correcta." },
+  VERDADERO_FALSO: { nombre: "¿Verdadero o Falso?", descripcion: "Evalúa con agilidad si las siguientes afirmaciones son ciertas." },
+  RELLENAR:        { nombre: "Completa la frase",   descripcion: "Elige el término adecuado que completa el enunciado." },
+  ORDENAR:         { nombre: "Secuencia lógica",     descripcion: "Ordena los fragmentos en la secuencia correcta." },
 };
 
-// Datos de demo para cuando no hay datos reales (preview de la plantilla)
 const DEMO_DATA: Record<TipoMinijuego, any> = {
   EMPAREJAR: {
     pares: [
@@ -63,7 +62,6 @@ export function MinijuegoView({ leccionId, onBack, onComplete, tipoMinijuego, da
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [victory, setVictory] = useState(false);
 
-  // Determinar tipo (default EMPAREJAR si no hay info del backend)
   const tipo: TipoMinijuego = tipoMinijuego || "EMPAREJAR";
   const datos = datosMinijuego || DEMO_DATA[tipo];
   const meta = TIPO_META[tipo];
@@ -78,49 +76,83 @@ export function MinijuegoView({ leccionId, onBack, onComplete, tipoMinijuego, da
     return (
       <div className="animate-fade-in" style={{
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-        height: "100%", gap: 24, fontFamily: "Inter, sans-serif"
+        height: "100%", gap: 24, fontFamily: "'Open Sans', system-ui, sans-serif", padding: "60px 20px"
       }}>
-        <span style={{ fontSize: 72 }}>{victory ? "🎉" : "😤"}</span>
-        <h1 style={{
-          fontFamily: "'Fraunces', Georgia, serif", fontSize: 44, margin: "0",
-          color: victory ? "#E8B94A" : "#F2637B"
+        <div style={{
+          background: "#FFFFFF",
+          border: "1px solid #E2E8F0",
+          borderRadius: 16,
+          padding: "48px 36px",
+          maxWidth: 480,
+          width: "100%",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+          textAlign: "center"
         }}>
-          {victory ? "¡Superado!" : "¡Inténtalo de nuevo!"}
-        </h1>
-        <p style={{ color: "#8FA8AA", fontSize: 18 }}>
-          Puntuación: <strong style={{ color: "#F5F3EE" }}>{finalScore} XP</strong>
-        </p>
-        <div style={{ display: "flex", gap: 16 }}>
-          {!victory && (
-            <button onClick={onBack}
-              style={{
-                background: "rgba(23,60,62,0.4)", color: "#F5F3EE",
-                border: "1px solid rgba(245,243,238,0.15)", borderRadius: 12,
-                padding: "14px 32px", fontSize: 16, fontWeight: 700, cursor: "pointer"
-              }}>
-              ← Salir
-            </button>
-          )}
-          <button onClick={async () => {
-            if (victory && leccionId) {
-              const token = localStorage.getItem('token');
-              if (token) {
-                try {
-                  await progresoClient.completarLeccion(leccionId, token);
-                } catch (e) {
-                  console.error(e);
+          <div style={{
+            width: 56,
+            height: 56,
+            borderRadius: "50%",
+            background: victory ? "#ECFDF5" : "#FEF2F2",
+            color: victory ? "#059669" : "#DC2626",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto 16px"
+          }}>
+            {victory ? (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            ) : (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            )}
+          </div>
+
+          <h1 style={{
+            fontSize: 24, margin: "0 0 8px", fontWeight: 700,
+            color: "#0F172A"
+          }}>
+            {victory ? "¡Práctica superada!" : "¡Sigue practicando!"}
+          </h1>
+          <p style={{ color: "#64748B", fontSize: 15, margin: "0 0 28px" }}>
+            Puntuación obtenida: <strong style={{ color: "#0F172A" }}>{finalScore} XP</strong>
+          </p>
+
+          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+            {!victory && (
+              <button onClick={onBack}
+                style={{
+                  background: "#FFFFFF", color: "#475569",
+                  border: "1px solid #CBD5E1", borderRadius: 8,
+                  padding: "10px 20px", fontSize: 14, fontWeight: 600, cursor: "pointer"
+                }}>
+                Volver
+              </button>
+            )}
+            <button onClick={async () => {
+              if (victory && leccionId) {
+                const token = localStorage.getItem('token');
+                if (token) {
+                  try {
+                    await progresoClient.completarLeccion(leccionId, token);
+                  } catch (e) {
+                    console.error(e);
+                  }
                 }
               }
-            }
-            onComplete();
-          }}
-            style={{
-              background: "#E8B94A", color: "#0F2A2E", border: "none", borderRadius: 12,
-              padding: "14px 32px", fontSize: 16, fontWeight: 700, cursor: "pointer",
-              boxShadow: "0 8px 24px rgba(232,185,74,0.3)"
-            }}>
-            Continuar Ruta →
-          </button>
+              onComplete();
+            }}
+              style={{
+                background: "#0F172A", color: "#FFFFFF", border: "none", borderRadius: 8,
+                padding: "10px 24px", fontSize: 14, fontWeight: 600, cursor: "pointer",
+                transition: "all 0.15s ease"
+              }}>
+              Continuar la ruta →
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -131,32 +163,50 @@ export function MinijuegoView({ leccionId, onBack, onComplete, tipoMinijuego, da
     return (
       <div className="animate-fade-in" style={{
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-        height: "100%", gap: 28, fontFamily: "Inter, sans-serif"
+        height: "100%", gap: 20, fontFamily: "'Open Sans', system-ui, sans-serif", padding: "60px 20px"
       }}>
         <div style={{
-          background: "rgba(23,60,62,0.5)", border: "1px solid rgba(232,185,74,0.2)",
-          borderRadius: 24, padding: "48px", textAlign: "center", maxWidth: 480,
-          boxShadow: "0 16px 48px rgba(0,0,0,0.3)"
+          background: "#FFFFFF", border: "1px solid #E2E8F0",
+          borderRadius: 16, padding: "40px 32px", textAlign: "center", maxWidth: 480,
+          boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
         }}>
-          <span style={{ fontSize: 64 }}>{meta.emoji}</span>
-          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 36, color: "#F5F3EE", margin: "16px 0 8px" }}>
+          <span style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            background: "#EFF6FF",
+            color: "#1D4ED8",
+            border: "1px solid #DBEAFE",
+            borderRadius: 6,
+            padding: "3px 10px",
+            fontSize: 12,
+            fontWeight: 600,
+            textTransform: "uppercase",
+            marginBottom: 16
+          }}>
+            Práctica interactiva
+          </span>
+
+          <h1 style={{ fontSize: 24, color: "#0F172A", margin: "0 0 10px", fontWeight: 700 }}>
             {titulo || meta.nombre}
           </h1>
-          <p style={{ color: "#8FA8AA", fontSize: 16, margin: "0 0 32px" }}>{meta.descripcion}</p>
+          <p style={{ color: "#64748B", fontSize: 14, margin: "0 0 28px", lineHeight: 1.5 }}>
+            {meta.descripcion}
+          </p>
           <button
             onClick={() => setGameStarted(true)}
             style={{
-              background: "#E8B94A", color: "#0F2A2E", border: "none", borderRadius: 12,
-              padding: "16px 48px", fontSize: 18, fontWeight: 700, cursor: "pointer",
-              boxShadow: "0 8px 24px rgba(232,185,74,0.4)", transition: "transform 0.2s"
+              background: "#0F172A", color: "#FFFFFF", border: "none", borderRadius: 8,
+              padding: "12px 36px", fontSize: 14, fontWeight: 600, cursor: "pointer",
+              transition: "all 0.15s ease"
             }}
-            onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
-            onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+            onMouseEnter={e => (e.currentTarget.style.background = "#1E293B")}
+            onMouseLeave={e => (e.currentTarget.style.background = "#0F172A")}
           >
-            ¡Comenzar! 🚀
+            Comenzar actividad
           </button>
         </div>
-        <button onClick={onBack} style={{ background: "none", border: "none", color: "#8FA8AA", cursor: "pointer", fontSize: 15 }}>
+        <button onClick={onBack} style={{ background: "none", border: "none", color: "#64748B", cursor: "pointer", fontSize: 13, fontWeight: 500 }}>
           ← Volver a la ruta
         </button>
       </div>
@@ -166,25 +216,45 @@ export function MinijuegoView({ leccionId, onBack, onComplete, tipoMinijuego, da
   // Pantalla de juego activo
   return (
     <div className="animate-fade-in" style={{
-      maxWidth: "900px", width: "100%", margin: "0 auto",
-      display: "flex", flexDirection: "column", gap: 32, fontFamily: "Inter, sans-serif"
+      maxWidth: "800px", width: "100%", margin: "0 auto",
+      display: "flex", flexDirection: "column", gap: 24, fontFamily: "'Open Sans', system-ui, sans-serif",
+      padding: "20px 0"
     }}>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <button onClick={onBack} style={{ background: "none", border: "none", color: "#8FA8AA", cursor: "pointer", fontSize: 20 }}>←</button>
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <button onClick={onBack} style={{
+          background: "#F1F5F9", border: "none", color: "#475569", cursor: "pointer",
+          width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center",
+          justifyContent: "center", fontSize: 14, fontWeight: 700
+        }}>
+          ←
+        </button>
         <div>
-          <div style={{ fontSize: 12, color: "#8FA8AA", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: 700 }}>Minijuego</div>
-          <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 22, color: "#F5F3EE", fontWeight: 700 }}>
-            {meta.emoji} {titulo || meta.nombre}
+          <div style={{ fontSize: 11, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.04em", fontWeight: 600 }}>Práctica interactiva</div>
+          <div style={{ fontSize: 18, color: "#0F172A", fontWeight: 700 }}>
+            {titulo || meta.nombre}
           </div>
         </div>
       </div>
 
-      {/* Renderizar el juego correspondiente */}
-      {tipo === "EMPAREJAR"       && <EmparejadorGame       datos={datos} onComplete={handleComplete} />}
-      {tipo === "VERDADERO_FALSO" && <VerdaderoFalsoGame    datos={datos} onComplete={handleComplete} />}
-      {tipo === "RELLENAR"        && <RellenarGame          datos={datos} onComplete={handleComplete} />}
-      {tipo === "ORDENAR"         && <OrdenarGame           datos={datos} onComplete={handleComplete} />}
+      {/* Área del juego */}
+      <div style={{
+        background: "#FFFFFF", border: "1px solid #E2E8F0",
+        borderRadius: 14, padding: "32px", boxShadow: "0 1px 3px rgba(0,0,0,0.03)"
+      }}>
+        {tipo === "EMPAREJAR" && (
+          <EmparejadorGame datos={datos} onComplete={handleComplete} />
+        )}
+        {tipo === "VERDADERO_FALSO" && (
+          <VerdaderoFalsoGame datos={datos} onComplete={handleComplete} />
+        )}
+        {tipo === "RELLENAR" && (
+          <RellenarGame datos={datos} onComplete={handleComplete} />
+        )}
+        {tipo === "ORDENAR" && (
+          <OrdenarGame datos={datos} onComplete={handleComplete} />
+        )}
+      </div>
     </div>
   );
 }

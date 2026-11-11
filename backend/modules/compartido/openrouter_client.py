@@ -138,7 +138,7 @@ async def _call_single_model(
         
         # --- FIN LIMPIEZA ---
         
-        logger.info(f"[OpenRouter] ✅ Respuesta exitosa con modelo: '{model}'")
+        logger.info(f"[OpenRouter]  Respuesta exitosa con modelo: '{model}'")
         return result.strip()
 
     except httpx.HTTPStatusError as e:

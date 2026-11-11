@@ -4,10 +4,10 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 
-// ── Nav ──────────────────────────────────────────────────────────────────────
+// ── Navigation Bar ──────────────────────────────────────────────────────────
 
 function Nav() {
-  const [open, setOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <nav style={{
@@ -16,691 +16,1130 @@ function Nav() {
       left: 0,
       right: 0,
       zIndex: 50,
-      background: "rgba(15,42,46,0.85)",
-      backdropFilter: "blur(14px)",
-      WebkitBackdropFilter: "blur(14px)",
-      borderBottom: "1px solid rgba(245,243,238,0.07)",
+      background: "rgba(255, 255, 255, 0.92)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      borderBottom: "1px solid #E2E8F0",
     }}>
       <div style={{
         maxWidth: 1200,
         margin: "0 auto",
-        padding: "0 32px",
-        height: 64,
+        padding: "0 24px",
+        height: 68,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
       }}>
-        {/* Logo */}
-        <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
-          <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 22, fontWeight: 900, color: "#F5F3EE", letterSpacing: "-0.02em" }}>
-            Adaptative
-          </span>
-          <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 22, fontWeight: 400, fontStyle: "italic", color: "#E8B94A", letterSpacing: "-0.01em" }}>
-            Master
-          </span>
-        </div>
+        {/* Brand Logo */}
+        <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+          <div style={{
+            width: 38,
+            height: 38,
+            borderRadius: 10,
+            background: "#EFF6FF",
+            border: "1px solid #DBEAFE",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 1px 2px rgba(37, 99, 235, 0.08)"
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
+            <span style={{ fontSize: 20, fontWeight: 800, color: "#0F172A", letterSpacing: "-0.02em" }}>
+              Adaptative
+            </span>
+            <span style={{ fontSize: 20, fontWeight: 700, color: "#2563EB", letterSpacing: "-0.02em" }}>
+              Master
+            </span>
+          </div>
+        </Link>
 
-        {/* Desktop links */}
-        <div style={{ display: "flex", alignItems: "center", gap: 36 }} className="nav-desktop">
-          {["Cómo funciona", "Características", "Testimonios", "Precios"].map((l) => (
-            <a key={l} href="#" style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "#A8A49C", textDecoration: "none", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#F5F3EE")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#A8A49C")}>
-              {l}
+        {/* Desktop Links */}
+        <div style={{ display: "flex", alignItems: "center", gap: 32 }} className="nav-desktop">
+          {[
+            { label: "Cómo funciona", href: "#como-funciona" },
+            { label: "Características", href: "#caracteristicas" },
+            { label: "Testimonios", href: "#testimonios" },
+          ].map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              style={{
+                fontSize: 14,
+                fontWeight: 500,
+                color: "#475569",
+                textDecoration: "none",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#0F172A")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#475569")}
+            >
+              {item.label}
             </a>
           ))}
         </div>
 
-        <Link to="/registro" style={{
-          fontFamily: "Inter, sans-serif",
-          fontSize: 14,
-          fontWeight: 600,
-          background: "#E8B94A",
-          color: "#0F2A2E",
-          borderRadius: 8,
-          padding: "9px 20px",
-          textDecoration: "none",
-          letterSpacing: "0.01em",
-          transition: "opacity 0.2s",
-          flexShrink: 0,
-        }}
-          onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
-          onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
-          Empezar gratis
-        </Link>
+        {/* Action Buttons */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Link
+            to="/login"
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: "#334155",
+              textDecoration: "none",
+              padding: "8px 16px",
+              borderRadius: 8,
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#0F172A";
+              e.currentTarget.style.background = "#F1F5F9";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "#334155";
+              e.currentTarget.style.background = "transparent";
+            }}
+          >
+            Iniciar sesión
+          </Link>
+          <Link
+            to="/registro"
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              background: "#2563EB",
+              color: "#FFFFFF",
+              borderRadius: 8,
+              padding: "9px 20px",
+              textDecoration: "none",
+              boxShadow: "0 1px 3px rgba(37, 99, 235, 0.2)",
+              transition: "all 0.15s ease",
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#1D4ED8";
+              e.currentTarget.style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#2563EB";
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
+          >
+            Empezar gratis
+          </Link>
+        </div>
       </div>
     </nav>
   );
 }
 
-// ── Trail SVG (decorative, hero right side) ──────────────────────────────────
+// ── Interactive Learning Path Preview (Hero Graphic) ─────────────────────────
 
-function TrailIllustration() {
+function LearningPathPreview() {
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      {/* Soft radial glow behind trail */}
+    <div style={{
+      width: "100%",
+      maxWidth: 500,
+      margin: "0 auto",
+      position: "relative",
+    }}>
+      {/* Decorative subtle background halo */}
       <div style={{
         position: "absolute",
-        top: "40%",
+        top: "20%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: 380,
-        height: 380,
-        background: "radial-gradient(circle, rgba(232,185,74,0.12) 0%, transparent 70%)",
+        width: 320,
+        height: 320,
+        background: "radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%)",
         borderRadius: "50%",
+        pointerEvents: "none",
       }} />
-      <svg viewBox="0 0 440 680" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-        {/* Topographic contour lines */}
-        {[
-          "M 30 120 C 80 100 140 130 200 115 C 260 100 320 128 410 112",
-          "M 20 230 C 70 210 130 245 190 228 C 250 211 310 240 415 225",
-          "M 25 350 C 75 330 135 362 195 345 C 255 328 315 358 410 342",
-          "M 18 460 C 68 440 128 472 188 455 C 248 438 308 468 408 452",
-          "M 22 565 C 72 545 132 578 192 560 C 252 542 312 572 405 558",
-        ].map((d, i) => (
-          <path key={i} d={d} fill="none" stroke="#2A5558" strokeWidth="1" opacity="0.5" strokeDasharray="7 5" />
-        ))}
 
-        {/* Trail path – completed */}
-        <path
-          d="M 220 40 C 260 90 300 130 280 185 C 258 242 160 258 140 315 C 118 372 195 408 230 460"
-          fill="none" stroke="#E8B94A" strokeWidth="3.5" strokeLinecap="round" opacity="0.9"
-        />
-        {/* Trail path – upcoming */}
-        <path
-          d="M 230 460 C 268 514 310 548 295 600 C 278 652 200 668 185 640"
-          fill="none" stroke="#2A5558" strokeWidth="3" strokeLinecap="round" strokeDasharray="9 6" opacity="0.65"
-        />
+      {/* Main SaaS Card */}
+      <div style={{
+        background: "#FFFFFF",
+        border: "1px solid #E2E8F0",
+        borderRadius: 18,
+        boxShadow: "0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.6)",
+        overflow: "hidden",
+        position: "relative",
+      }}>
+        {/* Card Header */}
+        <div style={{
+          padding: "16px 20px",
+          borderBottom: "1px solid #F1F5F9",
+          background: "#FAFAFA",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", gap: 6 }}>
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#E2E8F0" }} />
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#E2E8F0" }} />
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#E2E8F0" }} />
+            </div>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>
+              Python & Inteligencia Artificial
+            </span>
+          </div>
+          <span style={{
+            fontSize: 11,
+            fontWeight: 600,
+            background: "#ECFDF5",
+            color: "#059669",
+            padding: "3px 8px",
+            borderRadius: 6,
+            border: "1px solid #A7F3D0"
+          }}>
+            Ruta Activa
+          </span>
+        </div>
 
-        {/* km markers */}
-        {[
-          { x: 280, y: 108, label: "1 km" },
-          { x: 120, y: 288, label: "2 km" },
-          { x: 255, y: 435, label: "3 km" },
-          { x: 310, y: 575, label: "4 km" },
-        ].map((m, i) => (
-          <g key={i} opacity="0.4">
-            <line x1={m.x - 6} y1={m.y} x2={m.x + 6} y2={m.y} stroke="#A8A49C" strokeWidth="1" />
-            <text x={m.x} y={m.y - 7} fontSize="8" fill="#A8A49C" fontFamily="Inter, sans-serif" textAnchor="middle" letterSpacing="0.06em">{m.label}</text>
-          </g>
-        ))}
+        {/* Card Body */}
+        <div style={{ padding: "22px 24px" }}>
+          {/* Progress Overview */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
+              <div>
+                <span style={{ fontSize: 12, color: "#64748B", fontWeight: 500 }}>Tu progreso general</span>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "#0F172A" }}>65% completado</div>
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#2563EB" }}>Nivel 3 de 5</span>
+            </div>
+            <div style={{ width: "100%", height: 8, background: "#F1F5F9", borderRadius: 99, overflow: "hidden" }}>
+              <div style={{ width: "65%", height: "100%", background: "#2563EB", borderRadius: 99 }} />
+            </div>
+          </div>
 
-        {/* Terrain icons */}
-        {[
-          { x: 60, y: 185, icon: "▲" },
-          { x: 375, y: 310, icon: "◆" },
-          { x: 55, y: 500, icon: "▲" },
-        ].map((t, i) => (
-          <text key={i} x={t.x} y={t.y} fontSize="10" fill="#2A5558" opacity="0.6" textAnchor="middle" fontFamily="sans-serif">{t.icon}</text>
-        ))}
+          {/* Module Nodes List */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {/* Step 1 - Completed */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "12px 14px",
+              background: "#F8FAFC",
+              borderRadius: 10,
+              border: "1px solid #F1F5F9",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: "50%",
+                  background: "#ECFDF5",
+                  border: "1px solid #10B981",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#059669",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  flexShrink: 0,
+                }}>
+                  ✓
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#1E293B" }}>
+                    01. Fundamentos & Estructuras
+                  </div>
+                  <div style={{ fontSize: 11, color: "#64748B" }}>4 lecciones • 100% aprobado</div>
+                </div>
+              </div>
+              <span style={{ fontSize: 11, color: "#059669", fontWeight: 600 }}>Superado</span>
+            </div>
 
-        {/* Nodes */}
-        {/* Done */}
-        {[
-          { x: 220, y: 40 },
-          { x: 280, y: 182 },
-          { x: 142, y: 313 },
-        ].map((n, i) => (
-          <g key={i}>
-            <circle cx={n.x} cy={n.y} r={16} fill="#E8B94A" />
-            <text x={n.x} y={n.y + 5} textAnchor="middle" fontSize="11" fill="#0F2A2E" fontWeight="700" fontFamily="Inter, sans-serif">✓</text>
-          </g>
-        ))}
+            {/* Step 2 - Completed */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "12px 14px",
+              background: "#F8FAFC",
+              borderRadius: 10,
+              border: "1px solid #F1F5F9",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: "50%",
+                  background: "#ECFDF5",
+                  border: "1px solid #10B981",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#059669",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  flexShrink: 0,
+                }}>
+                  ✓
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#1E293B" }}>
+                    02. Análisis con Pandas y Numpy
+                  </div>
+                  <div style={{ fontSize: 11, color: "#64748B" }}>5 lecciones • 1 minijuego</div>
+                </div>
+              </div>
+              <span style={{ fontSize: 11, color: "#059669", fontWeight: 600 }}>Superado</span>
+            </div>
 
-        {/* Active node with glow */}
-        <circle cx={230} cy={460} r={34} fill="rgba(232,185,74,0.08)" />
-        <circle cx={230} cy={460} r={26} fill="rgba(232,185,74,0.13)" />
-        <circle cx={230} cy={460} r={20} fill="#E8B94A" stroke="#F5F3EE" strokeWidth="2.5" className="node-active-pulse" />
-        <text x={230} y={465} textAnchor="middle" fontSize="11" fill="#0F2A2E" fontWeight="700" fontFamily="Inter, sans-serif">4</text>
+            {/* Step 3 - Current Active Node */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "14px",
+              background: "#EFF6FF",
+              borderRadius: 12,
+              border: "1.5px solid #BFDBFE",
+              boxShadow: "0 2px 8px rgba(37,99,235,0.06)",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: "50%",
+                  background: "#2563EB",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#FFFFFF",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  flexShrink: 0,
+                }}>
+                  ▶
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#1E3A8A" }}>
+                    03. Modelos de Machine Learning
+                  </div>
+                  <div style={{ fontSize: 11, color: "#3B82F6", fontWeight: 500 }}>Lección 3 de 6 • En curso</div>
+                </div>
+              </div>
+              <span style={{
+                fontSize: 11,
+                fontWeight: 600,
+                background: "#2563EB",
+                color: "#FFFFFF",
+                padding: "5px 12px",
+                borderRadius: 6,
+              }}>
+                Continuar
+              </span>
+            </div>
 
-        {/* Upcoming */}
-        {[
-          { x: 295, y: 598 },
-          { x: 188, y: 638 },
-        ].map((n, i) => (
-          <g key={i} opacity="0.4">
-            <circle cx={n.x} cy={n.y} r={14} fill="none" stroke="#2A5558" strokeWidth="2" />
-            <text x={n.x} y={n.y + 5} textAnchor="middle" fontSize="10" fill="#A8A49C" fontFamily="Inter, sans-serif">{i + 5}</text>
-          </g>
-        ))}
+            {/* Step 4 - Upcoming Locked */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "12px 14px",
+              background: "#FFFFFF",
+              borderRadius: 10,
+              border: "1px solid #E2E8F0",
+              opacity: 0.65,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: "50%",
+                  background: "#F1F5F9",
+                  border: "1px solid #E2E8F0",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#94A3B8",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  flexShrink: 0,
+                }}>
+                  🔒
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#475569" }}>
+                    04. Redes Neuronales y Proyecto Final
+                  </div>
+                  <div style={{ fontSize: 11, color: "#94A3B8" }}>Se desbloquea al aprobar el módulo 3</div>
+                </div>
+              </div>
+              <span style={{ fontSize: 11, color: "#94A3B8" }}>Bloqueado</span>
+            </div>
+          </div>
+        </div>
 
-        {/* Milestone trophy */}
-        <g opacity="0.55">
-          <circle cx={185} cy={640} r={18} fill="none" stroke="#E8B94A" strokeWidth="2" strokeDasharray="5 3" />
-          <text x={185} y={646} textAnchor="middle" fontSize="15" fill="#E8B94A">🏆</text>
-        </g>
+        {/* Floating Callout / AI Intervention Note */}
+        <div style={{
+          margin: "0 16px 16px",
+          padding: "12px 16px",
+          background: "#F8FAFC",
+          border: "1px solid #E2E8F0",
+          borderRadius: 10,
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 12,
+        }}>
+          <div style={{
+            width: 28,
+            height: 28,
+            borderRadius: 8,
+            background: "#EFF6FF",
+            border: "1px solid #DBEAFE",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            marginTop: 2,
+          }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.2">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#0F172A", marginBottom: 2 }}>
+              Tutor IA calibró tu ruta
+            </div>
+            <div style={{ fontSize: 11.5, color: "#475569", lineHeight: 1.45 }}>
+              Detectamos alto dominio en álgebra lineal; omitimos 3 lecciones teóricas y agregamos ejercicios de código directo.
+            </div>
+          </div>
+        </div>
+      </div>
 
-        {/* Active node tooltip */}
-        <g transform="translate(262, 420)">
-          <rect x="0" y="0" width="136" height="54" rx="10" fill="#173C3E" stroke="rgba(232,185,74,0.4)" strokeWidth="1" />
-          <text x="12" y="18" fontSize="9" fill="#A8A49C" fontFamily="Inter, sans-serif" letterSpacing="0.08em">LECCIÓN ACTIVA</text>
-          <text x="12" y="34" fontSize="13" fill="#F5F3EE" fontFamily="'Fraunces', Georgia, serif" fontWeight="600">Cálculo diferencial</text>
-          <text x="12" y="48" fontSize="10" fill="#E8B94A" fontFamily="Inter, sans-serif">Continuar →</text>
-        </g>
-      </svg>
+      {/* Floating Badges */}
+      <div style={{
+        position: "absolute",
+        bottom: -16,
+        right: -10,
+        background: "#FFFFFF",
+        border: "1px solid #E2E8F0",
+        borderRadius: 12,
+        padding: "10px 14px",
+        boxShadow: "0 8px 20px rgba(0,0,0,0.06)",
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+      }}>
+        <span style={{ fontSize: 18 }}>🔥</span>
+        <div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#0F172A" }}>Racha activa</div>
+          <div style={{ fontSize: 11, color: "#64748B" }}>12 días seguidos</div>
+        </div>
+      </div>
     </div>
   );
 }
 
-// ── Hero ─────────────────────────────────────────────────────────────────────
+// ── Hero Section ────────────────────────────────────────────────────────────
 
 function Hero() {
   return (
     <section style={{
-      minHeight: "100vh",
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      alignItems: "center",
+      padding: "140px 24px 80px",
       maxWidth: 1200,
       margin: "0 auto",
-      padding: "100px 32px 60px",
-      gap: 48,
+      display: "grid",
+      gridTemplateColumns: "1.1fr 0.9fr",
+      alignItems: "center",
+      gap: 60,
     }} className="hero-grid">
-      {/* Left: copy */}
+      {/* Left Column: Headlines & Call to Actions */}
       <div>
+        {/* Pill Badge */}
         <div style={{
           display: "inline-flex",
           alignItems: "center",
           gap: 8,
-          background: "rgba(232,185,74,0.1)",
-          border: "1px solid rgba(232,185,74,0.25)",
+          background: "#EFF6FF",
+          border: "1px solid #DBEAFE",
           borderRadius: 20,
           padding: "6px 14px",
-          marginBottom: 28,
+          marginBottom: 24,
         }}>
-          <div style={{ width: 6, height: 6, background: "#E8B94A", borderRadius: "50%" }} />
-          <span style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#E8B94A", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600 }}>
-            Rutas de aprendizaje con IA
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#2563EB" }} />
+          <span style={{ fontSize: 12.5, fontWeight: 600, color: "#1D4ED8" }}>
+            Plataforma de Aprendizaje Adaptativo con IA
           </span>
         </div>
 
+        {/* Main Title */}
         <h1 style={{
-          fontFamily: "'Fraunces', Georgia, serif",
-          fontSize: "clamp(40px, 5vw, 64px)",
-          fontWeight: 900,
-          color: "#F5F3EE",
-          margin: "0 0 8px",
-          lineHeight: 1.08,
+          fontSize: "clamp(36px, 4.5vw, 54px)",
+          fontWeight: 800,
+          color: "#0F172A",
+          margin: "0 0 16px",
+          lineHeight: 1.15,
           letterSpacing: "-0.03em",
         }}>
-          Aprende a tu ritmo,
-        </h1>
-        <h1 style={{
-          fontFamily: "'Fraunces', Georgia, serif",
-          fontSize: "clamp(40px, 5vw, 64px)",
-          fontWeight: 400,
-          fontStyle: "italic",
-          color: "#E8B94A",
-          margin: "0 0 28px",
-          lineHeight: 1.08,
-          letterSpacing: "-0.02em",
-        }}>
-          no al de todos.
+          Aprende a tu ritmo, <br />
+          <span style={{ color: "#2563EB" }}>no al de todos.</span>
         </h1>
 
+        {/* Description */}
         <p style={{
-          fontFamily: "Inter, sans-serif",
           fontSize: 18,
-          color: "#A8A49C",
+          color: "#475569",
           lineHeight: 1.65,
-          margin: "0 0 40px",
-          maxWidth: 440,
+          margin: "0 0 36px",
+          maxWidth: 520,
         }}>
-          Adaptative Master analiza cómo aprendes y construye un sendero de estudio único para ti — no un temario genérico, sino una ruta que se adapta en tiempo real.
+          Adaptative Master analiza lo que ya sabes y genera un sendero de estudio hecho a tu medida. Sin cursos genéricos ni horas perdidas en temas que ya dominas.
         </p>
 
-        <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-          <Link to="/registro" style={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: 15,
-            fontWeight: 700,
-            background: "#E8B94A",
-            color: "#0F2A2E",
-            borderRadius: 10,
-            padding: "14px 28px",
-            textDecoration: "none",
-            letterSpacing: "0.01em",
-            transition: "opacity 0.2s, transform 0.2s",
-          }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = "0.88"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}>
-            Empieza gratis
+        {/* Action Buttons */}
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
+          <Link
+            to="/registro"
+            style={{
+              fontSize: 15,
+              fontWeight: 600,
+              background: "#2563EB",
+              color: "#FFFFFF",
+              borderRadius: 10,
+              padding: "14px 28px",
+              textDecoration: "none",
+              boxShadow: "0 2px 6px rgba(37,99,235,0.25)",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#1D4ED8";
+              e.currentTarget.style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#2563EB";
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
+          >
+            Crear mi ruta gratis →
           </Link>
-          <a href="#como-funciona" style={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: 15,
-            fontWeight: 500,
-            color: "#F5F3EE",
-            border: "1px solid rgba(245,243,238,0.2)",
-            borderRadius: 10,
-            padding: "14px 24px",
-            textDecoration: "none",
-            transition: "border-color 0.2s",
-          }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(245,243,238,0.5)")}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(245,243,238,0.2)")}>
+          <a
+            href="#como-funciona"
+            style={{
+              fontSize: 15,
+              fontWeight: 600,
+              color: "#334155",
+              background: "#FFFFFF",
+              border: "1px solid #CBD5E1",
+              borderRadius: 10,
+              padding: "14px 24px",
+              textDecoration: "none",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#F8FAFC";
+              e.currentTarget.style.borderColor = "#94A3B8";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#FFFFFF";
+              e.currentTarget.style.borderColor = "#CBD5E1";
+            }}
+          >
             Ver cómo funciona
           </a>
         </div>
 
-        {/* Social proof strip */}
-        <div style={{ marginTop: 48, display: "flex", alignItems: "center", gap: 20 }}>
+        {/* Social Proof Strip */}
+        <div style={{ marginTop: 44, display: "flex", alignItems: "center", gap: 18 }}>
           <div style={{ display: "flex" }}>
-            {["#E8B94A", "#F2637B", "#7EC8C8", "#A8A49C", "#F5F3EE"].map((c, i) => (
-              <div key={i} style={{
-                width: 32,
-                height: 32,
-                borderRadius: "50%",
-                background: `linear-gradient(135deg, ${c}88, ${c})`,
-                border: "2px solid #0F2A2E",
-                marginLeft: i === 0 ? 0 : -8,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 10,
-                fontWeight: 700,
-                color: "#0F2A2E",
-                fontFamily: "Inter, sans-serif",
-              }}>
-                {["MR", "CA", "JP", "LV", "SO"][i]}
+            {[
+              { text: "MR", bg: "#EFF6FF", color: "#1D4ED8" },
+              { text: "CA", bg: "#FDF2F8", color: "#DB2777" },
+              { text: "JP", bg: "#ECFDF5", color: "#059669" },
+              { text: "LV", bg: "#FFFBEB", color: "#D97706" },
+              { text: "SO", bg: "#F3E8FF", color: "#7E22CE" },
+            ].map((user, i) => (
+              <div
+                key={i}
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: "50%",
+                  background: user.bg,
+                  color: user.color,
+                  border: "2.5px solid #FFFFFF",
+                  marginLeft: i === 0 ? 0 : -8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                }}
+              >
+                {user.text}
               </div>
             ))}
           </div>
+
           <div>
-            <div style={{ display: "flex", gap: 2, marginBottom: 3 }}>
+            <div style={{ display: "flex", gap: 3, marginBottom: 2 }}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <svg key={i} width="12" height="12" viewBox="0 0 13 13"><polygon points="6.5,1 7.9,4.8 12,5.1 9,7.8 10,12 6.5,9.7 3,12 4,7.8 1,5.1 5.1,4.8" fill="#E8B94A" /></svg>
+                <svg key={i} width="14" height="14" viewBox="0 0 20 20" fill="#F59E0B">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
               ))}
             </div>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#A8A49C", margin: 0 }}>
-              <strong style={{ color: "#F5F3EE" }}>+12 000</strong> estudiantes ya en su ruta
+            <p style={{ fontSize: 13, color: "#64748B", margin: 0 }}>
+              <strong style={{ color: "#0F172A", fontWeight: 700 }}>+12,000 estudiantes</strong> progresando hoy
             </p>
           </div>
         </div>
       </div>
 
-      {/* Right: trail illustration */}
-      <div style={{ height: 580, position: "relative" }} className="hero-trail">
-        <TrailIllustration />
+      {/* Right Column: High Quality Product Preview */}
+      <div className="hero-trail" style={{ display: "flex", justifyContent: "center" }}>
+        <LearningPathPreview />
       </div>
     </section>
   );
 }
 
-// ── How it works ─────────────────────────────────────────────────────────────
-
-const STEPS = [
-  {
-    num: "01",
-    title: "Haz el diagnóstico inicial",
-    body: "Responde una evaluación breve. La IA identifica lo que ya sabes, lo que necesitas reforzar y cómo procesas mejor la información.",
-    icon: "◎",
-  },
-  {
-    num: "02",
-    title: "Recibe tu sendero personalizado",
-    body: "En segundos, tienes una ruta de aprendizaje única: lecciones ordenadas según tu nivel, tiempo disponible y objetivos.",
-    icon: "◈",
-  },
-  {
-    num: "03",
-    title: "La ruta se adapta contigo",
-    body: "Si avanzas rápido, el sistema acelera. Si algo no queda claro, refuerza antes de seguir. No hay dos senderos iguales.",
-    icon: "◊",
-  },
-];
-
-function HowItWorks() {
-  return (
-    <section id="como-funciona" style={{ padding: "100px 32px", borderTop: "1px solid rgba(245,243,238,0.06)" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ maxWidth: 560, marginBottom: 64 }}>
-          <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#E8B94A", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 600, margin: "0 0 16px" }}>
-            Cómo funciona
-          </p>
-          <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(30px, 4vw, 48px)", fontWeight: 700, color: "#F5F3EE", margin: 0, lineHeight: 1.15, letterSpacing: "-0.02em" }}>
-            Tres pasos hacia tu versión más preparada
-          </h2>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }} className="steps-grid">
-          {STEPS.map((s, i) => (
-            <div key={i} style={{
-              background: "#173C3E",
-              borderRadius: 20,
-              padding: "32px 28px",
-              border: "1px solid rgba(245,243,238,0.06)",
-              position: "relative",
-              overflow: "hidden",
-            }}>
-              {/* Subtle number watermark */}
-              <div style={{
-                position: "absolute",
-                top: -10,
-                right: 20,
-                fontFamily: "'Fraunces', Georgia, serif",
-                fontSize: 80,
-                fontWeight: 900,
-                color: "rgba(245,243,238,0.04)",
-                lineHeight: 1,
-                userSelect: "none",
-              }}>
-                {s.num}
-              </div>
-              <div style={{ fontSize: 28, marginBottom: 20, color: "#E8B94A" }}>{s.icon}</div>
-              <h3 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 20, fontWeight: 700, color: "#F5F3EE", margin: "0 0 12px", lineHeight: 1.25 }}>
-                {s.title}
-              </h3>
-              <p style={{ fontFamily: "Inter, sans-serif", fontSize: 14, color: "#A8A49C", lineHeight: 1.65, margin: 0 }}>
-                {s.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── Features ─────────────────────────────────────────────────────────────────
-
-const FEATURES = [
-  {
-    icon: "⚡",
-    color: "#F2637B",
-    title: "Aprendizaje en vivo",
-    body: "Únete a sesiones en tiempo real con otros estudiantes. Estudia acompañado sin perder tu ritmo personal.",
-  },
-  {
-    icon: "✦",
-    color: "#E8B94A",
-    title: "Tutor de IA disponible 24/7",
-    body: "Pregunta lo que sea cuando lo necesites. Tu tutor conoce exactamente dónde estás en tu sendero.",
-  },
-  {
-    icon: "◎",
-    color: "#7EC8C8",
-    title: "Progreso visible",
-    body: "El sendero de aprendizaje muestra dónde estás, cuánto has avanzado y qué logro te espera al final.",
-  },
-  {
-    icon: "◆",
-    color: "#E8B94A",
-    title: "Contenido de cualquier área",
-    body: "Matemáticas, idiomas, programación, historia. Adaptative Master genera rutas para el tema que necesites.",
-  },
-  {
-    icon: "◈",
-    color: "#F2637B",
-    title: "Sin currículo genérico",
-    body: "La IA descarta lo que ya sabes y se concentra en lo que te falta. Cero tiempo desperdiciado.",
-  },
-  {
-    icon: "▲",
-    color: "#7EC8C8",
-    title: "Rachas y logros reales",
-    body: "Cada día que estudias suma. Los hitos del sendero celebran el avance real, no el tiempo en pantalla.",
-  },
-];
-
-function Features() {
-  return (
-    <section style={{ padding: "100px 32px", background: "rgba(23,60,62,0.35)", borderTop: "1px solid rgba(245,243,238,0.06)" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ maxWidth: 540, marginBottom: 64 }}>
-          <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#E8B94A", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 600, margin: "0 0 16px" }}>
-            Características
-          </p>
-          <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(30px, 4vw, 48px)", fontWeight: 700, color: "#F5F3EE", margin: 0, lineHeight: 1.15, letterSpacing: "-0.02em" }}>
-            Todo lo que necesitas para aprender de verdad
-          </h2>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }} className="features-grid">
-          {FEATURES.map((f, i) => (
-            <div key={i} style={{
-              padding: "28px 24px",
-              borderRadius: 16,
-              border: "1px solid rgba(245,243,238,0.07)",
-              transition: "border-color 0.2s, background 0.2s",
-              cursor: "default",
-            }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "#173C3E"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(245,243,238,0.12)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.borderColor = "rgba(245,243,238,0.07)"; }}>
-              <div style={{
-                width: 42,
-                height: 42,
-                borderRadius: 12,
-                background: `${f.color}18`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 20,
-                color: f.color,
-                marginBottom: 18,
-              }}>
-                {f.icon}
-              </div>
-              <h3 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 18, fontWeight: 700, color: "#F5F3EE", margin: "0 0 10px", lineHeight: 1.25 }}>
-                {f.title}
-              </h3>
-              <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13.5, color: "#A8A49C", lineHeight: 1.65, margin: 0 }}>
-                {f.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── Testimonials ─────────────────────────────────────────────────────────────
-
-const TESTIMONIALS = [
-  {
-    quote: "Llevaba meses con el mismo libro de cálculo sin entender nada. En tres semanas con Adaptative Master llegué al punto donde me había atascado — y lo superé.",
-    name: "Marcos Reyes",
-    role: "Estudiante de Ingeniería, UNAM",
-    initials: "MR",
-    color: "#E8B94A",
-  },
-  {
-    quote: "Lo que más me gusta es que no me hace repetir lo que ya sé. Empecé por inglés B2 y en dos semanas ya iba directo a lo que necesitaba para el examen.",
-    name: "Carla Andrade",
-    role: "Profesional en transición, Bogotá",
-    initials: "CA",
-    color: "#F2637B",
-  },
-  {
-    quote: "El tutor de IA es distinto a cualquier chatbot que he probado. Sabe exactamente en qué lección estoy y me explica justo desde ahí, sin contexto extra.",
-    name: "Jorge Palacios",
-    role: "Docente de secundaria, México",
-    initials: "JP",
-    color: "#7EC8C8",
-  },
-];
-
-function Testimonials() {
-  return (
-    <section style={{ padding: "100px 32px", borderTop: "1px solid rgba(245,243,238,0.06)" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ maxWidth: 480, marginBottom: 64 }}>
-          <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#E8B94A", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 600, margin: "0 0 16px" }}>
-            Testimonios
-          </p>
-          <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(30px, 4vw, 48px)", fontWeight: 700, color: "#F5F3EE", margin: 0, lineHeight: 1.15, letterSpacing: "-0.02em" }}>
-            Lo que dicen quienes ya recorren su sendero
-          </h2>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 28 }} className="testimonials-grid">
-          {TESTIMONIALS.map((t, i) => (
-            <div key={i} style={{
-              background: "#173C3E",
-              borderRadius: 20,
-              padding: "32px 28px",
-              border: "1px solid rgba(245,243,238,0.06)",
-              display: "flex",
-              flexDirection: "column",
-              gap: 24,
-            }}>
-              {/* Stars */}
-              <div style={{ display: "flex", gap: 3 }}>
-                {Array.from({ length: 5 }).map((_, j) => (
-                  <svg key={j} width="13" height="13" viewBox="0 0 13 13"><polygon points="6.5,1 7.9,4.8 12,5.1 9,7.8 10,12 6.5,9.7 3,12 4,7.8 1,5.1 5.1,4.8" fill="#E8B94A" /></svg>
-                ))}
-              </div>
-              <p style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 16, fontStyle: "italic", color: "#F5F3EE", lineHeight: 1.65, margin: 0, flex: 1 }}>
-                "{t.quote}"
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  background: `${t.color}30`,
-                  border: `2px solid ${t.color}60`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: t.color,
-                }}>
-                  {t.initials}
-                </div>
-                <div>
-                  <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 600, color: "#F5F3EE", margin: 0 }}>{t.name}</p>
-                  <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#A8A49C", margin: 0 }}>{t.role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── Stats banner ─────────────────────────────────────────────────────────────
+// ── Stats Banner ────────────────────────────────────────────────────────────
 
 const STATS = [
-  { value: "12 000+", label: "Estudiantes activos" },
-  { value: "94%", label: "Completan su primera ruta" },
-  { value: "3×", label: "Más rápido que un curso genérico" },
-  { value: "47", label: "Áreas de conocimiento" },
+  { value: "12,000+", label: "Estudiantes activos", desc: "Aprendiendo a su propio ritmo" },
+  { value: "94%", label: "Tasa de finalización", desc: "En rutas adaptativas completadas" },
+  { value: "3.2×", label: "Mayor retención", desc: "Comparado con temarios estáticos" },
+  { value: "48+", label: "Áreas de estudio", desc: "Desde programación hasta idiomas" },
 ];
 
 function StatsBanner() {
   return (
-    <div style={{
-      background: "#173C3E",
-      borderTop: "1px solid rgba(245,243,238,0.06)",
-      borderBottom: "1px solid rgba(245,243,238,0.06)",
-      padding: "48px 32px",
+    <section id="metricas" style={{
+      background: "#F8FAFC",
+      borderTop: "1px solid #E2E8F0",
+      borderBottom: "1px solid #E2E8F0",
+      padding: "48px 24px",
     }}>
       <div style={{
         maxWidth: 1200,
         margin: "0 auto",
         display: "grid",
         gridTemplateColumns: "repeat(4, 1fr)",
-        gap: 24,
+        gap: 32,
         textAlign: "center",
       }} className="stats-grid">
         {STATS.map((s, i) => (
           <div key={i}>
-            <p style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 900, color: "#E8B94A", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+            <div style={{ fontSize: "clamp(28px, 3.2vw, 42px)", fontWeight: 800, color: "#0F172A", letterSpacing: "-0.02em", marginBottom: 4 }}>
               {s.value}
-            </p>
-            <p style={{ fontFamily: "Inter, sans-serif", fontSize: 13, color: "#A8A49C", margin: 0, letterSpacing: "0.04em" }}>
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: "#334155", marginBottom: 2 }}>
               {s.label}
-            </p>
+            </div>
+            <div style={{ fontSize: 12, color: "#64748B" }}>
+              {s.desc}
+            </div>
           </div>
         ))}
-      </div>
-    </div>
-  );
-}
-
-// ── CTA final ─────────────────────────────────────────────────────────────────
-
-function FinalCTA() {
-  return (
-    <section style={{ padding: "120px 32px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-      {/* Background glow */}
-      <div style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        width: 600,
-        height: 400,
-        background: "radial-gradient(ellipse, rgba(232,185,74,0.07) 0%, transparent 65%)",
-        pointerEvents: "none",
-      }} />
-
-      <div style={{ maxWidth: 680, margin: "0 auto", position: "relative" }}>
-        <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#E8B94A", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 600, marginBottom: 20 }}>
-          Tu ruta empieza hoy
-        </p>
-        <h2 style={{
-          fontFamily: "'Fraunces', Georgia, serif",
-          fontSize: "clamp(34px, 5vw, 58px)",
-          fontWeight: 900,
-          color: "#F5F3EE",
-          margin: "0 0 12px",
-          lineHeight: 1.1,
-          letterSpacing: "-0.02em",
-        }}>
-          Deja de estudiar a ciegas.
-        </h2>
-        <h2 style={{
-          fontFamily: "'Fraunces', Georgia, serif",
-          fontSize: "clamp(34px, 5vw, 58px)",
-          fontWeight: 400,
-          fontStyle: "italic",
-          color: "#E8B94A",
-          margin: "0 0 32px",
-          lineHeight: 1.1,
-          letterSpacing: "-0.01em",
-        }}>
-          Sigue tu propio sendero.
-        </h2>
-        <p style={{ fontFamily: "Inter, sans-serif", fontSize: 16, color: "#A8A49C", lineHeight: 1.65, marginBottom: 44 }}>
-          Diagnóstico gratuito. Sin tarjeta de crédito.<br />Tu primera ruta en menos de 2 minutos.
-        </p>
-        <Link to="/registro" style={{
-          display: "inline-block",
-          fontFamily: "Inter, sans-serif",
-          fontSize: 16,
-          fontWeight: 700,
-          background: "#E8B94A",
-          color: "#0F2A2E",
-          borderRadius: 12,
-          padding: "16px 36px",
-          textDecoration: "none",
-          letterSpacing: "0.01em",
-          transition: "opacity 0.2s, transform 0.2s",
-          boxShadow: "0 8px 32px rgba(232,185,74,0.25)",
-        }}
-          onMouseEnter={e => { e.currentTarget.style.opacity = "0.88"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-          onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}>
-          Crear mi ruta gratis
-        </Link>
       </div>
     </section>
   );
 }
 
-// ── Footer ────────────────────────────────────────────────────────────────────
+// ── How It Works ────────────────────────────────────────────────────────────
+
+const STEPS = [
+  {
+    num: "01",
+    title: "Diagnóstico inicial inteligente",
+    body: "Responde unas preguntas interactivas. La IA evalúa tus fundamentos, detecta qué ya dominas y qué conceptos conviene repasar.",
+    badge: "Evaluación inicial",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="m4.93 4.93 4.24 4.24"/>
+        <path d="m14.83 9.17 4.24-4.24"/>
+        <path d="m14.83 14.83 4.24 4.24"/>
+        <path d="m9.17 14.83-4.24 4.24"/>
+        <circle cx="12" cy="12" r="4"/>
+      </svg>
+    ),
+  },
+  {
+    num: "02",
+    title: "Tu sendero se genera al instante",
+    body: "Recibe una ruta estructurada paso a paso: lecciones breves, ejercicios prácticos y evaluaciones ajustadas a tu meta y tiempo disponible.",
+    badge: "Ruta personalizada",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 17h6l3 3 5-5H3z"/>
+        <path d="M14 6l7 7-4 4"/>
+        <path d="M9 3v4"/>
+      </svg>
+    ),
+  },
+  {
+    num: "03",
+    title: "Ajuste continuo en tiempo real",
+    body: "Si un tema te resulta sencillo, avanzas de inmediato. Si te cuesta, la IA te ofrece explicaciones alternativas y ejemplos claros hasta dominarlo.",
+    badge: "Adaptación en vivo",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+      </svg>
+    ),
+  },
+];
+
+function HowItWorks() {
+  return (
+    <section id="como-funciona" style={{ padding: "90px 24px", maxWidth: 1200, margin: "0 auto" }}>
+      <div style={{ maxWidth: 600, marginBottom: 54 }}>
+        <div style={{
+          display: "inline-block",
+          fontSize: 12,
+          fontWeight: 700,
+          color: "#2563EB",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          marginBottom: 10,
+        }}>
+          Metodología
+        </div>
+        <h2 style={{
+          fontSize: "clamp(28px, 3.5vw, 42px)",
+          fontWeight: 800,
+          color: "#0F172A",
+          margin: "0 0 14px",
+          lineHeight: 1.2,
+          letterSpacing: "-0.02em",
+        }}>
+          Aprende con efectividad en tres pasos
+        </h2>
+        <p style={{ fontSize: 16, color: "#64748B", margin: 0, lineHeight: 1.6 }}>
+          Diseñado para que aproveches cada minuto de estudio sin frustración ni repeticiones innecesarias.
+        </p>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }} className="steps-grid">
+        {STEPS.map((s, i) => (
+          <div
+            key={i}
+            style={{
+              background: "#FFFFFF",
+              borderRadius: 16,
+              padding: "32px 28px",
+              border: "1px solid #E2E8F0",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.02)",
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+              <div style={{
+                width: 44,
+                height: 44,
+                borderRadius: 12,
+                background: "#EFF6FF",
+                border: "1px solid #DBEAFE",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+                {s.icon}
+              </div>
+              <span style={{ fontSize: 14, fontWeight: 800, color: "#94A3B8", letterSpacing: "0.05em" }}>
+                PASO {s.num}
+              </span>
+            </div>
+
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0F172A", margin: "0 0 10px", lineHeight: 1.3 }}>
+              {s.title}
+            </h3>
+
+            <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.6, margin: 0 }}>
+              {s.body}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ── Features Section ────────────────────────────────────────────────────────
+
+const FEATURES = [
+  {
+    title: "Tutor IA disponible 24/7",
+    desc: "Pregunta cualquier duda en el momento. Tu tutor conoce exactamente tu avance y te explica con analogías claras.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    ),
+  },
+  {
+    title: "Cero currículos estáticos",
+    desc: "Olvídate de listas de 80 videos idénticos para todos. Cada lección se genera según lo que de verdad requieres.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    ),
+  },
+  {
+    title: "Minijuegos y práctica interactiva",
+    desc: "Refuerza conceptos clave con retos de emparejamiento, verdadero o falso y simulaciones dinámicas.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="6" width="20" height="12" rx="2"/>
+        <path d="M6 12h4m-2-2v4m9-3h.01M15 13h.01"/>
+      </svg>
+    ),
+  },
+  {
+    title: "Progreso visible y métricas claras",
+    desc: "Visualiza tus horas de concentración, rachas consecutivas, nivel de dominio y los hitos alcanzados.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 20V10M12 20V4M6 20v-6"/>
+      </svg>
+    ),
+  },
+  {
+    title: "Cualquier tema o disciplina",
+    desc: "Programación, matemáticas, finanzas, idiomas o ciencias. Escribe lo que deseas aprender y se creará tu ruta.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 2a14.5 14.5 0 0 0 0 20M12 2a14.5 14.5 0 0 1 0 20M2 12h20"/>
+      </svg>
+    ),
+  },
+  {
+    title: "Estudio colaborativo y social",
+    desc: "Conecta con compañeros de ruta, comparte recomendaciones y motívate celebrando avances en comunidad.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    ),
+  },
+];
+
+function Features() {
+  return (
+    <section id="caracteristicas" style={{
+      padding: "90px 24px",
+      background: "#F8FAFC",
+      borderTop: "1px solid #E2E8F0",
+      borderBottom: "1px solid #E2E8F0",
+    }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ maxWidth: 600, marginBottom: 54 }}>
+          <div style={{
+            display: "inline-block",
+            fontSize: 12,
+            fontWeight: 700,
+            color: "#2563EB",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            marginBottom: 10,
+          }}>
+            Características
+          </div>
+          <h2 style={{
+            fontSize: "clamp(28px, 3.5vw, 42px)",
+            fontWeight: 800,
+            color: "#0F172A",
+            margin: "0 0 14px",
+            lineHeight: 1.2,
+            letterSpacing: "-0.02em",
+          }}>
+            Todo lo necesario para dominar habilidades reales
+          </h2>
+          <p style={{ fontSize: 16, color: "#64748B", margin: 0, lineHeight: 1.6 }}>
+            Herramientas diseñadas para mantenerte enfocado, motivado y en constante evolución.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }} className="features-grid">
+          {FEATURES.map((f, i) => (
+            <div
+              key={i}
+              style={{
+                background: "#FFFFFF",
+                borderRadius: 14,
+                padding: "26px",
+                border: "1px solid #E2E8F0",
+                transition: "all 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "#CBD5E1";
+                e.currentTarget.style.boxShadow = "0 8px 24px rgba(15,23,42,0.04)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "#E2E8F0";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              <div style={{
+                width: 42,
+                height: 42,
+                borderRadius: 10,
+                background: "#EFF6FF",
+                border: "1px solid #DBEAFE",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: 16,
+              }}>
+                {f.icon}
+              </div>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: "#0F172A", margin: "0 0 8px" }}>
+                {f.title}
+              </h3>
+              <p style={{ fontSize: 13.5, color: "#64748B", lineHeight: 1.55, margin: 0 }}>
+                {f.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Testimonials ────────────────────────────────────────────────────────────
+
+const TESTIMONIALS = [
+  {
+    quote: "Llevaba meses intentando aprender cálculo por mi cuenta y me atascaba siempre en las mismas derivadas. Con la ruta adaptativa entendí los vacíos que tenía y en 3 semanas aprobé.",
+    name: "Marcos Reyes",
+    role: "Estudiante de Ingeniería",
+    initials: "MR",
+    color: "#2563EB",
+  },
+  {
+    quote: "Lo que más valoro es que no me hace perder tiempo con lo que ya conozco. En inglés técnico saltó directamente a vocabulario profesional y análisis de casos reales.",
+    name: "Carla Andrade",
+    role: "Analista de Datos",
+    initials: "CA",
+    color: "#059669",
+  },
+  {
+    quote: "El Tutor IA es muy superior a un chatbot ordinario: sabe exactamente en qué lección voy, qué dudas tuve ayer y cómo explicarme las cosas paso por paso.",
+    name: "Jorge Palacios",
+    role: "Docente de Ciencias",
+    initials: "JP",
+    color: "#7C3AED",
+  },
+];
+
+function Testimonials() {
+  return (
+    <section id="testimonios" style={{ padding: "90px 24px", maxWidth: 1200, margin: "0 auto" }}>
+      <div style={{ maxWidth: 600, marginBottom: 54 }}>
+        <div style={{
+          display: "inline-block",
+          fontSize: 12,
+          fontWeight: 700,
+          color: "#2563EB",
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          marginBottom: 10,
+        }}>
+          Testimonios
+        </div>
+        <h2 style={{
+          fontSize: "clamp(28px, 3.5vw, 42px)",
+          fontWeight: 800,
+          color: "#0F172A",
+          margin: "0 0 14px",
+          lineHeight: 1.2,
+          letterSpacing: "-0.02em",
+        }}>
+          Historias de quienes ya recorren su ruta
+        </h2>
+        <p style={{ fontSize: 16, color: "#64748B", margin: 0, lineHeight: 1.6 }}>
+          Estudiantes y profesionales que transformaron su forma de aprender.
+        </p>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }} className="testimonials-grid">
+        {TESTIMONIALS.map((t, i) => (
+          <div
+            key={i}
+            style={{
+              background: "#FFFFFF",
+              borderRadius: 16,
+              padding: "30px 26px",
+              border: "1px solid #E2E8F0",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.02)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>
+              {/* Star Rating */}
+              <div style={{ display: "flex", gap: 3, marginBottom: 16 }}>
+                {Array.from({ length: 5 }).map((_, j) => (
+                  <svg key={j} width="15" height="15" viewBox="0 0 20 20" fill="#F59E0B">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+
+              <p style={{
+                fontSize: 14.5,
+                color: "#334155",
+                lineHeight: 1.6,
+                margin: "0 0 24px",
+                fontStyle: "italic",
+              }}>
+                "{t.quote}"
+              </p>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 12, paddingTop: 16, borderTop: "1px solid #F1F5F9" }}>
+              <div style={{
+                width: 38,
+                height: 38,
+                borderRadius: "50%",
+                background: "#EFF6FF",
+                border: `1.5px solid ${t.color}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 12,
+                fontWeight: 700,
+                color: t.color,
+              }}>
+                {t.initials}
+              </div>
+              <div>
+                <div style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A" }}>{t.name}</div>
+                <div style={{ fontSize: 12, color: "#64748B" }}>{t.role}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ── Final CTA ───────────────────────────────────────────────────────────────
+
+function FinalCTA() {
+  return (
+    <section style={{ padding: "0 24px 100px", maxWidth: 1200, margin: "0 auto" }}>
+      <div style={{
+        background: "#0F172A",
+        borderRadius: 24,
+        padding: "64px 36px",
+        textAlign: "center",
+        color: "#FFFFFF",
+        position: "relative",
+        overflow: "hidden",
+        boxShadow: "0 20px 40px -10px rgba(15, 23, 42, 0.2)",
+      }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 2 }}>
+          <div style={{
+            display: "inline-block",
+            fontSize: 12,
+            fontWeight: 700,
+            color: "#60A5FA",
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            marginBottom: 16,
+          }}>
+            Comienza hoy mismo
+          </div>
+
+          <h2 style={{
+            fontSize: "clamp(30px, 4vw, 44px)",
+            fontWeight: 800,
+            margin: "0 0 16px",
+            lineHeight: 1.15,
+            letterSpacing: "-0.02em",
+          }}>
+            Deja de estudiar a ciegas. <br />
+            Descubre tu propia ruta.
+          </h2>
+
+          <p style={{
+            fontSize: 16,
+            color: "#94A3B8",
+            lineHeight: 1.6,
+            margin: "0 0 36px",
+          }}>
+            Diagnóstico gratuito en menos de 2 minutos. Sin tarjeta de crédito requerida.
+          </p>
+
+          <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
+            <Link
+              to="/registro"
+              style={{
+                fontSize: 15,
+                fontWeight: 600,
+                background: "#2563EB",
+                color: "#FFFFFF",
+                borderRadius: 10,
+                padding: "14px 32px",
+                textDecoration: "none",
+                boxShadow: "0 4px 14px rgba(37,99,235,0.4)",
+                transition: "all 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#1D4ED8";
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#2563EB";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              Crear mi primera ruta gratis →
+            </Link>
+            <Link
+              to="/login"
+              style={{
+                fontSize: 14,
+                fontWeight: 600,
+                color: "#CBD5E1",
+                textDecoration: "none",
+                padding: "14px 20px",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#CBD5E1")}
+            >
+              Ya tengo cuenta: Iniciar sesión
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Footer ──────────────────────────────────────────────────────────────────
 
 function Footer() {
   return (
     <footer style={{
-      borderTop: "1px solid rgba(245,243,238,0.08)",
-      padding: "48px 32px",
+      borderTop: "1px solid #E2E8F0",
+      padding: "44px 24px",
+      background: "#FFFFFF",
     }}>
       <div style={{
         maxWidth: 1200,
@@ -711,32 +1150,61 @@ function Footer() {
         flexWrap: "wrap",
         gap: 20,
       }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
-          <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 18, fontWeight: 900, color: "#F5F3EE" }}>Adaptative</span>
-          <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 18, fontWeight: 400, fontStyle: "italic", color: "#E8B94A" }}>Master</span>
+        {/* Brand */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{
+            width: 28,
+            height: 28,
+            borderRadius: 7,
+            background: "#EFF6FF",
+            border: "1px solid #DBEAFE",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.2">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <span style={{ fontSize: 15, fontWeight: 800, color: "#0F172A" }}>Adaptative</span>
+          <span style={{ fontSize: 15, fontWeight: 700, color: "#2563EB" }}>Master</span>
         </div>
-        <div style={{ display: "flex", gap: 28 }}>
-          {["Privacidad", "Términos", "Contacto"].map((l) => (
-            <a key={l} href="#" style={{ fontFamily: "Inter, sans-serif", fontSize: 13, color: "#A8A49C", textDecoration: "none" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#F5F3EE")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#A8A49C")}>
-              {l}
+
+        {/* Links */}
+        <div style={{ display: "flex", gap: 24 }}>
+          {["Privacidad", "Términos de servicio", "Soporte", "Contacto"].map((item) => (
+            <a
+              key={item}
+              href="#"
+              style={{
+                fontSize: 13,
+                color: "#64748B",
+                textDecoration: "none",
+                transition: "color 0.15s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#0F172A")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#64748B")}
+            >
+              {item}
             </a>
           ))}
         </div>
-        <p style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#A8A49C", margin: 0 }}>
-          © 2025 Adaptative Master
+
+        {/* Copyright */}
+        <p style={{ fontSize: 13, color: "#94A3B8", margin: 0 }}>
+          © 2026 Adaptative Master. Todos los derechos reservados.
         </p>
       </div>
     </footer>
   );
 }
 
-// ── Root ──────────────────────────────────────────────────────────────────────
+// ── Landing Page Wrapper ────────────────────────────────────────────────────
 
 function Landing() {
   return (
-    <div style={{ background: "#0F2A2E", minHeight: "100vh", color: "#F5F3EE" }}>
+    <div style={{ background: "#FFFFFF", minHeight: "100vh", color: "#0F172A" }}>
       <Nav />
       <Hero />
       <StatsBanner />
@@ -748,6 +1216,8 @@ function Landing() {
     </div>
   );
 }
+
+// ── Main App Router ─────────────────────────────────────────────────────────
 
 export default function App() {
   return (

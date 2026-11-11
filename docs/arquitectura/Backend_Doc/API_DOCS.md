@@ -19,7 +19,7 @@ Lista el estado general de las rutas de aprendizaje.
     {
       "id": 1,
       "titulo": "Python Backend",
-      "icono": "🐍",
+      "icono": "",
       "progreso_porcentaje": 72,
       "lecciones_completadas": 12,
       "lecciones_totales": 17

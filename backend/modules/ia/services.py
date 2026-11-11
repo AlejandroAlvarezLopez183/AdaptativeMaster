@@ -157,7 +157,7 @@ async def enviar_mensaje_tutor(
             max_tokens=800,
         )
     except Exception as e:
-        respuesta_llm = "Lo siento, tuve un problema al procesar tu pregunta. Intenta de nuevo en un momento. 🙏"
+        respuesta_llm = "Lo siento, tuve un problema al procesar tu pregunta. Intenta de nuevo en un momento. "
         print(f"[ERROR] Fallo llamada a OpenRouter (tutor): {e}")
 
     # 6. Guardar respuesta del tutor en la BD

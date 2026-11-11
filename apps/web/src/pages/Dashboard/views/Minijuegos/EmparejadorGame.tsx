@@ -84,62 +84,104 @@ export function EmparejadorGame({ datos, onComplete }: EmparejadorGameProps) {
   const defs = cards.filter(c => c.type === 'definition');
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, width: "100%", fontFamily: "'Open Sans', system-ui, sans-serif" }}>
       {/* HUD */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #F1F5F9", paddingBottom: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span>🔥</span>
-          <span style={{ color: combo > 1 ? "#E8B94A" : "#8FA8AA", fontWeight: 700 }}>x{combo}</span>
+          <span style={{ fontSize: 13, color: "#64748B", fontWeight: 600 }}>Racha:</span>
+          <span style={{ color: combo > 1 ? "#2563EB" : "#64748B", fontWeight: 700, fontSize: 14 }}>x{combo}</span>
         </div>
-        <div style={{ color: "#F5F3EE", fontWeight: 700 }}>💎 {score} XP</div>
+        <div style={{ color: "#0F172A", fontWeight: 700, fontSize: 14 }}>{score} XP</div>
         <div style={{
-          background: timeLeft <= 10 ? "rgba(242,99,123,0.1)" : "rgba(23,60,62,0.4)",
-          border: `2px solid ${timeLeft <= 10 ? "#F2637B" : "rgba(245,243,238,0.2)"}`,
-          padding: "6px 18px", borderRadius: 20, display: "flex", alignItems: "center", gap: 8
+          background: timeLeft <= 10 ? "#FEF2F2" : "#F8FAFC",
+          border: `1px solid ${timeLeft <= 10 ? "#FECACA" : "#E2E8F0"}`,
+          padding: "4px 14px", borderRadius: 20, display: "flex", alignItems: "center", gap: 6
         }}>
-          <span>⏳</span>
-          <span style={{ fontWeight: 800, color: timeLeft <= 10 ? "#F2637B" : "#F5F3EE" }}>
+          <span style={{ fontWeight: 700, fontSize: 13, color: timeLeft <= 10 ? "#DC2626" : "#0F172A" }}>
             {timeLeft}s
           </span>
         </div>
       </div>
 
       {/* Cards grid */}
-      <div style={{ display: "flex", gap: 32 }}>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
-          <h3 style={{ color: "#E8B94A", textAlign: "center", margin: "0 0 8px", fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase" }}>Términos</h3>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <h3 style={{ color: "#2563EB", textAlign: "center", margin: "0 0 6px", fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", fontWeight: 700 }}>
+            Términos
+          </h3>
           {terms.map(card => {
             const isSelected = selectedTerm?.id === card.id;
             const isError = selectedTerm && selectedDef && selectedTerm.pairId !== selectedDef.pairId && isSelected;
+            
+            let bg = "#FFFFFF";
+            let border = "#CBD5E1";
+            let color = "#0F172A";
+
+            if (card.isMatched) {
+              bg = "#F8FAFC";
+              border = "#E2E8F0";
+              color = "#94A3B8";
+            } else if (isError) {
+              bg = "#FEF2F2";
+              border = "#DC2626";
+              color = "#DC2626";
+            } else if (isSelected) {
+              bg = "#EFF6FF";
+              border = "#2563EB";
+              color = "#1D4ED8";
+            }
+
             return (
               <button key={card.id} onClick={() => handleClick(card)} disabled={card.isMatched}
                 style={{
-                  background: card.isMatched ? "transparent" : isSelected ? "rgba(232,185,74,0.15)" : "rgba(23,60,62,0.4)",
-                  border: `2px solid ${card.isMatched ? "rgba(245,243,238,0.05)" : isError ? "#F2637B" : isSelected ? "#E8B94A" : "rgba(245,243,238,0.1)"}`,
-                  color: card.isMatched ? "rgba(245,243,238,0.2)" : "#F5F3EE",
-                  padding: "20px", borderRadius: 14, fontSize: 16, fontWeight: 600,
-                  cursor: card.isMatched ? "default" : "pointer", transition: "all 0.2s",
-                  transform: isSelected && !isError ? "scale(1.02)" : "scale(1)",
+                  background: bg,
+                  border: `1.5px solid ${border}`,
+                  color: color,
+                  padding: "16px", borderRadius: 10, fontSize: 14, fontWeight: 600,
+                  cursor: card.isMatched ? "default" : "pointer", transition: "all 0.15s ease",
+                  textAlign: "center"
                 }}>
                 {card.text}
               </button>
             );
           })}
         </div>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
-          <h3 style={{ color: "#45C893", textAlign: "center", margin: "0 0 8px", fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase" }}>Definiciones</h3>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <h3 style={{ color: "#059669", textAlign: "center", margin: "0 0 6px", fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", fontWeight: 700 }}>
+            Definiciones
+          </h3>
           {defs.map(card => {
             const isSelected = selectedDef?.id === card.id;
             const isError = selectedTerm && selectedDef && selectedTerm.pairId !== selectedDef.pairId && isSelected;
+
+            let bg = "#FFFFFF";
+            let border = "#CBD5E1";
+            let color = "#0F172A";
+
+            if (card.isMatched) {
+              bg = "#F8FAFC";
+              border = "#E2E8F0";
+              color = "#94A3B8";
+            } else if (isError) {
+              bg = "#FEF2F2";
+              border = "#DC2626";
+              color = "#DC2626";
+            } else if (isSelected) {
+              bg = "#ECFDF5";
+              border = "#059669";
+              color = "#047857";
+            }
+
             return (
               <button key={card.id} onClick={() => handleClick(card)} disabled={card.isMatched}
                 style={{
-                  background: card.isMatched ? "transparent" : isSelected ? "rgba(69,200,147,0.15)" : "rgba(23,60,62,0.4)",
-                  border: `2px solid ${card.isMatched ? "rgba(245,243,238,0.05)" : isError ? "#F2637B" : isSelected ? "#45C893" : "rgba(245,243,238,0.1)"}`,
-                  color: card.isMatched ? "rgba(245,243,238,0.2)" : "#F5F3EE",
-                  padding: "20px", borderRadius: 14, fontSize: 14, fontWeight: 400,
-                  cursor: card.isMatched ? "default" : "pointer", transition: "all 0.2s", textAlign: "left", lineHeight: 1.4,
-                  transform: isSelected && !isError ? "scale(1.02)" : "scale(1)",
+                  background: bg,
+                  border: `1.5px solid ${border}`,
+                  color: color,
+                  padding: "16px", borderRadius: 10, fontSize: 13, fontWeight: 400,
+                  cursor: card.isMatched ? "default" : "pointer", transition: "all 0.15s ease",
+                  textAlign: "left", lineHeight: 1.5
                 }}>
                 {card.text}
               </button>

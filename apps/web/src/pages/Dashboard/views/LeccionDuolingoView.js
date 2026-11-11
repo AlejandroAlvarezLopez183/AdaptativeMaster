@@ -38,9 +38,9 @@ function LessonNode({ lesson, chapterColor, offset, isLast, onActivate, }) {
     const isCheckpoint = type === "checkpoint";
     const isFinalNode = isBoss || isCheckpoint;
     const size = isFinalNode ? 90 : 64; // Aún más grande para jefes
-    const bg = isDone ? chapterColor : isActive ? chapterColor : "#1E4A4D";
-    const borderColor = isDone ? chapterColor : isActive ? chapterColor : "rgba(245,243,238,0.12)";
-    const iconColor = isDone || isActive ? "#0F2A2E" : "rgba(245,243,238,0.25)";
+    const bg = isDone ? chapterColor : isActive ? chapterColor : "#F1F5F9";
+    const borderColor = isDone ? chapterColor : isActive ? chapterColor : "#E2E8F0";
+    const iconColor = isDone || isActive ? "#FFFFFF" : "#94A3B8";
     return (_jsxs("div", { style: { display: "flex", flexDirection: "row", alignItems: "center", position: "relative" }, children: [!isLast && (_jsx("div", { style: {
                     position: "absolute",
                     top: "50%",
@@ -50,7 +50,7 @@ function LessonNode({ lesson, chapterColor, offset, isLast, onActivate, }) {
                     width: 48,
                     background: isDone
                         ? `linear-gradient(to right, ${chapterColor}, ${chapterColor}88)`
-                        : "rgba(245,243,238,0.08)",
+                        : "#E2E8F0",
                     borderRadius: 4,
                     zIndex: 0,
                 } })), _jsxs("div", { style: { transform: `translateY(${offset}px)`, position: "relative", zIndex: 1 }, onMouseEnter: () => setTooltip(true), onMouseLeave: () => setTooltip(false), children: [isActive && (_jsxs(_Fragment, { children: [_jsx("div", { style: { position: "absolute", inset: -14, borderRadius: "50%", background: `${chapterColor}10` } }), _jsx("div", { style: { position: "absolute", inset: -7, borderRadius: "50%", background: `${chapterColor}18` } })] })), isFinalNode ? (
@@ -59,7 +59,7 @@ function LessonNode({ lesson, chapterColor, offset, isLast, onActivate, }) {
                             width: size,
                             height: size,
                             borderRadius: "20%",
-                            background: isLocked ? "#173C3E" : `linear-gradient(135deg, ${chapterColor}, ${chapterColor}aa)`,
+                            background: isLocked ? "#F1F5F9" : `linear-gradient(135deg, ${chapterColor}, ${chapterColor}aa)`,
                             border: `4px solid ${borderColor}`,
                             display: "flex",
                             alignItems: "center",
@@ -67,15 +67,15 @@ function LessonNode({ lesson, chapterColor, offset, isLast, onActivate, }) {
                             cursor: isLocked ? "default" : "pointer",
                             transition: "transform 0.18s, box-shadow 0.18s",
                             boxShadow: isActive
-                                ? `0 0 0 6px ${chapterColor}30, 0 12px 32px rgba(0,0,0,0.5)`
+                                ? `0 0 0 6px ${chapterColor}30, 0 12px 32px rgba(0,0,0,0.12)`
                                 : isDone
-                                    ? `0 8px 24px rgba(0,0,0,0.4)`
+                                    ? `0 4px 12px rgba(0,0,0,0.08)`
                                     : "none",
                             outline: "none",
                             position: "relative",
                             transform: isLocked ? "rotate(45deg)" : "rotate(0deg)"
                         }, className: isActive ? "node-active-pulse" : "", onMouseEnter: e => { if (!isLocked)
-                            e.currentTarget.style.transform = isLocked ? "rotate(45deg) scale(1.07)" : "scale(1.07)"; }, onMouseLeave: e => { e.currentTarget.style.transform = isLocked ? "rotate(45deg) scale(1)" : "scale(1)"; }, children: [_jsx("div", { style: { transform: isLocked ? "rotate(-45deg)" : "rotate(0deg)" }, children: isDone ? (_jsx("svg", { width: "32", height: "32", viewBox: "0 0 24 24", fill: "none", children: _jsx("path", { d: "M5 12L10 17L19 7", stroke: "#0F2A2E", strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round" }) })) : isLocked ? (_jsxs("svg", { width: "28", height: "28", viewBox: "0 0 20 20", fill: "none", children: [_jsx("rect", { x: "4", y: "9", width: "12", height: "9", rx: "2", stroke: "rgba(245,243,238,0.3)", strokeWidth: "1.8", fill: "none" }), _jsx("path", { d: "M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9", stroke: "rgba(245,243,238,0.3)", strokeWidth: "1.8", strokeLinecap: "round" })] })) : (_jsx("span", { style: { fontSize: 32 }, children: "\u2694\uFE0F" })) }), isBoss && !isLocked && (_jsx("div", { style: { position: 'absolute', top: -14, fontSize: 16 }, children: "\uD83D\uDC51" }))] })) : (
+                            e.currentTarget.style.transform = isLocked ? "rotate(45deg) scale(1.07)" : "scale(1.07)"; }, onMouseLeave: e => { e.currentTarget.style.transform = isLocked ? "rotate(45deg) scale(1)" : "scale(1)"; }, children: [_jsx("div", { style: { transform: isLocked ? "rotate(-45deg)" : "rotate(0deg)" }, children: isDone ? (_jsx("svg", { width: "32", height: "32", viewBox: "0 0 24 24", fill: "none", children: _jsx("path", { d: "M5 12L10 17L19 7", stroke: "#FFFFFF", strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round" }) })) : isLocked ? (_jsxs("svg", { width: "28", height: "28", viewBox: "0 0 20 20", fill: "none", children: [_jsx("rect", { x: "4", y: "9", width: "12", height: "9", rx: "2", stroke: "#94A3B8", strokeWidth: "1.8", fill: "none" }), _jsx("path", { d: "M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9", stroke: "#94A3B8", strokeWidth: "1.8", strokeLinecap: "round" })] })) : (_jsx("span", { style: { fontSize: 32 } })) }), isBoss && !isLocked && (_jsx("div", { style: { position: 'absolute', top: -14, fontSize: 16 } }))] })) : (
                     // RENDER NORMAL (CIRCULO)
                     _jsx("button", { onClick: () => !isLocked && onActivate(lesson.id), style: {
                             width: size,
@@ -89,37 +89,37 @@ function LessonNode({ lesson, chapterColor, offset, isLast, onActivate, }) {
                             cursor: isLocked ? "default" : "pointer",
                             transition: "transform 0.18s, box-shadow 0.18s",
                             boxShadow: isActive
-                                ? `0 0 0 4px ${chapterColor}30, 0 8px 24px rgba(0,0,0,0.4)`
+                                ? `0 0 0 4px ${chapterColor}30, 0 8px 20px rgba(0,0,0,0.1)`
                                 : isDone
-                                    ? `0 4px 16px rgba(0,0,0,0.3)`
+                                    ? `0 2px 8px rgba(0,0,0,0.06)`
                                     : "none",
                             outline: "none",
                             position: "relative",
                         }, className: isActive ? "node-active-pulse" : "", onMouseEnter: e => { if (!isLocked)
-                            e.currentTarget.style.transform = "scale(1.07)"; }, onMouseLeave: e => { e.currentTarget.style.transform = "scale(1)"; }, children: isDone ? (_jsx("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", children: _jsx("path", { d: "M5 12L10 17L19 7", stroke: "#0F2A2E", strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round" }) })) : isLocked ? (_jsxs("svg", { width: "20", height: "20", viewBox: "0 0 20 20", fill: "none", children: [_jsx("rect", { x: "4", y: "9", width: "12", height: "9", rx: "2", stroke: "rgba(245,243,238,0.2)", strokeWidth: "1.5", fill: "none" }), _jsx("path", { d: "M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9", stroke: "rgba(245,243,238,0.2)", strokeWidth: "1.5", strokeLinecap: "round" })] })) : (_jsx(NodeIcon, { type: type, color: iconColor })) })), tooltip && (_jsxs("div", { style: {
+                            e.currentTarget.style.transform = "scale(1.07)"; }, onMouseLeave: e => { e.currentTarget.style.transform = "scale(1)"; }, children: isDone ? (_jsx("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", children: _jsx("path", { d: "M5 12L10 17L19 7", stroke: "#FFFFFF", strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round" }) })) : isLocked ? (_jsxs("svg", { width: "20", height: "20", viewBox: "0 0 20 20", fill: "none", children: [_jsx("rect", { x: "4", y: "9", width: "12", height: "9", rx: "2", stroke: "#94A3B8", strokeWidth: "1.5", fill: "none" }), _jsx("path", { d: "M7 9V6C7 4.3 8.3 3 10 3C11.7 3 13 4.3 13 6V9", stroke: "#94A3B8", strokeWidth: "1.5", strokeLinecap: "round" })] })) : (_jsx(NodeIcon, { type: type, color: iconColor })) })), tooltip && (_jsxs("div", { style: {
                             position: "absolute",
                             bottom: size + 10,
                             left: "50%",
                             transform: "translateX(-50%)",
-                            background: "#173C3E",
-                            border: `1px solid ${isLocked ? "rgba(245,243,238,0.1)" : chapterColor + "50"}`,
+                            background: "#FFFFFF",
+                            border: `1px solid ${isLocked ? "#E2E8F0" : chapterColor + "50"}`,
                             borderRadius: 12,
                             padding: "10px 14px",
                             minWidth: 170,
                             zIndex: 20,
                             pointerEvents: "none",
-                            boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
                         }, children: [_jsxs("p", { style: {
-                                    fontFamily: "Inter, sans-serif", fontSize: 10, color: isLocked ? "#8FA8AA" : chapterColor,
-                                    letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600, margin: "0 0 4px",
-                                }, children: [type === "boss" ? "⚔️ Examen de Sección" : type === "checkpoint" ? "🚩 Punto de control" : type === "quiz" ? "Quiz" : "Lección", isLocked && " · Bloqueado"] }), _jsx("p", { style: {
-                                    fontFamily: "'Fraunces', Georgia, serif", fontSize: 14, fontWeight: 600,
-                                    color: "#F5F3EE", margin: "0 0 6px", lineHeight: 1.3,
-                                }, children: lesson.title }), _jsxs("p", { style: { fontFamily: "Inter, sans-serif", fontSize: 11, color: "#8FA8AA", margin: 0 }, children: ["+", lesson.xp, " XP"] }), _jsx("div", { style: {
+                                    fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 10, color: isLocked ? "#64748B" : chapterColor,
+                                    letterSpacing: "0.06em", textTransform: "uppercase", fontWeight: 700, margin: "0 0 4px",
+                                }, children: [type === "boss" ? "Examen de Sección" : type === "checkpoint" ? "Punto de control" : type === "quiz" ? "Quiz" : "Lección", isLocked && " · Bloqueado"] }), _jsx("p", { style: {
+                                    fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 13, fontWeight: 700,
+                                    color: "#0F172A", margin: "0 0 4px", lineHeight: 1.3,
+                                }, children: lesson.title }), _jsxs("p", { style: { fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 11, color: "#64748B", margin: 0 }, children: ["+", lesson.xp, " XP"] }), _jsx("div", { style: {
                                     position: "absolute", bottom: -6, left: "50%", transform: "translateX(-50%) rotate(45deg)",
-                                    width: 10, height: 10, background: "#173C3E",
-                                    borderRight: `1px solid ${isLocked ? "rgba(245,243,238,0.1)" : chapterColor + "50"}`,
-                                    borderBottom: `1px solid ${isLocked ? "rgba(245,243,238,0.1)" : chapterColor + "50"}`,
+                                    width: 10, height: 10, background: "#FFFFFF",
+                                    borderRight: `1px solid ${isLocked ? "#E2E8F0" : chapterColor + "50"}`,
+                                    borderBottom: `1px solid ${isLocked ? "#E2E8F0" : chapterColor + "50"}`,
                                 } })] })), isActive && (_jsx("div", { style: {
                             position: "absolute", top: size + 14, left: "50%",
                             transform: "translateX(-50%)", zIndex: 10, whiteSpace: "nowrap",
@@ -133,16 +133,16 @@ function LessonNode({ lesson, chapterColor, offset, isLast, onActivate, }) {
 // ── Chapter Header ─────────────────────────────────────────────────────────────
 function ChapterHeader({ chapter, isFirst }) {
     return (_jsxs("div", { style: { display: "flex", flexDirection: "row", alignItems: "center", marginRight: 32, marginLeft: isFirst ? 0 : 48, position: "relative" }, children: [_jsxs("div", { style: {
-                    background: `${chapter.color}15`, border: `1px solid ${chapter.color}35`,
+                    background: "#FFFFFF", border: `1px solid #E2E8F0`,
                     borderRadius: 14, padding: "14px 28px", textAlign: "center", position: "relative", overflow: "hidden",
-                    whiteSpace: "nowrap",
-                }, children: [_jsx("div", { style: { position: "absolute", inset: 0, background: `radial-gradient(ellipse at 50% 0%, ${chapter.color}12 0%, transparent 60%)` } }), _jsxs("p", { style: {
-                            fontFamily: "Inter, sans-serif", fontSize: 10, color: chapter.color,
-                            letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700, margin: "0 0 4px", position: "relative",
+                    whiteSpace: "nowrap", boxShadow: "0 1px 3px rgba(0,0,0,0.03)"
+                }, children: [_jsxs("p", { style: {
+                            fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 10, color: chapter.color,
+                            letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 700, margin: "0 0 4px", position: "relative",
                         }, children: ["Secci\u00F3n ", chapter.id] }), _jsx("h3", { style: {
-                            fontFamily: "'Fraunces', Georgia, serif", fontSize: 20, fontWeight: 800,
-                            color: "#F5F3EE", margin: "0 0 2px", letterSpacing: "-0.01em", position: "relative",
-                        }, children: chapter.title }), _jsx("p", { style: { fontFamily: "Inter, sans-serif", fontSize: 12, color: "#8FA8AA", margin: 0, position: "relative" }, children: chapter.subtitle })] }), _jsx("div", { style: { height: 3, width: 28, background: `${chapter.color}40`, borderRadius: 4, marginLeft: 0 } })] }));
+                            fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 16, fontWeight: 700,
+                            color: "#0F172A", margin: "0 0 2px", letterSpacing: "-0.01em", position: "relative",
+                        }, children: chapter.title }), _jsx("p", { style: { fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 12, color: "#64748B", margin: 0, position: "relative" }, children: chapter.subtitle })] }), _jsx("div", { style: { height: 3, width: 28, background: "#E2E8F0", borderRadius: 4, marginLeft: 0 } })] }));
 }
 export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQuiz, onOpenBoss, onOpenMinijuego }) {
     let globalIndex = 0;
@@ -242,9 +242,9 @@ export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQui
             flexDirection: "column",
             padding: "20px 40px",
         }, children: [_jsxs("div", { style: { textAlign: "center", marginBottom: 24, width: "100%", flexShrink: 0 }, children: [_jsx("h1", { style: {
-                            fontFamily: "'Fraunces', Georgia, serif", fontSize: 32, fontWeight: 800,
-                            color: "#F5F3EE", margin: "0 0 8px", letterSpacing: "-0.02em",
-                        }, children: "Ruta Tem\u00E1tica" }), _jsx("p", { style: { fontFamily: "Inter, sans-serif", fontSize: 14, color: "#8FA8AA", margin: 0 }, children: "Sigue el camino horizontalmente para avanzar" })] }), _jsx("div", { ref: scrollContainerRef, style: {
+                            fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 26, fontWeight: 700,
+                            color: "#0F172A", margin: "0 0 6px", letterSpacing: "-0.01em",
+                        }, children: "Mapa interactivo de lecciones" }), _jsx("p", { style: { fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 13, color: "#64748B", margin: 0 }, children: "Sigue el camino horizontal para completar tus m\u00F3dulos paso a paso" })] }), _jsx("div", { ref: scrollContainerRef, style: {
                     width: "100%",
                     overflowX: "auto",
                     overflowY: "hidden",
@@ -278,7 +278,7 @@ export function LeccionDuolingoView({ rutaId, leccionId, onOpenLesson, onOpenQui
                             return (_jsxs("div", { style: { display: "flex", flexDirection: "row", alignItems: "center" }, children: [_jsx(ChapterHeader, { chapter: chapter, isFirst: ci === 0 }), _jsx("div", { style: { display: "flex", flexDirection: "row", alignItems: "center" }, children: nodes }), ci < chapters.length - 1 && (_jsx("div", { style: { height: 3, width: 40, background: "rgba(245,243,238,0.06)", borderRadius: 4, margin: "0" } }))] }, chapter.id));
                         }), _jsxs("div", { style: {
                                 display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
-                                marginLeft: 48, padding: "28px 24px", background: "#173C3E", borderRadius: 18,
-                                border: "1px solid rgba(232,185,74,0.2)", minWidth: 200
-                            }, children: [_jsx("div", { style: { fontSize: 32, marginBottom: 10 }, children: "\uD83C\uDFC6" }), _jsx("p", { style: { fontFamily: "'Fraunces', Georgia, serif", fontSize: 18, fontWeight: 700, color: "#F5F3EE", margin: "0 0 6px" }, children: "Maestr\u00EDa" }), _jsx("p", { style: { fontFamily: "Inter, sans-serif", fontSize: 12, color: "#8FA8AA", margin: 0 }, children: "Completa todas las secciones" })] })] }) })] }));
+                                marginLeft: 48, padding: "28px 24px", background: "#FFFFFF", borderRadius: 14,
+                                border: "1px solid #E2E8F0", minWidth: 200, boxShadow: "0 1px 3px rgba(0,0,0,0.03)"
+                            }, children: [_jsx("p", { style: { fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 16, fontWeight: 700, color: "#0F172A", margin: "0 0 4px" }, children: "Meta del curso" }), _jsx("p", { style: { fontFamily: "'Open Sans', system-ui, sans-serif", fontSize: 12, color: "#64748B", margin: 0 }, children: "Completa todas las secciones" })] })] }) })] }));
 }

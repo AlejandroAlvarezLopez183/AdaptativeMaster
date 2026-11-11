@@ -11,19 +11,20 @@ export function PerfilView({ user: initialUser }: PerfilViewProps) {
   const [loading, setLoading] = useState(false);
 
   // Estados del form
-  const [nivel, setNivel] = useState(user?.nivel || "Principiante");
+  const [nivel, setNivel] = useState(user?.nivel || "Intermedio");
   const [interesesText, setInteresesText] = useState(user?.intereses?.join(", ") || "");
   const [objetivos, setObjetivos] = useState(user?.objetivos || "");
 
   const nombre = user?.nombre?.split(" ")[0] || "Usuario";
-  
-  // Datos extra
   const rachas = "0"; 
 
   const handleSave = async () => {
     setLoading(true);
     const token = localStorage.getItem("token");
-    if (!token) return;
+    if (!token) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const interestsArray = interesesText.split(",").map(i => i.trim()).filter(i => i !== "");
@@ -45,128 +46,234 @@ export function PerfilView({ user: initialUser }: PerfilViewProps) {
   };
 
   return (
-    <div className="animate-fade-in" style={{ maxWidth: '720px', width: '100%', margin: '0 auto', fontFamily: 'Inter, sans-serif' }}>
+    <div className="animate-fade-in" style={{ maxWidth: '800px', width: '100%', margin: '0 auto', fontFamily: "'Open Sans', system-ui, sans-serif" }}>
       
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+      {/* Header Perfil */}
+      <div style={{
+        background: '#FFFFFF',
+        border: '1px solid #E2E8F0',
+        borderRadius: 14,
+        padding: '28px 32px',
+        marginBottom: 24,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+        flexWrap: 'wrap',
+        gap: 16
+      }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
           <div style={{
-            width: 72,
-            height: 72,
+            width: 64,
+            height: 64,
             borderRadius: "50%",
-            background: "linear-gradient(135deg, #E8B94A, #F2637B)",
+            background: "#EFF6FF",
+            border: "2px solid #DBEAFE",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: 28,
+            fontSize: 22,
             fontWeight: 700,
-            color: "#0F2A2E",
+            color: "#2563EB",
             textTransform: "uppercase",
-            boxShadow: "0 8px 24px rgba(232,185,74,0.2)"
+            flexShrink: 0
           }}>
             {user?.nombre ? user.nombre.substring(0, 2) : "US"}
           </div>
           <div>
-            <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 32, fontWeight: 700, color: "#F5F3EE", margin: "0 0 4px" }}>
-              {nombre}
+            <h1 style={{ fontSize: 24, fontWeight: 700, color: "#0F172A", margin: "0 0 4px" }}>
+              {user?.nombre || nombre}
             </h1>
-            <p style={{ margin: 0, color: "#8FA8AA", fontSize: 14 }}>{user?.email}</p>
+            <p style={{ margin: 0, color: "#64748B", fontSize: 13 }}>{user?.email}</p>
           </div>
         </div>
 
-        <button style={{
-          background: isEditing ? "#E8B94A" : "transparent",
-          border: isEditing ? "none" : "1px solid rgba(232,185,74,0.4)",
-          color: isEditing ? "#0F2A2E" : "#E8B94A",
-          padding: "10px 20px",
-          borderRadius: 10,
-          cursor: loading ? "not-allowed" : "pointer",
-          fontWeight: 600,
-          fontSize: 14,
-          transition: "all 0.2s"
-        }}
-        onClick={() => {
-          if (isEditing) {
-            handleSave();
-          } else {
-            setIsEditing(true);
-          }
-        }}
+        <button 
+          style={{
+            background: isEditing ? "#0F172A" : "#FFFFFF",
+            border: isEditing ? "none" : "1px solid #CBD5E1",
+            color: isEditing ? "#FFFFFF" : "#0F172A",
+            padding: "9px 18px",
+            borderRadius: 8,
+            cursor: loading ? "not-allowed" : "pointer",
+            fontWeight: 600,
+            fontSize: 13,
+            transition: "all 0.15s ease",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6
+          }}
+          onClick={() => {
+            if (isEditing) {
+              handleSave();
+            } else {
+              setIsEditing(true);
+            }
+          }}
+          disabled={loading}
+          onMouseEnter={e => {
+            if (!isEditing) {
+              e.currentTarget.style.background = '#F8FAFC';
+              e.currentTarget.style.borderColor = '#94A3B8';
+            }
+          }}
+          onMouseLeave={e => {
+            if (!isEditing) {
+              e.currentTarget.style.background = '#FFFFFF';
+              e.currentTarget.style.borderColor = '#CBD5E1';
+            }
+          }}
         >
           {loading ? "Guardando..." : isEditing ? "Guardar cambios" : "Editar perfil"}
         </button>
       </div>
 
       {/* Grid de contenido */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
         
         {/* Nivel General */}
-        <div style={{ background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 16, padding: 24 }}>
-          <h3 style={{ margin: '0 0 8px', fontSize: 13, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Nivel general</h3>
+        <div style={{
+          background: '#FFFFFF',
+          border: '1px solid #E2E8F0',
+          borderRadius: 12,
+          padding: 24,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+        }}>
+          <h3 style={{ margin: '0 0 8px', fontSize: 12, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+            Nivel general
+          </h3>
           {isEditing ? (
             <select
               value={nivel}
               onChange={e => setNivel(e.target.value)}
-              style={{ width: '100%', padding: '8px', borderRadius: 8, background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(245,243,238,0.2)', color: '#F5F3EE', outline: 'none' }}
+              style={{
+                width: '100%',
+                padding: '9px 12px',
+                borderRadius: 8,
+                background: '#FFFFFF',
+                border: '1px solid #CBD5E1',
+                color: '#0F172A',
+                fontSize: 14,
+                outline: 'none'
+              }}
             >
               <option value="Principiante">Principiante</option>
               <option value="Intermedio">Intermedio</option>
               <option value="Avanzado">Avanzado</option>
             </select>
           ) : (
-            <p style={{ margin: 0, fontSize: 20, fontWeight: 600, color: '#E8B94A' }}>{user?.nivel || "No definido"}</p>
+            <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#0F172A' }}>
+              {user?.nivel || "Intermedio"}
+            </p>
           )}
         </div>
 
         {/* Logros / Racha */}
-        <div style={{ background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 16, padding: 24 }}>
-          <h3 style={{ margin: '0 0 8px', fontSize: 13, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Logros y Rachas</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 24 }}>🔥</span>
-            <span style={{ fontSize: 20, fontWeight: 600, color: '#F5F3EE' }}>{rachas} días</span>
+        <div style={{
+          background: '#FFFFFF',
+          border: '1px solid #E2E8F0',
+          borderRadius: 12,
+          padding: 24,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+        }}>
+          <h3 style={{ margin: '0 0 8px', fontSize: 12, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+            Racha actual
+          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 20, fontWeight: 700, color: '#0F172A' }}>{rachas} días activos</span>
           </div>
         </div>
 
         {/* Intereses */}
-        <div style={{ background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 16, padding: 24, gridColumn: '1 / -1' }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: 13, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Intereses</h3>
+        <div style={{
+          background: '#FFFFFF',
+          border: '1px solid #E2E8F0',
+          borderRadius: 12,
+          padding: 24,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+          gridColumn: '1 / -1'
+        }}>
+          <h3 style={{ margin: '0 0 12px', fontSize: 12, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+            Áreas de interés
+          </h3>
           {isEditing ? (
-            <input
-              type="text"
-              value={interesesText}
-              onChange={e => setInteresesText(e.target.value)}
-              placeholder="Ej. Python, APIs, React"
-              style={{ width: '100%', padding: '12px', borderRadius: 8, background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(245,243,238,0.2)', color: '#F5F3EE', outline: 'none' }}
-            />
+            <div>
+              <input
+                type="text"
+                value={interesesText}
+                onChange={e => setInteresesText(e.target.value)}
+                placeholder="Ej. Python, Machine Learning, Matemáticas, React"
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  borderRadius: 8,
+                  background: '#FFFFFF',
+                  border: '1px solid #CBD5E1',
+                  color: '#0F172A',
+                  fontSize: 14,
+                  outline: 'none'
+                }}
+              />
+              <span style={{ display: 'block', fontSize: 12, color: '#64748B', marginTop: 6 }}>
+                Separa cada interés con una coma
+              </span>
+            </div>
           ) : (
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {user?.intereses && user.intereses.length > 0 ? (
                 user.intereses.map(interes => (
-                  <span key={interes} style={{ background: 'rgba(232,185,74,0.15)', color: '#E8B94A', padding: '6px 14px', borderRadius: 20, fontSize: 14, fontWeight: 600 }}>
+                  <span key={interes} style={{
+                    background: '#EFF6FF',
+                    color: '#1D4ED8',
+                    border: '1px solid #DBEAFE',
+                    padding: '4px 12px',
+                    borderRadius: 16,
+                    fontSize: 13,
+                    fontWeight: 600
+                  }}>
                     {interes}
                   </span>
                 ))
               ) : (
-                <span style={{ color: '#8FA8AA' }}>Ninguno definido aún.</span>
+                <span style={{ color: '#64748B', fontSize: 13 }}>No has configurado intereses aún.</span>
               )}
             </div>
           )}
         </div>
 
         {/* Objetivos */}
-        <div style={{ background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 16, padding: 24, gridColumn: '1 / -1' }}>
-          <h3 style={{ margin: '0 0 12px', fontSize: 13, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Objetivos</h3>
+        <div style={{
+          background: '#FFFFFF',
+          border: '1px solid #E2E8F0',
+          borderRadius: 12,
+          padding: 24,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+          gridColumn: '1 / -1'
+        }}>
+          <h3 style={{ margin: '0 0 12px', fontSize: 12, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+            Objetivos de aprendizaje
+          </h3>
           {isEditing ? (
             <textarea
               value={objetivos}
               onChange={e => setObjetivos(e.target.value)}
-              placeholder="¿Qué quieres lograr con EstudiLab?"
+              placeholder="¿Qué metas o proyectos deseas alcanzar con tus estudios?"
               rows={3}
-              style={{ width: '100%', padding: '12px', borderRadius: 8, background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(245,243,238,0.2)', color: '#F5F3EE', outline: 'none', resize: 'vertical' }}
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                borderRadius: 8,
+                background: '#FFFFFF',
+                border: '1px solid #CBD5E1',
+                color: '#0F172A',
+                fontSize: 14,
+                outline: 'none',
+                resize: 'vertical'
+              }}
             />
           ) : (
-            <p style={{ margin: 0, fontSize: 16, color: '#F5F3EE', lineHeight: 1.5 }}>
-              {user?.objetivos || <span style={{ color: '#8FA8AA' }}>Ninguno definido aún.</span>}
+            <p style={{ margin: 0, fontSize: 14, color: '#334155', lineHeight: 1.6 }}>
+              {user?.objetivos || <span style={{ color: '#64748B' }}>Aún no has definido tus metas de estudio.</span>}
             </p>
           )}
         </div>

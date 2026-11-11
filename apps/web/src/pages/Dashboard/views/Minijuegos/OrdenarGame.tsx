@@ -41,7 +41,7 @@ export function OrdenarGame({ datos, onComplete }: OrdenarGameProps) {
     <div style={{ display: "flex", flexDirection: "column", gap: 20, width: "100%", maxWidth: 680, margin: "0 auto" }}>
       <div style={{ textAlign: "center" }}>
         <p style={{ color: "#8FA8AA", fontSize: 14, margin: 0 }}>
-          🖱️ Arrastra los fragmentos para ordenarlos correctamente
+           Arrastra los fragmentos para ordenarlos correctamente
         </p>
       </div>
 
@@ -76,8 +76,8 @@ export function OrdenarGame({ datos, onComplete }: OrdenarGameProps) {
                 {fragmentos[itemIdx]}
               </code>
               {!verificado && <span style={{ color: "#8FA8AA", fontSize: 18 }}>⠿</span>}
-              {isCorrect && <span>✅</span>}
-              {isWrong && <span>❌</span>}
+              {isCorrect && <span></span>}
+              {isWrong && <span></span>}
             </div>
           );
         })}
@@ -85,7 +85,7 @@ export function OrdenarGame({ datos, onComplete }: OrdenarGameProps) {
 
       {verificado ? (
         <div style={{ textAlign: "center", color: esCorrecto ? "#45C893" : "#F2637B", fontWeight: 700, fontSize: 18 }}>
-          {esCorrecto ? "🎉 ¡Orden perfecto!" : "❌ Orden incorrecto. ¡Sigue practicando!"}
+          {esCorrecto ? " ¡Orden perfecto!" : " Orden incorrecto. ¡Sigue practicando!"}
         </div>
       ) : (
         <button onClick={handleVerificar}

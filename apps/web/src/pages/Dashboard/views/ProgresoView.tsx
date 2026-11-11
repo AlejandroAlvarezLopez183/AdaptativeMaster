@@ -28,11 +28,19 @@ export function ProgresoView() {
   }, []);
 
   if (loading) {
-    return <div style={{ color: "#E8B94A", textAlign: "center", marginTop: "40px" }}>Cargando tu progreso...</div>;
+    return (
+      <div style={{ color: "#64748B", textAlign: "center", padding: "60px 0", fontSize: 14 }}>
+        Cargando tu progreso...
+      </div>
+    );
   }
 
   if (error) {
-    return <div style={{ color: "#F2637B", textAlign: "center", marginTop: "40px" }}>{error}</div>;
+    return (
+      <div style={{ color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", padding: 16, borderRadius: 8, textAlign: "center", margin: "20px auto", maxWidth: 400 }}>
+        {error}
+      </div>
+    );
   }
 
   const rachaActual = data?.racha?.dias_actuales || 0;
@@ -40,9 +48,42 @@ export function ProgresoView() {
   const leccionesCompletadas = data?.ultimos_xp?.filter(x => x.motivo.includes("Lección")).length || 0;
 
   const stats = [
-    { label: "Racha actual", value: `${rachaActual} días`, icon: "🔥", color: "#F2637B" },
-    { label: "Total XP", value: `${xpTotal} XP`, icon: "✨", color: "#E8B94A" },
-    { label: "Lecciones", value: `${leccionesCompletadas}`, icon: "📚", color: "#45C893" },
+    {
+      label: "Racha actual",
+      value: `${rachaActual} días`,
+      caption: "Constancia de estudio",
+      bg: "#FEF3C7",
+      iconColor: "#D97706",
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z" />
+        </svg>
+      )
+    },
+    {
+      label: "Total XP",
+      value: `${xpTotal} XP`,
+      caption: "Experiencia acumulada",
+      bg: "#EFF6FF",
+      iconColor: "#2563EB",
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+      )
+    },
+    {
+      label: "Lecciones completadas",
+      value: `${leccionesCompletadas}`,
+      caption: "Actividades finalizadas",
+      bg: "#ECFDF5",
+      iconColor: "#059669",
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      )
+    },
   ];
 
   const habilidades = data?.habilidades || [];
@@ -51,87 +92,147 @@ export function ProgresoView() {
   const progresoRuta = data?.progreso_ruta || 0;
 
   return (
-    <div className="animate-fade-in" style={{ maxWidth: '840px', width: '100%', margin: '0 auto', fontFamily: 'Inter, sans-serif' }}>
+    <div className="animate-fade-in" style={{ maxWidth: '960px', width: '100%', margin: '0 auto', fontFamily: "'Open Sans', system-ui, sans-serif" }}>
       
-      <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 32, fontWeight: 700, color: "#F5F3EE", margin: "0 0 8px" }}>
+      <div style={{ marginBottom: 28 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: "#0F172A", margin: "0 0 6px", letterSpacing: "-0.01em" }}>
           Mi progreso
         </h1>
-        <p style={{ color: "#8FA8AA", margin: 0, fontSize: 15 }}>
-          Haz un seguimiento de tus objetivos y habilidades.
+        <p style={{ color: "#64748B", margin: 0, fontSize: 14 }}>
+          Métricas de desempeño, retención y seguimiento semanal de tus objetivos.
         </p>
       </div>
 
-      {/* Progreso General y Stats Superiores */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20, marginBottom: 24 }}>
-        
-        {/* Tarjeta de progreso gigante */}
-        <div style={{ background: 'rgba(23,60,62,0.6)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 16, padding: 24, display: 'flex', flexDirection: 'column', gridColumn: '1 / -1' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 12 }}>
-            <span style={{ fontSize: 14, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Progreso de la ruta</span>
-            <span style={{ fontSize: 32, fontWeight: 800, color: '#E8B94A', lineHeight: 1 }}>{progresoRuta}%</span>
+      {/* Tarjeta de Progreso General */}
+      <div style={{
+        background: '#FFFFFF',
+        border: '1px solid #E2E8F0',
+        borderRadius: 12,
+        padding: 24,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+        marginBottom: 20
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 12 }}>
+          <div>
+            <span style={{ fontSize: 12, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+              Progreso general de la ruta activa
+            </span>
+            <div style={{ fontSize: 14, color: '#0F172A', marginTop: 2 }}>
+              Avanza a tu ritmo completando lecciones y evaluaciones
+            </div>
           </div>
-          <div style={{ width: '100%', height: 12, background: 'rgba(0,0,0,0.3)', borderRadius: 8, overflow: 'hidden' }}>
-            <div style={{ width: `${progresoRuta}%`, height: '100%', background: 'linear-gradient(90deg, #C49A33, #E8B94A)', borderRadius: 8 }} />
-          </div>
+          <span style={{ fontSize: 28, fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>
+            {progresoRuta}%
+          </span>
         </div>
+        <div style={{ width: '100%', height: 8, background: '#F1F5F9', borderRadius: 4, overflow: 'hidden' }}>
+          <div style={{ width: `${progresoRuta}%`, height: '100%', background: '#2563EB', borderRadius: 4, transition: 'width 0.4s ease' }} />
+        </div>
+      </div>
 
-        {/* Stats pequeñas */}
+      {/* Stats Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 24 }}>
         {stats.map((stat, idx) => (
-          <div key={idx} style={{ background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 16, padding: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>
+          <div key={idx} style={{
+            background: '#FFFFFF',
+            border: '1px solid #E2E8F0',
+            borderRadius: 12,
+            padding: '18px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 14,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+          }}>
+            <div style={{
+              width: 40,
+              height: 40,
+              borderRadius: 8,
+              background: stat.bg,
+              color: stat.iconColor,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0
+            }}>
               {stat.icon}
             </div>
             <div>
-              <p style={{ margin: '0 0 4px', fontSize: 12, color: '#8FA8AA', textTransform: 'uppercase', letterSpacing: '0.02em' }}>{stat.label}</p>
-              <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#F5F3EE' }}>{stat.value}</p>
+              <p style={{ margin: '0 0 2px', fontSize: 12, color: '#64748B', fontWeight: 500 }}>{stat.label}</p>
+              <p style={{ margin: '0 0 2px', fontSize: 20, fontWeight: 700, color: '#0F172A' }}>{stat.value}</p>
+              <p style={{ margin: 0, fontSize: 11, color: '#94A3B8' }}>{stat.caption}</p>
             </div>
           </div>
         ))}
-
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+      {/* Grid Inferior: Habilidades & Actividad Semanal */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
         
-        {/* Habilidades */}
-        <div style={{ background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 16, padding: 24 }}>
-          <h3 style={{ margin: '0 0 20px', fontSize: 15, color: '#F5F3EE', fontWeight: 600 }}>Habilidades</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {habilidades.map(hab => (
-              <div key={hab.nombre}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 14, color: '#8FA8AA', fontWeight: 500 }}>{hab.nombre}</span>
-                  <span style={{ fontSize: 14, color: '#F5F3EE', fontWeight: 600 }}>{hab.porcentaje}%</span>
+        {/* Habilidades dominadas */}
+        <div style={{
+          background: '#FFFFFF',
+          border: '1px solid #E2E8F0',
+          borderRadius: 12,
+          padding: 24,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+        }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: 16, color: '#0F172A', fontWeight: 700 }}>
+            Habilidades evaluadas
+          </h3>
+          
+          {habilidades.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {habilidades.map(hab => (
+                <div key={hab.nombre}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, color: '#475569', fontWeight: 500 }}>{hab.nombre}</span>
+                    <span style={{ fontSize: 13, color: '#0F172A', fontWeight: 600 }}>{hab.porcentaje}%</span>
+                  </div>
+                  <div style={{ width: '100%', height: 6, background: '#F1F5F9', borderRadius: 3, overflow: 'hidden' }}>
+                    <div style={{ width: `${hab.porcentaje}%`, height: '100%', background: '#059669', borderRadius: 3 }} />
+                  </div>
                 </div>
-                <div style={{ width: '100%', height: 6, background: 'rgba(0,0,0,0.2)', borderRadius: 4, overflow: 'hidden' }}>
-                  <div style={{ width: `${hab.porcentaje}%`, height: '100%', background: '#45C893', borderRadius: 4 }} />
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p style={{ margin: 0, color: '#64748B', fontSize: 13 }}>
+              Completa lecciones y minijuegos para ver tu desglose de habilidades.
+            </p>
+          )}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          {/* Esta semana */}
-          <div style={{ background: 'rgba(23,60,62,0.4)', border: '1px solid rgba(245,243,238,0.06)', borderRadius: 16, padding: 24 }}>
-            <h3 style={{ margin: '0 0 20px', fontSize: 15, color: '#F5F3EE', fontWeight: 600 }}>Esta semana</h3>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* Columna Derecha: Semana y Refuerzo */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          
+          {/* Actividad semanal */}
+          <div style={{
+            background: '#FFFFFF',
+            border: '1px solid #E2E8F0',
+            borderRadius: 12,
+            padding: 24,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+          }}>
+            <h3 style={{ margin: '0 0 16px', fontSize: 16, color: '#0F172A', fontWeight: 700 }}>
+              Constancia semanal
+            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
               {semana.map((dia, idx) => (
                 <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 12, color: '#8FA8AA', fontWeight: 600 }}>{dia.dia}</span>
+                  <span style={{ fontSize: 12, color: '#64748B', fontWeight: 600 }}>{dia.dia}</span>
                   <div style={{
-                    width: 28,
-                    height: 28,
+                    width: 32,
+                    height: 32,
                     borderRadius: '50%',
-                    background: dia.completado ? 'rgba(232,185,74,0.15)' : 'rgba(0,0,0,0.2)',
-                    border: `1px solid ${dia.completado ? '#E8B94A' : 'rgba(245,243,238,0.06)'}`,
+                    background: dia.completado ? '#EFF6FF' : '#F8FAFC',
+                    border: `1.5px solid ${dia.completado ? '#2563EB' : '#E2E8F0'}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: dia.completado ? '#E8B94A' : 'transparent',
-                    fontSize: 14
+                    color: dia.completado ? '#2563EB' : '#94A3B8',
+                    fontSize: 13,
+                    fontWeight: 700
                   }}>
-                    {dia.completado && '✓'}
+                    {dia.completado ? '✓' : ''}
                   </div>
                 </div>
               ))}
@@ -139,20 +240,43 @@ export function ProgresoView() {
           </div>
 
           {/* Conceptos a reforzar */}
-          <div style={{ background: 'rgba(242,99,123,0.05)', border: '1px solid rgba(242,99,123,0.2)', borderRadius: 16, padding: 24 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-              <span style={{ fontSize: 20 }}>💡</span>
-              <h3 style={{ margin: 0, fontSize: 15, color: '#F2637B', fontWeight: 600 }}>Conceptos que debes reforzar</h3>
+          <div style={{
+            background: '#FFFFFF',
+            border: '1px solid #E2E8F0',
+            borderRadius: 12,
+            padding: 24,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+              <div style={{ width: 28, height: 28, borderRadius: 6, background: '#FEF2F2', color: '#DC2626', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+              </div>
+              <h3 style={{ margin: 0, fontSize: 15, color: '#0F172A', fontWeight: 700 }}>
+                Conceptos a reforzar
+              </h3>
             </div>
-            <ul style={{ margin: 0, paddingLeft: 24, display: 'flex', flexDirection: 'column', gap: 10, color: '#F5F3EE' }}>
-              {reforzar.map((item, idx) => (
-                <li key={idx} style={{ fontSize: 14, fontWeight: 500 }}>{item}</li>
-              ))}
-            </ul>
+
+            {reforzar.length > 0 ? (
+              <ul style={{ margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 8, color: '#475569', fontSize: 13 }}>
+                {reforzar.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            ) : (
+              <p style={{ margin: 0, color: '#64748B', fontSize: 13 }}>
+                ¡Vas al día! No se han detectado conceptos críticos por reforzar en este momento.
+              </p>
+            )}
           </div>
+
         </div>
 
       </div>
+
     </div>
   );
 }

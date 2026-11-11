@@ -1,10 +1,10 @@
-# Resumen de Desarrollo (Día 1 y 2) 🚀
+# Resumen de Desarrollo (Día 1 y 2)
 
 Este documento plasma todos los logros técnicos, arquitectónicos y de experiencia de usuario (UI/UX) que hemos implementado de manera conjunta en la plataforma **AdaptativeMaster (EstudiLabAi)** durante las últimas sesiones.
 
 ---
 
-## 📅 Día 1: Fundamentos y Personalización Profunda
+##  Día 1: Fundamentos y Personalización Profunda
 
 ### 1. Migración y Base de Datos (Perfil Editable)
 - Rompimos la plantilla estática del perfil del usuario.
@@ -23,7 +23,7 @@ Este documento plasma todos los logros técnicos, arquitectónicos y de experien
 
 ---
 
-## 📅 Día 2: Magia, Inteligencia Artificial y Experiencia de Usuario
+##  Día 2: Magia, Inteligencia Artificial y Experiencia de Usuario
 
 ### 1. Sistema de Contexto Inteligente (Menciones `@` en el chat)
 - Se revolucionó el chat en `TutorView.tsx` para parecerse a plataformas líderes como GitHub o IDEs. 
@@ -44,7 +44,7 @@ Este documento plasma todos los logros técnicos, arquitectónicos y de experien
   1. *¿Qué quieres dominar?*
   2. *¿Cuál es tu nivel?*
   3. *¿Cuánto tiempo tienes?*
-- Al concluir, dispara una animación cinemática central ("La IA está pensando... ✨") durante 3 segundos, lo que da a los usuarios una fuerte sensación de interacción premium y alta tecnología, antes de enviarlos a su nuevo mapa del conocimiento.
+- Al concluir, dispara una animación cinemática central ("La IA está pensando... ") durante 3 segundos, lo que da a los usuarios una fuerte sensación de interacción premium y alta tecnología, antes de enviarlos a su nuevo mapa del conocimiento.
 
 ---
-**🚀 Estado del proyecto:** La plataforma luce increíblemente cohesiva. La estética oscura mezclada con los tintes dorados y esmeraldas se complementa a la perfección con mecánicas fluidas que invitan al usuario a no querer salir de la web.
+** Estado del proyecto:** La plataforma luce increíblemente cohesiva. La estética oscura mezclada con los tintes dorados y esmeraldas se complementa a la perfección con mecánicas fluidas que invitan al usuario a no querer salir de la web.

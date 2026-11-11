@@ -4,12 +4,15 @@ Aquí van las reglas reales (cálculos, validaciones de negocio, orquestación).
 No debe conocer detalles de HTTP ni de SQL directamente.
 """
 from datetime import datetime, timedelta
+from typing import Optional, List
+from uuid import UUID
 from jose import jwt, JWTError
 from fastapi import HTTPException, status
 import bcrypt
 from modules.compartido.config import settings
 from . import repository, schemas, models
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
@@ -66,3 +69,24 @@ async def actualizar_perfil(session: AsyncSession, user: models.Usuario, update_
     await session.commit()
     await session.refresh(user)
     return user
+
+
+async def obtener_usuario_por_id(session: AsyncSession, user_id: UUID) -> Optional[models.Usuario]:
+    return await session.get(models.Usuario, user_id)
+
+async def obtener_usuarios_por_ids(session: AsyncSession, user_ids: list[UUID]) -> list[models.Usuario]:
+    if not user_ids:
+        return []
+    result = await session.execute(
+        select(models.Usuario).where(models.Usuario.id.in_(user_ids))
+    )
+    return list(result.scalars().all())
+
+async def listar_otros_usuarios(session: AsyncSession, usuario_id: UUID, limite: int = 10) -> list[models.Usuario]:
+    result = await session.execute(
+        select(models.Usuario)
+        .where(models.Usuario.id != usuario_id)
+        .order_by(models.Usuario.created_at.desc())
+        .limit(limite)
+    )
+    return list(result.scalars().all())

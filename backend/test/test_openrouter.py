@@ -32,14 +32,14 @@ BLUE   = "\033[94m"
 RESET  = "\033[0m"
 BOLD   = "\033[1m"
 
-def ok(msg):   print(f"{GREEN}  ✅ {msg}{RESET}")
-def fail(msg): print(f"{RED}  ❌ {msg}{RESET}")
-def info(msg): print(f"{BLUE}  ℹ  {msg}{RESET}")
+def ok(msg):   print(f"{GREEN}   {msg}{RESET}")
+def fail(msg): print(f"{RED}   {msg}{RESET}")
+def info(msg): print(f"{BLUE}  {msg}{RESET}")
 
 
 async def test_chat_simple():
     """Prueba 1: Llamada conversacional básica (como el Tutor IA)."""
-    print(f"\n{BOLD}📝 Prueba 1: Chat conversacional (modo Tutor){RESET}")
+    print(f"\n{BOLD} Prueba 1: Chat conversacional (modo Tutor){RESET}")
     try:
         respuesta = await chat_completion(
             messages=[
@@ -61,7 +61,7 @@ async def test_chat_simple():
 
 async def test_json_generation():
     """Prueba 2: Generación de JSON estructurado (como la generación de Rutas)."""
-    print(f"{BOLD}🗺  Prueba 2: Generación de JSON estructurado (modo Ruta){RESET}")
+    print(f"{BOLD}  Prueba 2: Generación de JSON estructurado (modo Ruta){RESET}")
     try:
         resultado = await chat_completion_json(
             messages=[
@@ -90,7 +90,7 @@ async def test_json_generation():
 
 async def main():
     print(f"\n{BOLD}{'='*55}")
-    print(f"  🚀 Test de integración OpenRouter — EstudiLabAI")
+    print(f"   Test de integración OpenRouter — EstudiLabAI")
     print(f"{'='*55}{RESET}")
 
     # Verificar que la API Key esté cargada
@@ -111,9 +111,9 @@ async def main():
     print(f"{BOLD}{'='*55}")
     total = sum([prueba1, prueba2])
     if total == 2:
-        print(f"  {GREEN}🎉 Todas las pruebas pasaron ({total}/2) — OpenRouter listo!{RESET}")
+        print(f"  {GREEN} Todas las pruebas pasaron ({total}/2) — OpenRouter listo!{RESET}")
     else:
-        print(f"  {YELLOW}⚠️  {total}/2 pruebas pasaron. Revisa los errores arriba.{RESET}")
+        print(f"  {YELLOW}  {total}/2 pruebas pasaron. Revisa los errores arriba.{RESET}")
     print(f"{'='*55}{RESET}\n")
 
 
